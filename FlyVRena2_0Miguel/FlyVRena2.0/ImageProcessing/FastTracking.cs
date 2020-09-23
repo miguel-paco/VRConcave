@@ -4,10 +4,6 @@ using OpenCV.Net;
 using Sardine.Core;
 using System;
 using System.Diagnostics;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace FlyVRena2._0.ImageProcessing
 {
@@ -15,12 +11,11 @@ namespace FlyVRena2._0.ImageProcessing
     {
         Stopwatch stopWatch = new Stopwatch(); // Check process time auxiliar variable
 
-        // Define Inputs +++++++++++++++++++++++++++++++++++++++++++++++++++++
+        
         bool disp; // Bool to turn on or off the Tracking Result Display
-        private float[] calibValues; // Values to change reference of the values
         private float[] prevTrack = new float[5]; // Value to save the old tracking value
         private IplImage Mask; // Image to use as support on the tresholding methods (either as a reference to subtract or to save current image)
-        // Min area within detected contours
+        
         private int _minArea = 0; 
         public int MinArea
         {
@@ -31,7 +26,7 @@ namespace FlyVRena2._0.ImageProcessing
                 Changed("FlyMinArea");
             }
         }
-        // Max area within detected contours
+
         private int _maxArea = 0; 
         public int MaxArea
         {
@@ -42,7 +37,7 @@ namespace FlyVRena2._0.ImageProcessing
                 Changed("FlyMaxArea");
             }
         }
-        // Treshold Value
+
         private int _thr = 0; 
         public int Thr
         {
@@ -53,7 +48,7 @@ namespace FlyVRena2._0.ImageProcessing
                 Changed("FlyThreshold");
             }
         }
-        // Size of the median smooth filter
+
         private int _smooth = 1;
         public int SmoothSize
         {
@@ -64,13 +59,13 @@ namespace FlyVRena2._0.ImageProcessing
                 Changed("FlySmoothSize");
             }
         }
+        
         //Tracking Visualizer Parameters
         TypeVisualizerDialog vis;
         ImageVisualizer imVis;
         ServiceProvider provider;
-        // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-        // Initialization ====================================================
+
         public FastTracking(Frame mask, int minA, int maxA, int thr, int smooth, bool disp)
         {
             //Initialize with pre-defined parameters. Modify and re-compile to alter tracking parameters. 
@@ -79,7 +74,7 @@ namespace FlyVRena2._0.ImageProcessing
             Thr = thr;
             SmoothSize = smooth;
             this.disp = disp;
-            Mask = mask.image; // As design, this will be the first adquired frame
+            Mask = mask.image; // In background subtraction method, this will be the first adquired frame 
             if (disp)
             {
                 provider = new ServiceProvider();
@@ -90,36 +85,24 @@ namespace FlyVRena2._0.ImageProcessing
                 vis.Show();
                 vis.Location = new System.Drawing.Point(512, 0);
             }
-            calibValues = new float[12];
-            calibValues[0] = 0.0011f;
-            calibValues[1] = -0.7660f;
-            calibValues[2] = 0.0000f;
-            calibValues[3] = 0.0004f;
-            calibValues[4] = 1;
-            calibValues[5] = 0.0012f;
-            calibValues[6] = -0.0000f;
-            calibValues[7] = -0.3676f;
-            calibValues[8] = 12.5535f;
-            calibValues[9] = 4.6354f + 0.07f;
-            calibValues[10] = -12.9056f;
-            calibValues[11] = -1.0711f;
         }
-        // ===================================================================
         
-        public float[] GetParams(IplImage output)
+        public float[] ObtainTrackingData(IplImage output)
         {
+            float[] param = new float[5] { 0, 0, 0, 0, 0};
+
             if (Mask == null) // if no first frame
             {
                 Mask = output.Clone();
-                return new float[4] { 0, 0, 0, 0 };
+                return param;
             }
             else
             {
-                float[] param = new float[4];
-                float majoraxis;
+                float majoraxis = 0f;
                 double contourArea;
                 RotatedRect elipse;
                 Moments moments;
+
                 //// Smoothing Tresholding ------------------------------------------------------------------------
                 ////save the Current Image on the Mask
                 //Mask = output.Clone();
@@ -131,13 +114,17 @@ namespace FlyVRena2._0.ImageProcessing
                 //CV.Sub(output, Mask, output);
                 //// ----------------------------------------------------------------------------------------------
 
+                //// Background Subtraction -----------------------------------------------------------------------
                 //subtract mask from frame
                 CV.Sub(Mask, output, output);
+                //// ----------------------------------------------------------------------------------------------
 
-                //threshold to binarize the data
+                // Find Fly -------------------------------------------------------------------------------------
+                
+                //Binarize the data
                 CV.Threshold(output, output, _thr, 255, ThresholdTypes.Binary);
 
-                //find countours of the binary regions
+                //Find countours of the binary regions
                 Seq currentContour;
                 using (var storage = new MemStorage())
                 using (var scanner = CV.StartFindContours(output, storage, Contour.HeaderSize, ContourRetrieval.External, ContourApproximation.ChainApproxNone, new OpenCV.Net.Point(0, 0)))
@@ -145,7 +132,7 @@ namespace FlyVRena2._0.ImageProcessing
                     double bfArea = 0;
                     while ((currentContour = scanner.FindNextContour()) != null)
                     {
-                        //calculate the number of pixels inside the contour
+                        //Calculate the number of pixels inside the contour
                         contourArea = CV.ContourArea(currentContour, SeqSlice.WholeSeq);
                         CV.DrawContours(output, currentContour, new Scalar(80), new Scalar(80), 1, -1);
                         //Console.WriteLine("{0}", contourArea);
@@ -178,16 +165,33 @@ namespace FlyVRena2._0.ImageProcessing
                             }
                             CV.DrawContours(output, currentContour, new Scalar(255), new Scalar(255), 1, -1);
                             
+                            
                         }
                         bfArea = contourArea;
                     }
                 }
 
+                // ----------------------------------------------------------------------------------------------
+
+                // Correct Orientation Based on Previous Tracking
+                param[2] = CorrectedOrientation(param[2], prevTrack[2]);
+
+                // Find Fly Head
+                if (majoraxis > 0)
+                {
+                    param[3] = param[0] + Convert.ToSingle(Math.Cos(param[2] * Math.PI / 180f)) * majoraxis / 2f;
+                    param[4] = param[1] + Convert.ToSingle(Math.Sin(param[2] * Math.PI / 180f)) * majoraxis / 2f;
+                }
+                else
+                {
+                    param[3] = param[0];
+                    param[4] = param[1];
+                }
+                CV.Circle(output, new Point(Convert.ToInt32(param[3] + Convert.ToSingle(Math.Cos(param[2] * Math.PI / 180f)) * 3), Convert.ToInt32(param[4] + Convert.ToSingle(Math.Sin(param[2] * Math.PI / 180f)) * 3)), 1, new Scalar(255,0,0));
+
                 if (disp)
                     imVis.Show(output.Clone());
 
-                //Console.WriteLine("{0}", param[0]);
-                //return position and orientation
                 return param;
             }
         }
@@ -217,54 +221,12 @@ namespace FlyVRena2._0.ImageProcessing
             return or;
         }
 
-        public float[] Calibrate(float[] data)
-        {
-            float[] rVals = new float[4];
-
-            rVals[0] = data[0]; // Centroid X coord
-            rVals[1] = data[1]; // Centroid Y coord
-            rVals[2] = data[2]; // Corrected Orientation (deg)
-            rVals[3] = data[3]; // MajorAxis
-            return rVals;
-        }
-
-        public float[] GetHeadCoords(float[] data, IplImage output)
-        {
-            float[] param = new float[5];
-            float majoraxis;
-
-            param[0] = data[0]; // Centroid X coord
-            param[1] = data[1]; // Centroid Y coord
-            param[2] = data[2]; // Corrected Orientation (deg)
-            majoraxis = data[3];
-
-            //find head coordenates (x: param[3]; y: param[4])
-            if (majoraxis > 0)
-            {
-                param[3] = param[0] + Convert.ToSingle(Math.Cos(param[2] * Math.PI / 180f)) * majoraxis / 2f;
-                param[4] = param[1] + Convert.ToSingle(Math.Sin(param[2] * Math.PI / 180f)) * majoraxis / 2f;
-            }
-            else
-            {
-                param[3] = param[0];
-                param[4] = param[1];
-            }
-
-            return param;
-        }
-
         protected override void Process(T data)
         {
             float[] currentTracking;
             using (IplImage input = data.image)
             {
-                currentTracking = GetParams(input);
-            }
-            currentTracking = Calibrate(currentTracking);
-            currentTracking[2] = CorrectedOrientation(currentTracking[2], prevTrack[2]);
-            using (IplImage input = data.image)
-            {
-                currentTracking = GetHeadCoords(currentTracking,input);
+                currentTracking = ObtainTrackingData(input);
             }
 
             this.Send<MovementData>(new MovementData(data.ID, data.source, new float[] {

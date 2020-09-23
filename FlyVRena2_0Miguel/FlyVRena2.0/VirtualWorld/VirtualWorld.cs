@@ -25,7 +25,6 @@ namespace FlyVRena2._0.VirtualWorld
         public VRProtocol vRProtocol;
         private FastTracking<Frame> fastT;
         public KalmanFilterTrack<MovementData> kft;
-
         public RenderSubsystem render;
         public UpdateSubsystem update;
 
@@ -118,6 +117,7 @@ namespace FlyVRena2._0.VirtualWorld
         Stopwatch stopwatch = new Stopwatch();
         public void Update(double time)
         {
+            // Start Recording Camera Data
             if (firstUp)
             {
                 firstUp = false;
@@ -134,11 +134,13 @@ namespace FlyVRena2._0.VirtualWorld
                 stopwatch.Stop();
                 stopwatch.Start();
             }
+            // Update Timer
             if (!firstUp && secondUp)
             {
                 update.Update(time);
                 _time += time;
             }
+            // Finish Experiment
             if (stopwatch.ElapsedMilliseconds >= 1000 * (vRProtocol.duration + 0.5) && secondUp)
             {
                 if (vRProtocol.useCam1 && vRProtocol.recordCam1)
@@ -154,6 +156,7 @@ namespace FlyVRena2._0.VirtualWorld
 
         public void Draw(double time)
         {
+            // Update Open Loop Stimulus (with time)
             if (secondUp != false)
             {
                 if (stopwatch.IsRunning)
@@ -196,6 +199,7 @@ namespace FlyVRena2._0.VirtualWorld
             }
         }
 
+        // Create Save Directory
         public void CreateSaveDirectory(string protocolName, VRProtocol protocol)
         {
             int index0 = protocolName.LastIndexOf(".");
@@ -269,6 +273,7 @@ namespace FlyVRena2._0.VirtualWorld
             return result;
         }
 
+        // Close Protocol
         public void OnExiting()
         {
 
@@ -293,7 +298,6 @@ namespace FlyVRena2._0.VirtualWorld
             if (vRProtocol.usePulsePal)
             {
                 pp.OnExit();
-                //dataRecorder.OnExit();
             }
             this.kft.OnExit();
             if (vRProtocol.recordTracking)
@@ -308,6 +312,7 @@ namespace FlyVRena2._0.VirtualWorld
             update.OnExit();
         }
 
+        // Clear Memory
         public void Dispose()
         {
             if (vRProtocol.useCam1)
@@ -331,7 +336,6 @@ namespace FlyVRena2._0.VirtualWorld
             if (vRProtocol.usePulsePal)
             {
                 pp.DisposeModule();
-                //dataRecorder.DisposeModule();
             }
             this.kft.DisposeModule();
             if (vRProtocol.recordTracking)
