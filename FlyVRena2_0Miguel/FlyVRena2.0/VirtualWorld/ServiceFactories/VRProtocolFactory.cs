@@ -45,21 +45,6 @@ namespace FlyVRena2._0.VirtualWorld.ServiceFactories
         [XmlElement("FPSCam2")]
         public int cam2FPS;
 
-        [XmlElement("UseTreadmill")]
-        public bool useTreadmill;
-
-        [XmlElement("RecordTreadmill")]
-        public bool recTreadmill;
-        [XmlElement("PathRecordTreadmill")]
-        public string treadmillRecPath;
-
-        [XmlElement("UseDAC")]
-        public bool useDAC;
-        [XmlElement("RecordDAC")]
-        public bool recDAC;
-        [XmlElement("PathRecordDAC")]
-        public string DACRecPath;
-
         [XmlElement("UsePulsePal")]
         public bool usePulsePal;
         [XmlElement("PortPulsePal")]
@@ -79,7 +64,7 @@ namespace FlyVRena2._0.VirtualWorld.ServiceFactories
         {
             var wo = (IServiceContainer)provider.GetService(typeof(IServiceContainer));
             var vrProtocol = new VRProtocol(wo, VW, cam1pathParams, cam2pathParams, cam1Use, cam2Use, cam1Track, cam2Track, cam1Disp, cam2Disp, cam1Rec,
-                cam2Rec, cam1pathRec, cam2pathRec, cam1FPS, cam2FPS, useTreadmill, recTreadmill, treadmillRecPath, useDAC, recDAC, DACRecPath, usePulsePal,
+                cam2Rec, cam1pathRec, cam2pathRec, cam1FPS, cam2FPS, usePulsePal,
                 ppPort, recordTracking, recordTrackingRaw, pathRecordingTracking, duration);
             wo.AddService(typeof(VRProtocol), vrProtocol);
         }

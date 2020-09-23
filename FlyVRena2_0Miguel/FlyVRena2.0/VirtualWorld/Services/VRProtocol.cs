@@ -22,12 +22,6 @@ namespace FlyVRena2._0.VirtualWorld.Services
         public int fpsCam2 = 1;
         public string recordPathCam1 = "";
         public string recordPathCam2 = "";
-        public bool useTreadmill = false;
-        public bool recordTreadmill = false;
-        public string recordPathTreadmill = "";
-        public bool useDAC = false;
-        public bool recordDAC = false;
-        public string recordPathDAC = "";
         public bool usePulsePal = false;
         public string portPulsePal = "COM5";
         public bool recordTracking = false;
@@ -36,8 +30,8 @@ namespace FlyVRena2._0.VirtualWorld.Services
         public float duration = 10;
 
         public VRProtocol(IServiceProvider wObj, VirtualWorld VW, string cam1Params, string cam2Params, bool cam1Use, bool cam2Use, bool cam1Track, bool cam2Track,
-            bool cam1Disp, bool cam2Disp, bool cam1Rec, bool cam2Rec, string cam1StringRec, string cam2StringRec, int cam1FPS, int cam2FPS, bool treadmillUse,
-            bool treadmillRec, string treadmillRecPath, bool DACuse, bool DACrecord, string DACRecPath, bool pulsePalUse, string pulsePalPort, bool trackingRec, bool trackingRecRaw,
+            bool cam1Disp, bool cam2Disp, bool cam1Rec, bool cam2Rec, string cam1StringRec, string cam2StringRec, int cam1FPS, int cam2FPS,
+            bool pulsePalUse, string pulsePalPort, bool trackingRec, bool trackingRecRaw,
             string trackingRecPath, float duration)
         {
             this.paramsPathCam1 = cam1Params;
@@ -54,12 +48,6 @@ namespace FlyVRena2._0.VirtualWorld.Services
             this.fpsCam2 = cam2FPS;
             this.recordPathCam1 = cam1StringRec;
             this.recordPathCam2 = cam2StringRec;
-            this.useTreadmill = treadmillUse;
-            this.recordPathTreadmill = treadmillRecPath;
-            this.recordTreadmill = treadmillRec;
-            this.useDAC = DACuse;
-            this.recordDAC = DACrecord;
-            this.recordPathDAC = DACRecPath;
             this.usePulsePal = pulsePalUse;
             this.portPulsePal = pulsePalPort;
             this.recordTracking = trackingRec;

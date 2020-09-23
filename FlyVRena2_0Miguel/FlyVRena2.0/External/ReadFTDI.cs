@@ -66,34 +66,6 @@ namespace FlyVRena2._0.External
                 status = FTDI.FT_STATUS.FT_DEVICE_NOT_FOUND;
         }
 
-        public bool StartTreadmill()
-        {
-            myFtdiDevice.ResetDevice();
-            // Stop acquiring data
-            wBuffer[0] = 254;
-            wBuffer[1] = 0;
-            status |= myFtdiDevice.Write(wBuffer, 2, ref writenValues);
-            status |= myFtdiDevice.Purge(FTDI.FT_PURGE.FT_PURGE_TX | FTDI.FT_PURGE.FT_PURGE_RX);
-            // Start acquiring data
-            wBuffer[0] = 255;
-            wBuffer[1] = 0;
-            status |= myFtdiDevice.Write(wBuffer, 2, ref writenValues);
-            myFtdiDevice.ResetDevice();
-            myFtdiDevice.SetLatency(0);
-            toStart = (status == FTDI.FT_STATUS.FT_OK);
-            return toStart;
-        }
-
-        public void StopTreadmill()
-        {
-            // Stop acquisition
-            myFtdiDevice.Purge(FTDI.FT_PURGE.FT_PURGE_TX | FTDI.FT_PURGE.FT_PURGE_RX);
-            wBuffer[0] = 254;
-            wBuffer[1] = 0;
-            myFtdiDevice.Write(wBuffer, 2, ref writenValues);
-            myFtdiDevice.Purge(FTDI.FT_PURGE.FT_PURGE_TX | FTDI.FT_PURGE.FT_PURGE_RX);
-        }
-
         private ulong tickNumber = 0;
         [SecurityPermission(SecurityAction.Demand, Flags = SecurityPermissionFlag.ControlThread)]
         protected override void Work(CancellationToken cancellationToken)
@@ -124,7 +96,6 @@ namespace FlyVRena2._0.External
                            // sumValues[i] += value[i];
                         }
                         tickNumber++;
-                        Send<TreadmillData>(new TreadmillData(tickNumber, deviceNo, value, buffer[1]));
                     }
                     else
                     {

@@ -1,5 +1,4 @@
 ﻿using FlyVRena2._0.External;
-using FlyVRena2._0.External.NIDAC;
 using FlyVRena2._0.ImageProcessing;
 using FlyVRena2._0.VirtualWorld.ServiceFactories;
 using FlyVRena2._0.VirtualWorld.Services;
@@ -19,14 +18,12 @@ namespace FlyVRena2._0.VirtualWorld
         //Acquisition
         private uEyeCamera cam1;
         private uEyeCamera cam2;
-        private ReadFTDI treadmill;
         private PulsePal<MovementData> pp;
 
         // Vars Stimuli
         private WorldObject root;
         public VRProtocol vRProtocol;
         private FastTracking<Frame> fastT;
-        private TransformTreadmill<TreadmillData> tt;
         public KalmanFilterTrack<MovementData> kft;
 
         public RenderSubsystem render;
@@ -35,8 +32,6 @@ namespace FlyVRena2._0.VirtualWorld
         // Vars Data Storage
         private DataRecorder<FilteredData> dataRecorder;
         private DataRecorderRaw<MovementData> dataRecorderRaw;
-        private DACReader dacReader;
-        private DACRecorder<DACData> dacRecorder;
         public double _time = 0;
 
         public bool finish = false;
@@ -60,8 +55,6 @@ namespace FlyVRena2._0.VirtualWorld
             {
                 pp = new PulsePal<MovementData>(vRProtocol.portPulsePal);
                 pp.StartPulsePal();
-                //dataRecorder = new DataRecorder<FilteredData>(vRProtocol.recordPathTracking, cam2, this);
-                //dataRecorder.Start();
             }
             if (vRProtocol.useCam1)
             {
@@ -97,28 +90,6 @@ namespace FlyVRena2._0.VirtualWorld
                 }
             }
 
-            if (vRProtocol.useTreadmill)
-            {
-                treadmill = new ReadFTDI(0);
-                if (treadmill.status == FTD2XX_NET.FTDI.FT_STATUS.FT_OK)
-                {
-                    treadmill.Start();
-                    tt = new TransformTreadmill<TreadmillData>();
-                    tt.Start();
-                    kft.Start();
-                }
-            }
-            if (vRProtocol.recordTreadmill & vRProtocol.useCam2)
-            {
-                dataRecorder = new DataRecorder<FilteredData>(vRProtocol.recordPathTreadmill, cam2, this);
-                dataRecorder.Start();
-            }
-            else if (vRProtocol.recordTreadmill & !vRProtocol.useCam2)
-            {
-                dataRecorder = new DataRecorder<FilteredData>(vRProtocol.recordPathTreadmill, this);
-                dataRecorder.Start();
-            }
-
             if (vRProtocol.recordTracking & vRProtocol.useCam2)
             {
                 dataRecorder = new DataRecorder<FilteredData>(vRProtocol.recordPathTracking, cam2, true, this);
@@ -140,21 +111,6 @@ namespace FlyVRena2._0.VirtualWorld
                 dataRecorderRaw = new DataRecorderRaw<MovementData>(vRProtocol.recordPathTracking, true, this);
                 dataRecorderRaw.Start();
             }
-
-            if (vRProtocol.useDAC)
-            {
-                dacReader = new DACReader(-10, 10);
-                dacReader.Init();
-                if (vRProtocol.recordDAC)
-                {
-                    if (dacReader.dacON)
-                    {
-                        dacRecorder = new DACRecorder<DACData>(vRProtocol.recordPathDAC);
-                        dacRecorder.Start();
-                    }
-                }
-            }
-            
         }
 
         bool firstUp = true;
@@ -165,11 +121,6 @@ namespace FlyVRena2._0.VirtualWorld
             if (firstUp)
             {
                 firstUp = false;
-                if (vRProtocol.useTreadmill)
-                {
-                    if (treadmill.status == FTD2XX_NET.FTDI.FT_STATUS.FT_OK)
-                        treadmill.StartTreadmill();
-                }
                 if (vRProtocol.useCam1 && vRProtocol.recordCam1)
                 {
                     if (cam1.m_IsLive == true)
@@ -180,8 +131,6 @@ namespace FlyVRena2._0.VirtualWorld
                     if (cam2.m_IsLive == true)
                         cam2.RecordVideo(vRProtocol.recordPathCam2);
                 }
-                if (vRProtocol.useTreadmill)
-                    while (!treadmill.toStart) { }
                 stopwatch.Stop();
                 stopwatch.Start();
             }
@@ -192,10 +141,6 @@ namespace FlyVRena2._0.VirtualWorld
             }
             if (stopwatch.ElapsedMilliseconds >= 1000 * (vRProtocol.duration + 0.5) && secondUp)
             {
-                if (vRProtocol.useTreadmill)
-                {
-                    treadmill.StopTreadmill();
-                }
                 if (vRProtocol.useCam1 && vRProtocol.recordCam1)
                 {
                     if (cam1.m_IsLive == true)
@@ -244,7 +189,7 @@ namespace FlyVRena2._0.VirtualWorld
                 VRProtocolFactory vrpF = (VRProtocolFactory)root.objectBuilder[0];
                 vrpF.Initialize(root, this);
                 this.vRProtocol = (VRProtocol)root.GetService(typeof(VRProtocol));
-                if (vRProtocol.recordCam1 || vRProtocol.recordCam2 || vRProtocol.recordDAC || vRProtocol.recordTreadmill || vRProtocol.recordTracking || vRProtocol.recordTrackingRaw)
+                if (vRProtocol.recordCam1 || vRProtocol.recordCam2 || vRProtocol.recordTracking || vRProtocol.recordTrackingRaw)
                 {
                     CreateSaveDirectory(fileName, this.vRProtocol);
                 }
@@ -291,8 +236,6 @@ namespace FlyVRena2._0.VirtualWorld
             Directory.CreateDirectory(directory);
             protocol.recordPathCam1 = directory + protocol.recordPathCam1.Substring(protocol.recordPathCam1.LastIndexOf("\\"));
             protocol.recordPathCam2 = directory + protocol.recordPathCam2.Substring(protocol.recordPathCam2.LastIndexOf("\\"));
-            protocol.recordPathDAC = directory + protocol.recordPathDAC.Substring(protocol.recordPathDAC.LastIndexOf("\\"));
-            protocol.recordPathTreadmill = directory + protocol.recordPathTreadmill.Substring(protocol.recordPathTreadmill.LastIndexOf("\\"));
             protocol.recordPathTracking = directory + protocol.recordPathTracking.Substring(protocol.recordPathTracking.LastIndexOf("\\"));
         }
 
@@ -329,14 +272,6 @@ namespace FlyVRena2._0.VirtualWorld
         public void OnExiting()
         {
 
-            if (vRProtocol.useTreadmill)
-            {
-                if (treadmill.status == FTD2XX_NET.FTDI.FT_STATUS.FT_OK)
-                {
-                    this.tt.OnExit();
-                    this.treadmill.OnExit();
-                }
-            }
             if (vRProtocol.useCam1)
             {
                 if (cam1.m_IsLive == true)
@@ -355,27 +290,12 @@ namespace FlyVRena2._0.VirtualWorld
                     this.cam2.OnExit();
                 }
             }
-            if (vRProtocol.useDAC)
-            {
-                if (dacReader.dacON)
-                {
-                    dacReader.OnExit();
-                    if (vRProtocol.recordDAC)
-                    {
-                        dacRecorder.OnExit();
-                    }
-                }
-            }
             if (vRProtocol.usePulsePal)
             {
                 pp.OnExit();
                 //dataRecorder.OnExit();
             }
             this.kft.OnExit();
-            if (vRProtocol.recordTreadmill)
-            {
-                this.dataRecorder.OnExit();
-            }
             if (vRProtocol.recordTracking)
             {
                 this.dataRecorder.OnExit();
@@ -390,14 +310,6 @@ namespace FlyVRena2._0.VirtualWorld
 
         public void Dispose()
         {
-            if (vRProtocol.useTreadmill)
-            {
-                if (treadmill.status == FTD2XX_NET.FTDI.FT_STATUS.FT_OK)
-                {
-                    this.tt.DisposeModule();
-                    this.treadmill.DisposeModule();
-                }
-            }
             if (vRProtocol.useCam1)
             {
                 if (cam1.m_IsLive == true)
@@ -416,27 +328,12 @@ namespace FlyVRena2._0.VirtualWorld
                     this.cam2.DisposeModule();
                 }
             }
-            if (vRProtocol.useDAC)
-            {
-                if (dacReader.dacON)
-                {
-                    dacReader.DisposeModule();
-                    if (vRProtocol.recordDAC)
-                    {
-                        dacRecorder.DisposeModule();
-                    }
-                }
-            }
             if (vRProtocol.usePulsePal)
             {
                 pp.DisposeModule();
                 //dataRecorder.DisposeModule();
             }
             this.kft.DisposeModule();
-            if (vRProtocol.recordTreadmill)
-            {
-                this.dataRecorder.DisposeModule();
-            }
             if (vRProtocol.recordTracking)
             {
                 this.dataRecorder.DisposeModule();
