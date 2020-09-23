@@ -1,6 +1,7 @@
 ﻿using FlyVRena2._0.External;
 using FlyVRena2._0.Visualizers;
 using OpenCV.Net;
+using OpenTK.Graphics.ES20;
 using Sardine.Core;
 using System;
 using System.Diagnostics;
@@ -101,27 +102,9 @@ namespace FlyVRena2._0.ImageProcessing
                 double contourArea;
                 RotatedRect elipse;
                 Moments moments;
+                AngleVal orientation = new AngleVal() { Radians = 0f };
 
                 output = BackgroundSubtraction(output, (SmoothSize>0));
-
-
-                //// Smoothing Tresholding ------------------------------------------------------------------------
-                ////save the Current Image on the Background
-                //Background = output.Clone();
-
-                ////smooth the Current Image
-                //CV.Smooth(output, output, SmoothMethod.Median, SmoothSize);
-
-                ////subtract Background from frame
-                //CV.Sub(output, Background, output);
-                //// ----------------------------------------------------------------------------------------------
-
-                //// Background Subtraction -----------------------------------------------------------------------
-                //subtract Background from frame
-                //CV.Sub(Background, output, output);
-                //// ----------------------------------------------------------------------------------------------
-
-                // Find Fly -------------------------------------------------------------------------------------
                 
                 //Binarize the data
                 CV.Threshold(output, output, _thr, 255, ThresholdTypes.Binary);
@@ -138,7 +121,6 @@ namespace FlyVRena2._0.ImageProcessing
                         contourArea = CV.ContourArea(currentContour, SeqSlice.WholeSeq);
                         CV.DrawContours(output, currentContour, new Scalar(80), new Scalar(80), 1, -1);
                         //Console.WriteLine("{0}", contourArea);
-
                         //if number of pixels fit the expected for the fly, calculate the distribution moments
                         if (contourArea > bfArea && (contourArea > MinArea && contourArea < MaxArea))
                         {
@@ -147,10 +129,12 @@ namespace FlyVRena2._0.ImageProcessing
                             moments = new Moments(currentContour);
                             if (moments.M00 > 0)
                             {
-                                //transform moments into X,Y and orentation
+                                //transform moments into X,Y and orentation   
                                 trackResult[0] = Convert.ToSingle(moments.M10 / moments.M00);
                                 trackResult[1] = Convert.ToSingle(moments.M01 / moments.M00);
-                                trackResult[2] = 180f * Convert.ToSingle(0.5 * Math.Atan2(2 * (moments.M11 / moments.M00 - trackResult[0] * trackResult[1]), (moments.M20 / moments.M00 - trackResult[0] * trackResult[0]) - (moments.M02 / moments.M00 - trackResult[1] * trackResult[1]))) / Convert.ToSingle(Math.PI);
+                                orientation.Radians = Convert.ToSingle(0.5 * Math.Atan2(2 * (moments.M11 / moments.M00 - trackResult[0] * trackResult[1]),
+                                    moments.M20 / moments.M00 - trackResult[0] * trackResult[0])
+                                    - (moments.M02 / moments.M00 - trackResult[1] * trackResult[1]));
 
                                 if (moments.M00 > 5)
                                 {
@@ -162,34 +146,31 @@ namespace FlyVRena2._0.ImageProcessing
                                 {
                                     majoraxis = 0f;
                                 }
-                                trackResult[3] = majoraxis;
-
                             }
-                            CV.DrawContours(output, currentContour, new Scalar(255), new Scalar(255), 1, -1);
-                            
-                            
+                            CV.DrawContours(output, currentContour, new Scalar(255), new Scalar(255), 1, -1);        
                         }
                         bfArea = contourArea;
                     }
                 }
 
-                // ----------------------------------------------------------------------------------------------
+                orientation = CorrectedOrientation(orientation, trackPreviousResult[2]);
 
-                // Correct Orientation Based on Previous Tracking
-                trackResult[2] = CorrectedOrientation(trackResult[2], trackPreviousResult[2]);
+                trackResult[2] = orientation.Degrees;
 
                 // Find Fly Head
                 if (majoraxis > 0)
                 {
-                    trackResult[3] = trackResult[0] + Convert.ToSingle(Math.Cos(trackResult[2] * Math.PI / 180f)) * majoraxis / 2f;
-                    trackResult[4] = trackResult[1] + Convert.ToSingle(Math.Sin(trackResult[2] * Math.PI / 180f)) * majoraxis / 2f;
+                    trackResult[3] = trackResult[0] + Convert.ToSingle(Math.Cos(orientation.Radians)) * majoraxis / 2f;
+                    trackResult[4] = trackResult[1] + Convert.ToSingle(Math.Sin(orientation.Radians)) * majoraxis / 2f;
                 }
                 else
                 {
                     trackResult[3] = trackResult[0];
                     trackResult[4] = trackResult[1];
                 }
-                CV.Circle(output, new Point(Convert.ToInt32(trackResult[3] + Convert.ToSingle(Math.Cos(trackResult[2] * Math.PI / 180f)) * 3), Convert.ToInt32(trackResult[4] + Convert.ToSingle(Math.Sin(trackResult[2] * Math.PI / 180f)) * 3)), 1, new Scalar(255,0,0));
+
+                CV.Circle(output, new Point(Convert.ToInt32(trackResult[3] + Convert.ToSingle(Math.Cos(orientation.Radians)) * 3), Convert.ToInt32(trackResult[4] + Convert.ToSingle(Math.Cos(orientation.Radians)) * 3)), 1, new Scalar(255,0,0));
+
 
                 if (boolDisplayTrackingResult)
                     imVis.Show(output.Clone());
@@ -198,21 +179,31 @@ namespace FlyVRena2._0.ImageProcessing
             }
         }
 
-        //correct orientation to try to avoid jumps and make it contnuous (no modulus)
-        public float CorrectedOrientation(float or, float orp)
+        //Auxiliar Functions ------------------------------------------------------------------------
+        public AngleVal CorrectedOrientation(AngleVal or, float orp)
         {
             //number of pi rotations in one frame
-            int npi = (int)Math.Round((orp - or) / 180f);
+            int npi = (int)Math.Round((orp - or.Degrees) / 180f);
 
             //remove or add appropriate pi rotations
-            if (Math.Abs(Mod2pi(or - orp + 180f) / 2) > Math.Abs(Mod2pi(or - orp)))
+            if (Math.Abs(Mod2pi(or.Degrees - orp + 180f) / 2) > Math.Abs(Mod2pi(or.Degrees - orp)))
             {
-                return or + (npi - npi % 2) * 180f;
+                or.Degrees += (npi - npi % 2) * 180f;
             }
             else
             {
-                return or + npi * 180f;
+                or.Degrees += npi * 180f;
             }
+
+            return or;
+        }
+
+        //Make the angle modulus 2pi 
+        public float Mod2pi(float or)
+        {
+            while (or <= -180f) or += 2 * (float)180f;
+            while (or > 180f) or -= 2 * (float)180f;
+            return or;
         }
 
         public IplImage BackgroundSubtraction(IplImage output, bool boolSmooth)
@@ -226,33 +217,26 @@ namespace FlyVRena2._0.ImageProcessing
 
             return output;
         }
-
-        //Make the angle modulus 2pi 
-        public float Mod2pi(float or)
-        {
-            while (or <= -180f) or += 2 * (float)180f;
-            while (or > 180f) or -= 2 * (float)180f;
-            return or;
-        }
+        //Auxiliar Functions ------------------------------------------------------------------------
 
         protected override void Process(T data)
         {
-            float[] currentTracking;
+            float[] trackCurrentResult;
             using (IplImage input = data.image)
             {
-                currentTracking = ObtainTrackingData(input);
+                trackCurrentResult = ObtainTrackingData(input);
             }
 
             this.Send<MovementData>(new MovementData(data.ID, data.source, new float[] {
-                currentTracking[0],
-                currentTracking[1],
-                currentTracking[2],
-                ((currentTracking[0]-trackPreviousResult[0])*(float)Math.Cos(Math.PI*currentTracking[2]/180) + (currentTracking[1]-trackPreviousResult[1])*(float)Math.Sin(Math.PI*currentTracking[2]/180))*data.frameRate ,
-                (-(currentTracking[0]-trackPreviousResult[0])*(float)Math.Sin(Math.PI*currentTracking[2]/180) + (currentTracking[1]-trackPreviousResult[1])*(float)Math.Cos(Math.PI*currentTracking[2]/180))*data.frameRate ,
-                (currentTracking[2] - trackPreviousResult[2])*data.frameRate },
-                new float[] { currentTracking[3], currentTracking[4]
+                trackCurrentResult[0],
+                trackCurrentResult[1],
+                trackCurrentResult[2],
+                ((trackCurrentResult[0]-trackPreviousResult[0])*(float)Math.Cos(Math.PI*trackCurrentResult[2]/180) + (trackCurrentResult[1]-trackPreviousResult[1])*(float)Math.Sin(Math.PI*trackCurrentResult[2]/180))*data.frameRate ,
+                (-(trackCurrentResult[0]-trackPreviousResult[0])*(float)Math.Sin(Math.PI*trackCurrentResult[2]/180) + (trackCurrentResult[1]-trackPreviousResult[1])*(float)Math.Cos(Math.PI*trackCurrentResult[2]/180))*data.frameRate ,
+                (trackCurrentResult[2] - trackPreviousResult[2])*data.frameRate },
+                new float[] { trackCurrentResult[3], trackCurrentResult[4]
                 }));
-            trackPreviousResult = currentTracking;
+            trackPreviousResult = trackCurrentResult;
             data.image.Dispose();
         }
 

@@ -227,6 +227,7 @@
     <Compile Include="Display\TexturedObject.cs" />
     <Compile Include="Display\TexturedVertex.cs" />
     <Compile Include="Display\VertexFactory.cs" />
+    <Compile Include="External\AngleVal.cs" />
     <Compile Include="External\Coordinates.cs" />
     <Compile Include="External\DataRecorder.cs" />
     <Compile Include="External\DataRecorderRaw.cs" />

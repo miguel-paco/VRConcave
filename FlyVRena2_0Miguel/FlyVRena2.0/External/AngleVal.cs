@@ -22,12 +22,12 @@ namespace FlyVRena2._0.External
             }
         }
 
-        public virtual float Degree
+        public virtual float Degrees
         {
-            get => Deg2Rad(Degree);
+            get => Rad2Deg(Radians);
             set
             {
-                Degree = Rad2Deg(value);
+                Radians = Deg2Rad(value);
                 NotifyPropertyChanged();
             }
         }
