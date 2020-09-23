@@ -11,10 +11,12 @@ namespace FlyVRena2._0.ImageProcessing
     {
         Stopwatch stopWatch = new Stopwatch(); // Check process time auxiliar variable
 
-        
-        bool disp; // Bool to turn on or off the Tracking Result Display
-        private float[] prevTrack = new float[5]; // Value to save the old tracking value
-        private IplImage Mask; // Image to use as support on the tresholding methods (either as a reference to subtract or to save current image)
+        bool boolDisplayTrackingResult;
+        private float[] trackPreviousResult = new float[5];
+        // trackPreviousResult[0] - X Coord (Arena Pixels);
+        // trackPreviousResult[1] - Y Coord (Arena Pixels);
+        // trackPreviousResult[2] - Orientation (Degrees);
+        private IplImage Background;
         
         private int _minArea = 0; 
         public int MinArea
@@ -26,7 +28,6 @@ namespace FlyVRena2._0.ImageProcessing
                 Changed("FlyMinArea");
             }
         }
-
         private int _maxArea = 0; 
         public int MaxArea
         {
@@ -37,7 +38,6 @@ namespace FlyVRena2._0.ImageProcessing
                 Changed("FlyMaxArea");
             }
         }
-
         private int _thr = 0; 
         public int Thr
         {
@@ -48,7 +48,6 @@ namespace FlyVRena2._0.ImageProcessing
                 Changed("FlyThreshold");
             }
         }
-
         private int _smooth = 1;
         public int SmoothSize
         {
@@ -66,16 +65,16 @@ namespace FlyVRena2._0.ImageProcessing
         ServiceProvider provider;
 
 
-        public FastTracking(Frame mask, int minA, int maxA, int thr, int smooth, bool disp)
+        public FastTracking(Frame mask, int minA, int maxA, int thr, int smooth, bool boolDisplayTrackingResult)
         {
             //Initialize with pre-defined parameters. Modify and re-compile to alter tracking parameters. 
             MinArea = minA;
             MaxArea = maxA;
             Thr = thr;
             SmoothSize = smooth;
-            this.disp = disp;
-            Mask = mask.image; // In background subtraction method, this will be the first adquired frame 
-            if (disp)
+            this.boolDisplayTrackingResult = boolDisplayTrackingResult;
+            Background = mask.image; // In background subtraction method, this will be the first adquired frame 
+            if (boolDisplayTrackingResult)
             {
                 provider = new ServiceProvider();
                 vis = new TypeVisualizerDialog();
@@ -89,12 +88,12 @@ namespace FlyVRena2._0.ImageProcessing
         
         public float[] ObtainTrackingData(IplImage output)
         {
-            float[] param = new float[5] { 0, 0, 0, 0, 0};
+            float[] trackResult = new float[5] { 0, 0, 0, 0, 0};
 
-            if (Mask == null) // if no first frame
+            if (Background == null) // if no first frame
             {
-                Mask = output.Clone();
-                return param;
+                Background = output.Clone();
+                return trackResult;
             }
             else
             {
@@ -103,20 +102,23 @@ namespace FlyVRena2._0.ImageProcessing
                 RotatedRect elipse;
                 Moments moments;
 
+                output = BackgroundSubtraction(output, (SmoothSize>0));
+
+
                 //// Smoothing Tresholding ------------------------------------------------------------------------
-                ////save the Current Image on the Mask
-                //Mask = output.Clone();
+                ////save the Current Image on the Background
+                //Background = output.Clone();
 
                 ////smooth the Current Image
                 //CV.Smooth(output, output, SmoothMethod.Median, SmoothSize);
 
-                ////subtract mask from frame
-                //CV.Sub(output, Mask, output);
+                ////subtract Background from frame
+                //CV.Sub(output, Background, output);
                 //// ----------------------------------------------------------------------------------------------
 
                 //// Background Subtraction -----------------------------------------------------------------------
-                //subtract mask from frame
-                CV.Sub(Mask, output, output);
+                //subtract Background from frame
+                //CV.Sub(Background, output, output);
                 //// ----------------------------------------------------------------------------------------------
 
                 // Find Fly -------------------------------------------------------------------------------------
@@ -146,9 +148,9 @@ namespace FlyVRena2._0.ImageProcessing
                             if (moments.M00 > 0)
                             {
                                 //transform moments into X,Y and orentation
-                                param[0] = Convert.ToSingle(moments.M10 / moments.M00);
-                                param[1] = Convert.ToSingle(moments.M01 / moments.M00);
-                                param[2] = 180f * Convert.ToSingle(0.5 * Math.Atan2(2 * (moments.M11 / moments.M00 - param[0] * param[1]), (moments.M20 / moments.M00 - param[0] * param[0]) - (moments.M02 / moments.M00 - param[1] * param[1]))) / Convert.ToSingle(Math.PI);
+                                trackResult[0] = Convert.ToSingle(moments.M10 / moments.M00);
+                                trackResult[1] = Convert.ToSingle(moments.M01 / moments.M00);
+                                trackResult[2] = 180f * Convert.ToSingle(0.5 * Math.Atan2(2 * (moments.M11 / moments.M00 - trackResult[0] * trackResult[1]), (moments.M20 / moments.M00 - trackResult[0] * trackResult[0]) - (moments.M02 / moments.M00 - trackResult[1] * trackResult[1]))) / Convert.ToSingle(Math.PI);
 
                                 if (moments.M00 > 5)
                                 {
@@ -160,7 +162,7 @@ namespace FlyVRena2._0.ImageProcessing
                                 {
                                     majoraxis = 0f;
                                 }
-                                param[3] = majoraxis;
+                                trackResult[3] = majoraxis;
 
                             }
                             CV.DrawContours(output, currentContour, new Scalar(255), new Scalar(255), 1, -1);
@@ -174,25 +176,25 @@ namespace FlyVRena2._0.ImageProcessing
                 // ----------------------------------------------------------------------------------------------
 
                 // Correct Orientation Based on Previous Tracking
-                param[2] = CorrectedOrientation(param[2], prevTrack[2]);
+                trackResult[2] = CorrectedOrientation(trackResult[2], trackPreviousResult[2]);
 
                 // Find Fly Head
                 if (majoraxis > 0)
                 {
-                    param[3] = param[0] + Convert.ToSingle(Math.Cos(param[2] * Math.PI / 180f)) * majoraxis / 2f;
-                    param[4] = param[1] + Convert.ToSingle(Math.Sin(param[2] * Math.PI / 180f)) * majoraxis / 2f;
+                    trackResult[3] = trackResult[0] + Convert.ToSingle(Math.Cos(trackResult[2] * Math.PI / 180f)) * majoraxis / 2f;
+                    trackResult[4] = trackResult[1] + Convert.ToSingle(Math.Sin(trackResult[2] * Math.PI / 180f)) * majoraxis / 2f;
                 }
                 else
                 {
-                    param[3] = param[0];
-                    param[4] = param[1];
+                    trackResult[3] = trackResult[0];
+                    trackResult[4] = trackResult[1];
                 }
-                CV.Circle(output, new Point(Convert.ToInt32(param[3] + Convert.ToSingle(Math.Cos(param[2] * Math.PI / 180f)) * 3), Convert.ToInt32(param[4] + Convert.ToSingle(Math.Sin(param[2] * Math.PI / 180f)) * 3)), 1, new Scalar(255,0,0));
+                CV.Circle(output, new Point(Convert.ToInt32(trackResult[3] + Convert.ToSingle(Math.Cos(trackResult[2] * Math.PI / 180f)) * 3), Convert.ToInt32(trackResult[4] + Convert.ToSingle(Math.Sin(trackResult[2] * Math.PI / 180f)) * 3)), 1, new Scalar(255,0,0));
 
-                if (disp)
+                if (boolDisplayTrackingResult)
                     imVis.Show(output.Clone());
 
-                return param;
+                return trackResult;
             }
         }
 
@@ -211,6 +213,18 @@ namespace FlyVRena2._0.ImageProcessing
             {
                 return or + npi * 180f;
             }
+        }
+
+        public IplImage BackgroundSubtraction(IplImage output, bool boolSmooth)
+        {
+            //smooth the Current Image
+            if (boolSmooth)
+                CV.Smooth(output, Background, SmoothMethod.Median, SmoothSize);
+
+            //subtract Background from frame
+            CV.Sub(Background, output, output);
+
+            return output;
         }
 
         //Make the angle modulus 2pi 
@@ -233,12 +247,12 @@ namespace FlyVRena2._0.ImageProcessing
                 currentTracking[0],
                 currentTracking[1],
                 currentTracking[2],
-                ((currentTracking[0]-prevTrack[0])*(float)Math.Cos(Math.PI*currentTracking[2]/180) + (currentTracking[1]-prevTrack[1])*(float)Math.Sin(Math.PI*currentTracking[2]/180))*data.frameRate ,
-                (-(currentTracking[0]-prevTrack[0])*(float)Math.Sin(Math.PI*currentTracking[2]/180) + (currentTracking[1]-prevTrack[1])*(float)Math.Cos(Math.PI*currentTracking[2]/180))*data.frameRate ,
-                (currentTracking[2] - prevTrack[2])*data.frameRate },
+                ((currentTracking[0]-trackPreviousResult[0])*(float)Math.Cos(Math.PI*currentTracking[2]/180) + (currentTracking[1]-trackPreviousResult[1])*(float)Math.Sin(Math.PI*currentTracking[2]/180))*data.frameRate ,
+                (-(currentTracking[0]-trackPreviousResult[0])*(float)Math.Sin(Math.PI*currentTracking[2]/180) + (currentTracking[1]-trackPreviousResult[1])*(float)Math.Cos(Math.PI*currentTracking[2]/180))*data.frameRate ,
+                (currentTracking[2] - trackPreviousResult[2])*data.frameRate },
                 new float[] { currentTracking[3], currentTracking[4]
                 }));
-            prevTrack = currentTracking;
+            trackPreviousResult = currentTracking;
             data.image.Dispose();
         }
 
@@ -254,7 +268,7 @@ namespace FlyVRena2._0.ImageProcessing
 
         public void DisposeModule()
         {
-            Mask.Dispose();
+            Background.Dispose();
             this.Dispose();
         }
     }
