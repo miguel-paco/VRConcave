@@ -1,0 +1,8 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<WorldObject xmlns:ServiceFactories="FlyVRena2._0.VirtualWorld.ServiceFactories">
+  <objectBuilder>
+    <VRProtocolFactory>
+      <DurationInSeconds>300</DurationInSeconds>
+  </VRProtocolFactory>
+  </objectBuilder>
+</WorldObject>

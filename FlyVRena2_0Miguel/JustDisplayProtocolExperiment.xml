@@ -1,0 +1,67 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<WorldObject xmlns:ServiceFactories="FlyVRena2._0.VirtualWorld.ServiceFactories">
+  <WObjects>
+    <WorldObject>
+      <WObjects/>
+      <objectBuilder>
+        <NameFactory>
+          <name>Obj1</name>
+        </NameFactory>
+        <PositionFactory>
+          <x>200</x>
+          <y>0</y>
+          <z>1</z>
+          <rx>0</rx>
+          <ry>0</ry>
+          <rz>2</rz>  
+          <scale>1</scale>
+        </PositionFactory>
+        <DarkEllipseFactory>
+          <ellipseXRadius>100</ellipseXRadius>
+          <ellipseYRadius>50</ellipseYRadius>
+          <nPoints>20</nPoints>
+        </DarkEllipseFactory>
+        <!--<TexturedSquareFactory>
+          <texturePath>C:\Users\tomas\Documents\FlyVRena\VisualStim\10d-01.png</texturePath>
+          <textureSize>1024</textureSize>
+        </TexturedSquareFactory>-->
+        <UpdateWithFlyConstantDriftFactory>
+          <rSpeed>-1</rSpeed>
+          <direction>angular</direction>
+          <Trials>
+            <Trial TrialType="Obj1" TrialDuration="5"/>
+          </Trials>
+        </UpdateWithFlyConstantDriftFactory>
+      </objectBuilder>
+    </WorldObject>
+  </WObjects>
+  <objectBuilder>
+    <VRProtocolFactory>
+      <UseCam1>true</UseCam1>
+      <UseCam2>true</UseCam2>
+      <PathParamsCam1>C:\Users\Chiappee\Desktop\p1 600x600.ini</PathParamsCam1>
+      <PathParamsCam2>C:\Users\Chiappee\Desktop\p2 - 1024x544.ini</PathParamsCam2>
+      <Cam1Disp>true</Cam1Disp>
+      <Cam2Disp>true</Cam2Disp>
+      <RecordCam1>false</RecordCam1>
+      <RecordCam2>false</RecordCam2>
+      <PathRecordCam1> </PathRecordCam1>
+      <PathRecordCam2> </PathRecordCam2>
+      <Cam1Track>true</Cam1Track>
+      <Cam2Track>false</Cam2Track>
+      <FPSCam1>60</FPSCam1>
+      <FPSCam2>120</FPSCam2>
+      <UseTreadmill>false</UseTreadmill>
+      <RecordTreadmill>false</RecordTreadmill>
+      <PathRecordTreadmill> </PathRecordTreadmill>
+      <UseDAC>false</UseDAC>
+      <RecordDAC>false</RecordDAC>
+      <PathRecordDAC> </PathRecordDAC>
+      <UsePulsePal>false</UsePulsePal>
+      <PortPulsePal>COM5</PortPulsePal>
+      <PathRecordingTracking>C:\Users\tomas\Desktop\f1.txt</PathRecordingTracking>
+      <DurationInSeconds>5</DurationInSeconds>
+  
+  </VRProtocolFactory>
+  </objectBuilder>
+</WorldObject>
