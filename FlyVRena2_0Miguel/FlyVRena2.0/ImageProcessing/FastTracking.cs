@@ -13,12 +13,15 @@ namespace FlyVRena2._0.ImageProcessing
         Stopwatch stopWatch = new Stopwatch(); // Check process time auxiliar variable
 
         bool boolDisplayTrackingResult;
-        private float[] trackPreviousResult = new float[5];
+        private float[] trackPreviousResult = new float[5] { 0, 0, 0, 0, 0 };
         // trackPreviousResult[0] - X Coord (Arena Pixels);
         // trackPreviousResult[1] - Y Coord (Arena Pixels);
         // trackPreviousResult[2] - Orientation (Degrees);
+        // trackPreviousResult[3] - X Head Coord (Arena Pixels);
+        // trackPreviousResult[4] - Y Head Coord (Arena Pixels);
         private IplImage Background;
-        
+        private float[] trackMovementDirection = new float[10] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+
         private int _minArea = 0; 
         public int MinArea
         {
@@ -153,6 +156,8 @@ namespace FlyVRena2._0.ImageProcessing
                     }
                 }
 
+                orientation = HeadTailOrientation(trackResult[0], trackResult[1], orientation);
+
                 orientation = CorrectedOrientation(orientation, trackPreviousResult[2]);
 
                 trackResult[2] = orientation.Degrees;
@@ -197,12 +202,47 @@ namespace FlyVRena2._0.ImageProcessing
 
             return or;
         }
-
-        //Make the angle modulus 2pi 
+                
         public float Mod2pi(float or)
         {
+            //Make the angle modulus 2pi 
             while (or <= -180f) or += 2 * (float)180f;
             while (or > 180f) or -= 2 * (float)180f;
+            return or;
+        }
+
+        public AngleVal HeadTailOrientation (float X, float Y, AngleVal or)
+        {
+            int idx = 0;
+            int check = 1;
+            float average = 0f;
+            float norm;
+            Point2f previous = new Point2f(trackPreviousResult[0] - trackPreviousResult[3], trackPreviousResult[1] - trackPreviousResult[4]);
+            Point2f current = new Point2f(trackPreviousResult[0] - X, trackPreviousResult[1] - Y);
+            AngleVal theta = new AngleVal() { Radians = 0f };
+
+            norm = (float)Math.Sqrt((previous.X - current.X) * (previous.X - current.X) +
+                (previous.Y - current.Y) * (previous.Y - current.Y));
+            theta.Radians = (float)Math.Acos((previous.X * current.X + previous.Y * current.Y) / norm);
+
+            while (idx < 9)
+            {
+                trackMovementDirection[idx] = trackMovementDirection[idx + 1];
+                idx += 1;
+                check = check * (int)trackMovementDirection[idx];
+                average += trackMovementDirection[idx];
+            }
+
+            if (Math.Abs(theta.Degrees) > 90) { trackMovementDirection[9] = -1; } else { trackMovementDirection[9] = 1; };
+
+            average += trackMovementDirection[9];
+
+            if (average < 0 && check!=0)
+            {
+                or.Degrees += 180;
+                trackMovementDirection[9] = 0;
+            }
+
             return or;
         }
 

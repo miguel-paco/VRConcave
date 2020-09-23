@@ -64,7 +64,7 @@ namespace FlyVRena2._0.VirtualWorld
                     cam1.Start();
                     if (vRProtocol.trackCam1)
                     {
-                        fastT = new FastTracking<Frame>(cam1.firstFrame, 1, 30, 50, 21, true);
+                        fastT = new FastTracking<Frame>(cam1.firstFrame, 1, 100, 50, 21, true);
                         fastT.Start();
                         kft.Start();
                     }
