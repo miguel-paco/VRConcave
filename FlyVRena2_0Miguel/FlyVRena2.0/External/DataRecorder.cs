@@ -10,6 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using OpenCV.Net;
 
 namespace FlyVRena2._0.External
 {
@@ -61,17 +62,25 @@ namespace FlyVRena2._0.External
 
         protected override void Process(T data)
         {
+            Coordinates centroid = new Coordinates() { PixelsCurve = new Point2d(data.rawposition[0], data.rawposition[1]) };
+            Coordinates head = new Coordinates() { PixelsCurve = new Point2d(data.head[0], data.head[1]) };
+            float orientation = data.rawposition[2];
+
+            // General save Structure:
+            // FramesCam1 TrackingClock RawTrackingcentroidX(mm) RawTrackingCentroidY(mm) RawTrackingOrientation(deg) RawTrackingHeadX(mm) RawTrackingHeadY(mm) ExperimentTimer FramesCam2
             if (writeTracking)
             {
                 if (cam != null)
                 {
-                    fileStream.WriteLine(data.ID.ToString() + " " + data.clock.ToString() + " " + data.position[0].ToString() + " " + data.position[1].ToString() + " " + 
-                        data.position[2].ToString() + " " + (vw._time).ToString("F6", CultureInfo.InvariantCulture) + " " + cam.m_s32FrameCoutTotal.ToString());
+                    fileStream.WriteLine(data.ID.ToString() + " " + data.clock.ToString() + " " + centroid.MillimetersCurve.X.ToString() + " " + centroid.MillimetersCurve.Y.ToString() + " " +
+                        orientation.ToString() + " " + head.MillimetersCurve.X.ToString() + " " + head.MillimetersCurve.Y.ToString() + " " +
+                        (vw._time).ToString("F6", CultureInfo.InvariantCulture) + " " + cam.m_s32FrameCoutTotal.ToString());
                 }
                 else
                 {
                     fileStream.WriteLine(data.ID.ToString() + " " + data.clock.ToString() + " " +
-                        data.position[0].ToString() + " " + data.position[1].ToString() + " " + data.position[2].ToString() + " " + (vw._time).ToString("F6", CultureInfo.InvariantCulture));
+                        centroid.MillimetersCurve.X.ToString() + " " + centroid.MillimetersCurve.Y.ToString() + " " + orientation.ToString() + " " +
+                        head.MillimetersCurve.X.ToString() + " " + head.MillimetersCurve.Y.ToString() + " " + (vw._time).ToString("F6", CultureInfo.InvariantCulture));
                 }
             }
             else
@@ -89,6 +98,7 @@ namespace FlyVRena2._0.External
                 }
             }
         }
+    }
 
 
         public void OnExit()

@@ -42,7 +42,7 @@ namespace FlyVRena2._0.ImageProcessing
 
         //Filter data and store values
 
-        private void filterPoints(float[] pt)
+        private float[] filterPoints(float[] pt)
         {
             //add tracking data as filter state
             mk.state[0, 0] = pt[0];
@@ -58,12 +58,17 @@ namespace FlyVRena2._0.ImageProcessing
             pars[0] = estimated[0, 0];
             pars[1] = estimated[1, 0];
             pars[2] = estimated[2, 0] / 5f;
+
+            return pars;
         }
 
         protected override void Process(T data)
         {
-            //filterPoints(data.position);
-            Send<FilteredData>(new FilteredData(data.ID, data.source, data.position, data.velocity, data.raw, data.clock));
+            float[] estimate;
+
+            //estimate = filterPoints(data.position);
+            estimate = data.position;
+            Send<FilteredData>(new FilteredData(data.ID, data.source, estimate, data.velocity, data.raw, data.clock, data.position, data.head));
         }
 
         //Dispose of all initiated objects
