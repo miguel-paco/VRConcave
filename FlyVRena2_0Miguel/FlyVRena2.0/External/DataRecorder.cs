@@ -98,9 +98,7 @@ namespace FlyVRena2._0.External
                 }
             }
         }
-    }
-
-
+    
         public void OnExit()
         {
             fileStream.Close();
