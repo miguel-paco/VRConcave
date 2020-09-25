@@ -105,6 +105,7 @@ namespace FlyVRena2._0.ImageProcessing
                 double contourArea;
                 RotatedRect elipse;
                 Moments moments;
+                Point2f head;
                 AngleVal orientation = new AngleVal() { Radians = 0f };
 
                 output = BackgroundSubtraction(output, (SmoothSize>0));
@@ -136,8 +137,8 @@ namespace FlyVRena2._0.ImageProcessing
                                 trackResult[0] = Convert.ToSingle(moments.M10 / moments.M00);
                                 trackResult[1] = Convert.ToSingle(moments.M01 / moments.M00);
                                 orientation.Radians = Convert.ToSingle(0.5 * Math.Atan2(2 * (moments.M11 / moments.M00 - trackResult[0] * trackResult[1]),
-                                    moments.M20 / moments.M00 - trackResult[0] * trackResult[0])
-                                    - (moments.M02 / moments.M00 - trackResult[1] * trackResult[1]));
+                                    (moments.M20 / moments.M00 - trackResult[0] * trackResult[0])
+                                    - (moments.M02 / moments.M00 - trackResult[1] * trackResult[1])));
 
                                 if (moments.M00 > 5)
                                 {
@@ -161,6 +162,7 @@ namespace FlyVRena2._0.ImageProcessing
                 orientation = CorrectedOrientation(orientation, trackPreviousResult[2]);
 
                 trackResult[2] = orientation.Degrees;
+                Console.WriteLine("{0}", trackResult[2]);
 
                 // Find Fly Head
                 if (majoraxis > 0)
@@ -174,7 +176,8 @@ namespace FlyVRena2._0.ImageProcessing
                     trackResult[4] = trackResult[1];
                 }
 
-                CV.Circle(output, new Point(Convert.ToInt32(trackResult[3]), Convert.ToInt32(trackResult[4])), 1, new Scalar(255,0,0));
+                //CV.Circle(output, new Point(Convert.ToInt32(trackResult[3]), Convert.ToInt32(trackResult[4])), 0, new Scalar(125));
+                CV.Line(output, new Point(Convert.ToInt32(trackResult[0]), Convert.ToInt32(trackResult[1])), new Point(Convert.ToInt32(trackResult[3]), Convert.ToInt32(trackResult[4])), new Scalar(125));
 
 
                 if (boolDisplayTrackingResult)

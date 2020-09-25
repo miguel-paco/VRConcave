@@ -36,8 +36,8 @@
       <PathParamsCam2>C:\Users\ALBINO\Desktop\HighResCamParams.ini</PathParamsCam2>
       <Cam1Disp>true</Cam1Disp>
       <Cam2Disp>true</Cam2Disp>
-      <RecordCam1>true</RecordCam1>
-      <RecordCam2>true</RecordCam2>
+      <RecordCam1>false</RecordCam1>
+      <RecordCam2>false</RecordCam2>
       <PathRecordCam1>C:\Users\ALBINO\Desktop\Vid1</PathRecordCam1>
       <PathRecordCam2>C:\Users\ALBINO\Desktop\Vid2</PathRecordCam2>
       <Cam1Track>true</Cam1Track>
