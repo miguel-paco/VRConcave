@@ -55,26 +55,12 @@ namespace FlyVRena2._0.External
             }
         }
 
-        public virtual Point2d PixelsLine
-        {
-            
-
-            get => MMl2PXl(MMc2MMl(MillimetersCurve));
-            set
-            {
-                MillimetersCurve = MMl2MMc(PXl2MMl(value));
-                NotifyPropertyChanged();
-            }
-        }
-
         public virtual Point2d VirtualRealityLine
         {
-
-
-            get => PXl2VRl(MMl2PXl(MMc2MMl(MillimetersCurve)));
+            get => MMl2VRl(MMc2MMl(MillimetersCurve));
             set
             {
-                MillimetersCurve = MMl2MMc(PXl2MMl(VRl2PXl(value)));
+                MillimetersCurve = MMl2MMc(VRl2MMl(value));
                 NotifyPropertyChanged();
             }
         }
@@ -86,15 +72,15 @@ namespace FlyVRena2._0.External
 
             // Conversion Matrix Values: 3x3 Matrix [a,b,c; d,e,f; g,h,i]
             // (set 'a','e'&'i' to 1 and the rest to 0 - identity matrix - if there is no transformation)
-            const float a = 0.00032428f;
-            const float b = -0.012138f;
-            const float c = 0.7292f;
-            const float d = -0.011639f;
-            const float e = 0.00022908f;
-            const float f = 0.68407f;
-            const float g = 4.3019e-06f;
-            const float h = 4.6682e-07f;
-            const float i = 0.0066826f;
+            const float a = 0.00073814f;
+            const float b = -0.012449f;
+            const float c = 0.71826f;
+            const float d = -0.011906f;
+            const float e = -0.00015285f;
+            const float f = 0.69555f;
+            const float g = 2.3365e-06f;
+            const float h = 2.3884e-07f;
+            const float i = 0.0034217f;
 
             // If there is a displacement between the current image and the calibrated image (set to 0 if there is no displacement)
             const float dispX = 0f;
@@ -113,15 +99,15 @@ namespace FlyVRena2._0.External
 
             // Conversion Matrix Values: 3x3 Matrix [a,b,c; d,e,f; g,h,i]
             // (set 'a','e'&'i' to 1 and the rest to 0 - identity matrix - if there is no transformation)
-            const float a = 9.9966e-05f;
-            const float b = 0.0067039f;
-            const float c = -0.69716f;
-            const float d = 0.0066433f;
-            const float e = -7.9659e-05f;
-            const float f = -0.71676f;
-            const float g = -5.2483e-07f;
-            const float h = -4.3019e-06f;
-            const float i = -0.011623f;
+            const float a = -5.5156e-05f;
+            const float b = 0.0034323f;
+            const float c = -0.68613f;
+            const float d = 0.0033991f;
+            const float e = 6.8197e-05f;
+            const float f = -0.72737f;
+            const float g = -2.0012e-07f;
+            const float h = -2.3404e-06f;
+            const float i = -0.011905f;
 
             // If there is a displacement between the current image and the calibrated image (set to 0 if there is no displacement)
             const float dispX = 0f;
@@ -140,15 +126,15 @@ namespace FlyVRena2._0.External
 
             // Conversion Matrix Values: 3x3 Matrix [a,b,c; d,e,f; g,h,i]
             // (set 'a','e'&'i' to 1 and the rest to 0 - identity matrix - if there is no transformation)
-            const float a = -0.0049851f;
-            const float b = -0.0011127f;
-            const float c = 0.80155f;
-            const float d = -0.0011787f;
-            const float e = 0.0055754f;
-            const float f = 0.59786f;
-            const float g = 2.7028e-08f;
-            const float h = 4.8385e-08f;
-            const float i = 0.0048524f;
+            const float a = -0.0049183f;
+            const float b = -0.0011707f;
+            const float c = 0.79832f;
+            const float d = -0.0013386f;
+            const float e = 0.0056305f;
+            const float f = 0.60216f;
+            const float g = 4.1358e-07f;
+            const float h = 6.719e-07f;
+            const float i = 0.0048531f;
 
             // If there is a displacement between the current image and the calibrated image (set to 0 if there is no displacement)
             const float dispX = 0f;
@@ -156,24 +142,6 @@ namespace FlyVRena2._0.External
 
             newCoord.X = (a * (value.X + dispX) + b * (value.Y + dispY) + c) / (g * (value.X + dispX) + h * (value.Y + dispY) + i);
             newCoord.Y = (d * (value.X + dispX) + e * (value.Y + dispY) + f) / (g * (value.X + dispX) + h * (value.Y + dispY) + i);
-
-            // Voltage can't be higher then 255 or lower then 0
-            if (newCoord.X > 255)
-            {
-                newCoord.X = 255;
-            }
-            else if (newCoord.X < 0)
-            {
-                newCoord.X = 0;
-            }
-            if (newCoord.Y > 255)
-            {
-                newCoord.Y = 255;
-            }
-            else if (newCoord.Y < 0)
-            {
-                newCoord.Y = 0;
-            }
 
             return newCoord;
         }
@@ -185,15 +153,15 @@ namespace FlyVRena2._0.External
 
             // Conversion Matrix Values: 3x3 Matrix [a,b,c; d,e,f; g,h,i]
             // (set 'a','e'&'i' to 1 and the rest to 0 - identity matrix - if there is no transformation)
-            const float a = -0.0048928f;
-            const float b = -0.00098515f;
-            const float c = 0.9296f;
-            const float d = -0.0010372f;
-            const float e = 0.0043811f;
-            const float f = -0.36846f;
-            const float g = 1.3285e-08f;
-            const float h = -3.9787e-08f;
-            const float i = 0.0052722f;
+            const float a = -0.0048642f;
+            const float b = -0.0011238f;
+            const float c = 0.93966f;
+            const float d = -0.0012179f;
+            const float e = 0.004371f;
+            const float f = -0.34199f;
+            const float g = 4.7421e-07f;
+            const float h = -5.4006e-07f;
+            const float i = 0.0053076f;
 
             // If there is a displacement between the current image and the calibrated image (set to 0 if there is no displacement)
             const float dispX = 0f;
@@ -247,22 +215,22 @@ namespace FlyVRena2._0.External
             return newCoord;
         }
 
-        protected virtual Point2d MMl2PXl(Point2d value)
+        protected virtual Point2d VRl2MMl(Point2d value)
         {
             // variable to save the coordinates in the new units
             Point2d newCoord;
 
             // Conversion Matrix Values: 3x3 Matrix [a,b,c; d,e,f; g,h,i]
             // (set 'a','e'&'i' to 1 and the rest to 0 - identity matrix - if there is no transformation)
-            const float a = 0.00076584f;
-            const float b = -0.011619f;
-            const float c = 0.72296f;
-            const float d = -0.011063f;
-            const float e = -0.00014624f;
-            const float f = 0.69067f;
-            const float g = 4.9195e-06f;
-            const float h = 4.3975e-07f;
-            const float i = 0.0066826f;
+            const float a = 0.00046338f;
+            const float b = -0.016657f;
+            const float c = 0.76363f;
+            const float d = -0.017203f;
+            const float e = -0.00036936f;
+            const float f = 0.63595f;
+            const float g = -1.2362e-06f;
+            const float h = -1.1074e-05f;
+            const float i = -0.10898f;
 
             // If there is a displacement between the current image and the calibrated image (set to 0 if there is no displacement)
             const float dispX = 0f;
@@ -274,76 +242,22 @@ namespace FlyVRena2._0.External
             return newCoord;
         }
 
-        protected virtual Point2d PXl2MMl(Point2d value)
+        protected virtual Point2d MMl2VRl(Point2d value)
         {
             // variable to save the coordinates in the new units
             Point2d newCoord;
 
             // Conversion Matrix Values: 3x3 Matrix [a,b,c; d,e,f; g,h,i]
             // (set 'a','e'&'i' to 1 and the rest to 0 - identity matrix - if there is no transformation)
-            const float a = 0.00011013f;
-            const float b = -0.0066985f;
-            const float c = 0.68038f;
-            const float d = -0.0066436f;
-            const float e = -0.00013484f;
-            const float f = 0.73272f;
-            const float g = 3.4988e-07f;
-            const float h = 4.9462e-06f;
-            const float i = 0.011054f;
-
-            // If there is a displacement between the current image and the calibrated image (set to 0 if there is no displacement)
-            const float dispX = 0f;
-            const float dispY = 0f;
-
-            newCoord.X = (a * (value.X + dispX) + b * (value.Y + dispY) + c) / (g * (value.X + dispX) + h * (value.Y + dispY) + i);
-            newCoord.Y = (d * (value.X + dispX) + e * (value.Y + dispY) + f) / (g * (value.X + dispX) + h * (value.Y + dispY) + i);
-
-            return newCoord;
-        }
-
-        protected virtual Point2d VRl2PXl(Point2d value)
-        {
-            // variable to save the coordinates in the new units
-            Point2d newCoord;
-
-            // Conversion Matrix Values: 3x3 Matrix [a,b,c; d,e,f; g,h,i]
-            // (set 'a','e'&'i' to 1 and the rest to 0 - identity matrix - if there is no transformation)
-            const float a = -0.0016511f;
-            const float b = 0.00014096f;
-            const float c = 0.71491f;
-            const float d = 3.4698e-05f;
-            const float e = -0.0014769f;
-            const float f = 0.69919f;
-            const float g = 2.2642e-07f;
-            const float h = 1.2989e-06f;
-            const float i = 0.0060523f;
-
-            // If there is a displacement between the current image and the calibrated image (set to 0 if there is no displacement)
-            const float dispX = 0f;
-            const float dispY = 0f;
-
-            newCoord.X = (a * (value.X + dispX) + b * (value.Y + dispY) + c) / (g * (value.X + dispX) + h * (value.Y + dispY) + i);
-            newCoord.Y = (d * (value.X + dispX) + e * (value.Y + dispY) + f) / (g * (value.X + dispX) + h * (value.Y + dispY) + i);
-
-            return newCoord;
-        }
-
-        protected virtual Point2d PXl2VRl(Point2d value)
-        {
-            // variable to save the coordinates in the new units
-            Point2d newCoord;
-
-            // Conversion Matrix Values: 3x3 Matrix [a,b,c; d,e,f; g,h,i]
-            // (set 'a','e'&'i' to 1 and the rest to 0 - identity matrix - if there is no transformation)
-            const float a = -0.0059665f;
-            const float b = 4.6024e-05f;
-            const float c = 0.69947f;
-            const float d = -3.1603e-05f;
-            const float e = -0.0061535f;
-            const float f = 0.71461f;
-            const float g = 2.2862e-07f;
-            const float h = 1.3212e-06f;
-            const float i = 0.0014746f;
+            const float a = -0.002758f;
+            const float b = 0.10644f;
+            const float c = 0.60186f;
+            const float d = 0.10945f;
+            const float e = 0.0028918f;
+            const float f = 0.78369f;
+            const float g = -1.1103e-05f;
+            const float h = -1.4985e-06f;
+            const float i = 0.016733f;
 
             // If there is a displacement between the current image and the calibrated image (set to 0 if there is no displacement)
             const float dispX = 0f;

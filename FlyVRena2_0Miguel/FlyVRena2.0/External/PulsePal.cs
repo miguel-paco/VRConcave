@@ -71,9 +71,11 @@ namespace FlyVRena2._0.External
                 commandBuffer[1] = SetVoltageCommand; // command pulsepal to set a voltage value
                 commandBuffer[2] = 1; // 1st Coordenate (X)
                 commandBuffer[3] = (byte)Math.Round(coord.VoltageCurve.X); // Voltage Value
+                if (commandBuffer[3] > 255) { commandBuffer[3] = 255; } else if (commandBuffer[3] < 0) { commandBuffer[3] = 0; } // Voltage can't be higher then 255 or lower then 0
                 serialPort.Write(commandBuffer, 0, 4); // Send Command
                 commandBuffer[2] = 2; // 2nd Coordenate (Y)
                 commandBuffer[3] = (byte)Math.Round(coord.VoltageCurve.Y); // Voltage Value
+                if (commandBuffer[3] > 255) { commandBuffer[3] = 255; } else if (commandBuffer[3] < 0) { commandBuffer[3] = 0; } // Voltage can't be higher then 255 or lower then 0
                 serialPort.Write(commandBuffer, 0, 4); // Send Command
             }
             MREvent.Wait();

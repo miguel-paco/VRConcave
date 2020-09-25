@@ -174,7 +174,7 @@ namespace FlyVRena2._0.ImageProcessing
                     trackResult[4] = trackResult[1];
                 }
 
-                CV.Circle(output, new Point(Convert.ToInt32(trackResult[3] + Convert.ToSingle(Math.Cos(orientation.Radians)) * 3), Convert.ToInt32(trackResult[4] + Convert.ToSingle(Math.Cos(orientation.Radians)) * 3)), 1, new Scalar(255,0,0));
+                CV.Circle(output, new Point(Convert.ToInt32(trackResult[3]), Convert.ToInt32(trackResult[4])), 1, new Scalar(255,0,0));
 
 
                 if (boolDisplayTrackingResult)
