@@ -31,7 +31,7 @@ namespace FlyVRena2._0.VirtualWorld.Services
 
         public VRProtocol(IServiceProvider wObj, VirtualWorld VW, string cam1Params, string cam2Params, bool cam1Use, bool cam2Use, bool cam1Track, bool cam2Track,
             bool cam1Disp, bool cam2Disp, bool cam1Rec, bool cam2Rec, string cam1StringRec, string cam2StringRec, int cam1FPS, int cam2FPS,
-            bool pulsePalUse, string pulsePalPort, bool trackingRec, bool trackingRecRaw,
+            bool pulsePalUse, string pulsePalPort, bool trackingRec,
             string trackingRecPath, float duration)
         {
             this.paramsPathCam1 = cam1Params;
@@ -51,7 +51,6 @@ namespace FlyVRena2._0.VirtualWorld.Services
             this.usePulsePal = pulsePalUse;
             this.portPulsePal = pulsePalPort;
             this.recordTracking = trackingRec;
-            this.recordTrackingRaw = trackingRecRaw;
             this.recordPathTracking = trackingRecPath;
             this.duration = duration;
         }

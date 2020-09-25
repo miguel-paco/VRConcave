@@ -31,7 +31,7 @@ namespace FlyVRena2._0.VirtualWorld.Services.UpdateServices
         protected override void Process(FilteredData data)
         {
             Coordinates centroid = new Coordinates() { PixelsCurve = new Point2d(data.position[0], data.position[1]) };
-            Console.WriteLine("{0}", centroid.MillimetersLine);
+            //Console.WriteLine("{0}", centroid.MillimetersLine);
             centroid.MillimetersCurve *= gain;
 
             this.positionService.position.X = Convert.ToSingle(centroid.VirtualRealityLine.X);

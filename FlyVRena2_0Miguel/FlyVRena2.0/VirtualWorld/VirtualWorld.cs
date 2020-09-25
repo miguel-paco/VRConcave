@@ -30,7 +30,6 @@ namespace FlyVRena2._0.VirtualWorld
 
         // Vars Data Storage
         private DataRecorder<FilteredData> dataRecorder;
-        private DataRecorderRaw<MovementData> dataRecorderRaw;
         public double _time = 0;
 
         public bool finish = false;
@@ -98,17 +97,6 @@ namespace FlyVRena2._0.VirtualWorld
             {
                 dataRecorder = new DataRecorder<FilteredData>(vRProtocol.recordPathTracking, true, this);
                 dataRecorder.Start();
-            }
-
-            if (vRProtocol.recordTrackingRaw & vRProtocol.useCam2)
-            {
-                dataRecorderRaw = new DataRecorderRaw<MovementData>(vRProtocol.recordPathTracking, cam2, true, this);
-                dataRecorderRaw.Start();
-            }
-            else if (vRProtocol.recordTrackingRaw & !vRProtocol.useCam2)
-            {
-                dataRecorderRaw = new DataRecorderRaw<MovementData>(vRProtocol.recordPathTracking, true, this);
-                dataRecorderRaw.Start();
             }
         }
 
@@ -192,7 +180,7 @@ namespace FlyVRena2._0.VirtualWorld
                 VRProtocolFactory vrpF = (VRProtocolFactory)root.objectBuilder[0];
                 vrpF.Initialize(root, this);
                 this.vRProtocol = (VRProtocol)root.GetService(typeof(VRProtocol));
-                if (vRProtocol.recordCam1 || vRProtocol.recordCam2 || vRProtocol.recordTracking || vRProtocol.recordTrackingRaw)
+                if (vRProtocol.recordCam1 || vRProtocol.recordCam2 || vRProtocol.recordTracking)
                 {
                     CreateSaveDirectory(fileName, this.vRProtocol);
                 }
@@ -304,10 +292,6 @@ namespace FlyVRena2._0.VirtualWorld
             {
                 this.dataRecorder.OnExit();
             }
-            if (vRProtocol.recordTrackingRaw)
-            {
-                this.dataRecorderRaw.OnExit();
-            }
             render.OnExit();
             update.OnExit();
         }
@@ -341,10 +325,6 @@ namespace FlyVRena2._0.VirtualWorld
             if (vRProtocol.recordTracking)
             {
                 this.dataRecorder.DisposeModule();
-            }
-            if (vRProtocol.recordTrackingRaw)
-            {
-                this.dataRecorderRaw.DisposeModule();
             }
             update.Dispose();
         }

@@ -36,8 +36,8 @@
       <PathParamsCam2>C:\Users\ALBINO\Desktop\HighResCamParams.ini</PathParamsCam2>
       <Cam1Disp>true</Cam1Disp>
       <Cam2Disp>true</Cam2Disp>
-      <RecordCam1>false</RecordCam1>
-      <RecordCam2>false</RecordCam2>
+      <RecordCam1>true</RecordCam1>
+      <RecordCam2>true</RecordCam2>
       <PathRecordCam1>C:\Users\ALBINO\Desktop\Vid1</PathRecordCam1>
       <PathRecordCam2>C:\Users\ALBINO\Desktop\Vid2</PathRecordCam2>
       <Cam1Track>true</Cam1Track>
@@ -46,9 +46,9 @@
       <FPSCam2>150</FPSCam2>
       <UsePulsePal>true</UsePulsePal>
       <PortPulsePal>COM3</PortPulsePal>
-      <RecordTrackingRaw>false</RecordTrackingRaw>
+      <RecordTracking>true</RecordTracking>
       <PathRecordingTracking>C:\Users\ALBINO\Desktop\f1.txt</PathRecordingTracking>
-      <DurationInSeconds>300</DurationInSeconds>
+      <DurationInSeconds>100</DurationInSeconds>
     </VRProtocolFactory>
   </objectBuilder>
 </WorldObject>

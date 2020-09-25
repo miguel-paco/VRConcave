@@ -162,7 +162,6 @@ namespace FlyVRena2._0.ImageProcessing
                 orientation = CorrectedOrientation(orientation, trackPreviousResult[2]);
 
                 trackResult[2] = orientation.Degrees;
-                Console.WriteLine("{0}", trackResult[2]);
 
                 // Find Fly Head
                 if (majoraxis > 0)

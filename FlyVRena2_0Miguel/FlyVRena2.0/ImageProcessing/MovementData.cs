@@ -9,11 +9,11 @@ namespace FlyVRena2._0.ImageProcessing
 {
     public class MovementData : Message
     {
-        public string source;
         public int[] raw = new int[4];
         public float[] position = new float[3];
         public float[] head = new float[2]; // fly head position
         public float[] velocity = new float[3];
+        public string source;
         public int clock = 0;
         public MovementData(ulong ID, string Source, float[] vals)
         {

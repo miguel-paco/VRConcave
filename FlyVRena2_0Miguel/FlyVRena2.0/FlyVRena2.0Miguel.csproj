@@ -230,7 +230,6 @@
     <Compile Include="External\AngleVal.cs" />
     <Compile Include="External\Coordinates.cs" />
     <Compile Include="External\DataRecorder.cs" />
-    <Compile Include="External\DataRecorderRaw.cs" />
     <Compile Include="External\Frame.cs" />
     <Compile Include="External\PulsePal.cs" />
     <Compile Include="External\ReadFTDI.cs" />
