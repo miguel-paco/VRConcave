@@ -38,8 +38,8 @@
       <Cam2Disp>true</Cam2Disp>
       <RecordCam1>true</RecordCam1>
       <RecordCam2>true</RecordCam2>
-      <PathRecordCam1>C:\Users\ALBINO\Desktop\Vid1</PathRecordCam1>
-      <PathRecordCam2>C:\Users\ALBINO\Desktop\Vid2</PathRecordCam2>
+      <PathRecordCam1>C:\Users\ALBINO\Desktop\Cam1</PathRecordCam1>
+      <PathRecordCam2>C:\Users\ALBINO\Desktop\Cam2</PathRecordCam2>
       <Cam1Track>true</Cam1Track>
       <Cam2Track>false</Cam2Track>
       <FPSCam1>85</FPSCam1>
@@ -47,8 +47,10 @@
       <UsePulsePal>true</UsePulsePal>
       <PortPulsePal>COM3</PortPulsePal>
       <RecordTracking>true</RecordTracking>
-      <PathRecordingTracking>C:\Users\ALBINO\Desktop\f1.txt</PathRecordingTracking>
-      <DurationInSeconds>100</DurationInSeconds>
+      <PathRecordingTracking>C:\Users\ALBINO\Desktop\Track.txt</PathRecordingTracking>
+      <RecordStimulus>true</RecordStimulus>
+      <PathRecordingStimulus>C:\Users\ALBINO\Desktop\Stim.txt</PathRecordingStimulus>
+      <DurationInSeconds>60</DurationInSeconds>
     </VRProtocolFactory>
   </objectBuilder>
 </WorldObject>

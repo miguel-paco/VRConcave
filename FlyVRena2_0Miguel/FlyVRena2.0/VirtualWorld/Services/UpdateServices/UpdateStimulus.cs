@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using OpenCV.Net;
+using FlyVRena2._0.VirtualWorld.Services.DrawServices;
 
 namespace FlyVRena2._0.VirtualWorld.Services.UpdateServices
 {
@@ -28,12 +29,22 @@ namespace FlyVRena2._0.VirtualWorld.Services.UpdateServices
 
         }
 
+        float[] currentStimSize = new float[2];
+        double[] currentStimPosition = new double[2];
+
         protected override void Process(FilteredData data)
         {
+            // Save Current Stimulus Position
+            currentStimPosition[0] = positionService.position.X;
+            currentStimPosition[1] = positionService.position.Y;
+            currentStimSize[0] = 0f;
+            currentStimSize[1] = 0f;
+            this.Send<StimData>(new StimData(currentStimPosition, currentStimSize, data.clock, data.ID));
+
+            // Update Stimulus Position (Feedback)
             Coordinates centroid = new Coordinates() { PixelsCurve = new Point2d(data.position[0], data.position[1]) };
             //Console.WriteLine("{0}", centroid.MillimetersLine);
             centroid.MillimetersCurve *= gain;
-
             this.positionService.position.X = Convert.ToSingle(centroid.VirtualRealityLine.X);
             this.positionService.position.Y = Convert.ToSingle(centroid.VirtualRealityLine.Y);
         }

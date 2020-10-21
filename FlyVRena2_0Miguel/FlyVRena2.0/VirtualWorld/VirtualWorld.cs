@@ -30,6 +30,7 @@ namespace FlyVRena2._0.VirtualWorld
 
         // Vars Data Storage
         private DataRecorder<FilteredData> dataRecorder;
+        private StimRecorder<StimData> stimRecorder;
         public double _time = 0;
 
         public bool finish = false;
@@ -97,6 +98,17 @@ namespace FlyVRena2._0.VirtualWorld
             {
                 dataRecorder = new DataRecorder<FilteredData>(vRProtocol.recordPathTracking, true, this);
                 dataRecorder.Start();
+            }
+
+            if (vRProtocol.recordStimulus & vRProtocol.useCam2)
+            {
+                stimRecorder = new StimRecorder<StimData>(vRProtocol.recordPathStimulus, cam2, true, this);
+                stimRecorder.Start();
+            }
+            else if (vRProtocol.recordStimulus & !vRProtocol.useCam2)
+            {
+                stimRecorder = new StimRecorder<StimData>(vRProtocol.recordPathStimulus, true, this);
+                stimRecorder.Start();
             }
         }
 
@@ -229,6 +241,7 @@ namespace FlyVRena2._0.VirtualWorld
             protocol.recordPathCam1 = directory + protocol.recordPathCam1.Substring(protocol.recordPathCam1.LastIndexOf("\\"));
             protocol.recordPathCam2 = directory + protocol.recordPathCam2.Substring(protocol.recordPathCam2.LastIndexOf("\\"));
             protocol.recordPathTracking = directory + protocol.recordPathTracking.Substring(protocol.recordPathTracking.LastIndexOf("\\"));
+            protocol.recordPathStimulus = directory + protocol.recordPathStimulus.Substring(protocol.recordPathStimulus.LastIndexOf("\\"));
         }
 
 
@@ -292,6 +305,10 @@ namespace FlyVRena2._0.VirtualWorld
             {
                 this.dataRecorder.OnExit();
             }
+            if (vRProtocol.recordStimulus)
+            {
+                stimRecorder.OnExit();
+            }
             render.OnExit();
             update.OnExit();
         }
@@ -325,6 +342,10 @@ namespace FlyVRena2._0.VirtualWorld
             if (vRProtocol.recordTracking)
             {
                 this.dataRecorder.DisposeModule();
+            }
+            if (vRProtocol.recordStimulus)
+            {
+                stimRecorder.Dispose();
             }
             update.Dispose();
         }

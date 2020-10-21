@@ -55,6 +55,11 @@ namespace FlyVRena2._0.VirtualWorld.ServiceFactories
         [XmlElement("PathRecordingTracking")]
         public string pathRecordingTracking;
 
+        [XmlElement("RecordStimulus")]
+        public bool recordStimulus;
+        [XmlElement("PathRecordingStimulus")]
+        public string pathRecordingStimulus;
+
         [XmlElement("DurationInSeconds")]
         public float duration;
 
@@ -63,7 +68,7 @@ namespace FlyVRena2._0.VirtualWorld.ServiceFactories
             var wo = (IServiceContainer)provider.GetService(typeof(IServiceContainer));
             var vrProtocol = new VRProtocol(wo, VW, cam1pathParams, cam2pathParams, cam1Use, cam2Use, cam1Track, cam2Track, cam1Disp, cam2Disp, cam1Rec,
                 cam2Rec, cam1pathRec, cam2pathRec, cam1FPS, cam2FPS, usePulsePal,
-                ppPort, recordTracking, pathRecordingTracking, duration);
+                ppPort, recordTracking, pathRecordingTracking, recordStimulus, pathRecordingStimulus, duration);
             wo.AddService(typeof(VRProtocol), vrProtocol);
         }
     }

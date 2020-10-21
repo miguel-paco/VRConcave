@@ -233,6 +233,8 @@
     <Compile Include="External\Frame.cs" />
     <Compile Include="External\PulsePal.cs" />
     <Compile Include="External\ReadFTDI.cs" />
+    <Compile Include="External\StimData.cs" />
+    <Compile Include="External\StimRecorder.cs" />
     <Compile Include="External\uEyeCamera.cs" />
     <Compile Include="ImageProcessing\FastTracking.cs" />
     <Compile Include="ImageProcessing\FilteredData.cs" />
