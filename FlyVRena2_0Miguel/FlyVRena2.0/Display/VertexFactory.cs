@@ -31,10 +31,8 @@ namespace FlyVRena2._0.Display
             int aux = 0;
             for (float ang = 0.0f; ang < 2* 3.1415f; ang += (2 * 3.1415f / np))
             {
-                vertices[aux] = new ColoredVertex(new Vector4(center[0]+(float)Math.Sin(ang)*r, center[1] + (float)Math.Cos(ang) * r, z, 1.0f), color);
+                vertices[aux] = new ColoredVertex(new Vector4((float)Math.Sin(ang)*r, (float)Math.Cos(ang) * r, z, 1.0f), color);
                 aux = aux + 1;
-                //vertices[aux] = new ColoredVertex(new Vector4(center[0] + (float)Math.Sin(ang+0.1) * r + center[1], center[1] + (float)Math.Cos(ang+0.1) * r - center[0], z, 1.0f), color);
-                //aux = aux + 1;
             }
             return vertices;
         }

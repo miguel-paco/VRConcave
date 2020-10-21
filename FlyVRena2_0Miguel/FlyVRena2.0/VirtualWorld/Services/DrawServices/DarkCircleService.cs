@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using FlyVRena2._0.Display;
+using FlyVRena2._0.VirtualWorld.ServiceFactories.DrawFactories;
 using FlyVRena2._0.VirtualWorld.Subsystems;
 using OpenTK;
 using OpenTK.Graphics;
@@ -24,7 +25,6 @@ namespace FlyVRena2._0.VirtualWorld.Services.DrawServices
                 VW.render.DrawServices.Add(nameService.name, this);
             }
         }
-
 
         public override void Render(ICamera camera)
         {

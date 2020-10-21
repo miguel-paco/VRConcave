@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
+using OpenCV.Net;
 
 
 namespace FlyVRena2._0.VirtualWorld.ServiceFactories.DrawFactories
@@ -13,13 +14,18 @@ namespace FlyVRena2._0.VirtualWorld.ServiceFactories.DrawFactories
     {
         [XmlElement("circleRadius")]
         public int circleRadius;
+
         [XmlElement("nPoints")]
         public int np;
 
         public override void Initialize(IServiceProvider provider, VirtualWorld VW)
         {
             var wo = (IServiceContainer)provider.GetService(typeof(IServiceContainer));
-            var draw = new DarkCircleService(wo, VW, circleRadius, np);
+            // Convert the radius from MillimeterCurve into VirtualRealityLinear (Approximation)
+            External.Coordinates coord = new External.Coordinates() { MillimetersLine = new Point2d(circleRadius, circleRadius) };
+            int radius = Convert.ToInt32( (coord.VirtualRealityLine.X + coord.VirtualRealityLine.Y)/2 );
+            Console.WriteLine("{0}", radius);
+            var draw = new DarkCircleService(wo, VW, radius, np);
             wo.AddService(typeof(DarkCircleService), draw);
         }
     }
