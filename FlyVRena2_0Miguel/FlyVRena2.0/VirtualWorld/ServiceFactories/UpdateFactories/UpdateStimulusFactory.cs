@@ -12,13 +12,22 @@ namespace FlyVRena2._0.VirtualWorld.ServiceFactories.UpdateFactories
     public class UpdateStimulusFactory : ServiceFactory
     {
 
-        [XmlElement("gain")]
-        public float gain;
+        [XmlElement("protocol")]
+        public int protocol;
+
+        [XmlElement("protocol_radius")]
+        public float protocol_radius;
+
+        [XmlElement("protocol_speed")]
+        public float protocol_speed;
+
+        [XmlElement("protocol_direction")]
+        public int protocol_direction;
 
         public override void Initialize(IServiceProvider provider, VirtualWorld VW)
         {
             var wo = (IServiceContainer)provider.GetService(typeof(IServiceContainer));
-            var upd = new UpdateStimulus(wo, VW, gain);
+            var upd = new UpdateStimulus(wo, VW, protocol, protocol_radius, protocol_speed, protocol_direction);
             upd.Start();
             wo.AddService(typeof(UpdateStimulus), upd);
         }
