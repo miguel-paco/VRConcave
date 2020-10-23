@@ -9,42 +9,22 @@ namespace FlyVRena2._0.ImageProcessing
 {
     public class MovementData : Message
     {
-        public int[] raw = new int[4];
+        // position[0] = center X coordinate
+        // position[1] = center Y coordinate
+        // position[2] = orientation
+        // velocity[0] = forward velocity
+        // velocity[1] = sideways velocity
+        // velocity[2] = angular velocity
+
         public float[] position = new float[3];
         public float[] head = new float[2]; // fly head position
         public float[] velocity = new float[3];
+        public double clock;
         public string source;
-        public int clock = 0;
-        public MovementData(ulong ID, string Source, float[] vals)
+        public MovementData(ulong ID, string source, float[] vals, float[] headcoord, double time)
         {
             this.ID = ID;
-            this.source = Source;
-            this.position[0] = vals[0];
-            this.position[1] = vals[1];
-            this.position[2] = vals[2];
-            this.velocity[0] = vals[3];
-            this.velocity[1] = vals[4];
-            this.velocity[2] = vals[5];
-        }
-
-        public MovementData(ulong ID, string Source, float[] vals, int[] raw, int clock)
-        {
-            this.ID = ID;
-            this.source = Source;
-            this.position[0] = vals[0];
-            this.position[1] = vals[1];
-            this.position[2] = vals[2];
-            this.velocity[0] = vals[3];
-            this.velocity[1] = vals[4];
-            this.velocity[2] = vals[5];
-            this.clock = clock;
-            this.raw = raw;
-        }
-
-        public MovementData(ulong ID, string Source, float[] vals, float[] headcoord)
-        {
-            this.ID = ID;
-            this.source = Source;
+            this.source = source;
             this.position[0] = vals[0];
             this.position[1] = vals[1];
             this.position[2] = vals[2];
@@ -53,22 +33,7 @@ namespace FlyVRena2._0.ImageProcessing
             this.velocity[2] = vals[5];
             this.head[0] = headcoord[0];
             this.head[1] = headcoord[1];
-        }
-
-        public MovementData(ulong ID, string Source, float[] vals, int[] raw, int clock, float[] headcoord)
-        {
-            this.ID = ID;
-            this.source = Source;
-            this.position[0] = vals[0];
-            this.position[1] = vals[1];
-            this.position[2] = vals[2];
-            this.velocity[0] = vals[3];
-            this.velocity[1] = vals[4];
-            this.velocity[2] = vals[5];
-            this.clock = clock;
-            this.raw = raw;
-            this.head[0] = headcoord[0];
-            this.head[1] = headcoord[1];
+            this.clock = time;
         }
     }
 }

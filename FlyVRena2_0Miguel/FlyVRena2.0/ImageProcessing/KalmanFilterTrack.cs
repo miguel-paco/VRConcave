@@ -68,7 +68,7 @@ namespace FlyVRena2._0.ImageProcessing
 
             //estimate = filterPoints(data.position);
             estimate = data.position;
-            Send<FilteredData>(new FilteredData(data.ID, data.source, estimate, data.velocity, data.raw, data.clock, data.position, data.head));
+            Send<FilteredData>(new FilteredData(data.ID, data.source, estimate, data.velocity, data.position, data.head, data.clock));
         }
 
         //Dispose of all initiated objects

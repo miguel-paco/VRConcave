@@ -64,7 +64,7 @@ namespace FlyVRena2._0.VirtualWorld
                     cam1.Start();
                     if (vRProtocol.trackCam1)
                     {
-                        fastT = new FastTracking<Frame>(cam1.firstFrame, 1, 100, 50, 0, true);
+                        fastT = new FastTracking<Frame>(this, cam1.firstFrame, 1, 100, 50, 0, true);
                         fastT.Start();
                         kft.Start();
                     }
@@ -82,7 +82,7 @@ namespace FlyVRena2._0.VirtualWorld
                     cam2.Start();
                     if (vRProtocol.trackCam2)
                     {
-                        fastT = new FastTracking<Frame>(cam2.firstFrame, 10, 5000, 35, 0, false);
+                        fastT = new FastTracking<Frame>(this, cam2.firstFrame, 10, 5000, 35, 0, false);
                         fastT.Start();
                         kft.Start();
                     }
@@ -139,6 +139,7 @@ namespace FlyVRena2._0.VirtualWorld
             {
                 update.Update(time);
                 _time += time;
+                Console.WriteLine("{0}", _time);
             }
             // Finish Experiment
             if (stopwatch.ElapsedMilliseconds >= 1000 * (vRProtocol.duration + 0.5) && secondUp)

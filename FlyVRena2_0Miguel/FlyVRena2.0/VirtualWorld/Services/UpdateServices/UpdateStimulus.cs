@@ -42,7 +42,6 @@ namespace FlyVRena2._0.VirtualWorld.Services.UpdateServices
         // Open Loop Section
         public override void Update(double time)
         {
-            Console.WriteLine("{0}", time);
             // Protocol 0: Follow Fly
 
             // Protocol 1: Circle
@@ -80,13 +79,6 @@ namespace FlyVRena2._0.VirtualWorld.Services.UpdateServices
                 k = 1;
             }
 
-            // Save Current Stimulus Position
-            currentStimPosition[0] = positionService.position.X;
-            currentStimPosition[1] = positionService.position.Y;
-            currentStimSize[0] = 0f;
-            currentStimSize[1] = 0f; 
-            this.Send<StimData>(new StimData(currentStimPosition, currentStimSize, data.clock, data.ID));
-
             // Close Loop Section
 
             // Protocol 0: Follow Fly
@@ -97,6 +89,13 @@ namespace FlyVRena2._0.VirtualWorld.Services.UpdateServices
                 this.positionService.position.X = Convert.ToSingle(centroid.VirtualRealityLine.X);
                 this.positionService.position.Y = Convert.ToSingle(centroid.VirtualRealityLine.Y);
             }
+
+            // Save Stimulus Position
+            currentStimPosition[0] = positionService.position.X;
+            currentStimPosition[1] = positionService.position.Y;
+            currentStimSize[0] = 0f;
+            currentStimSize[1] = 0f;
+            this.Send<StimData>(new StimData(currentStimPosition, currentStimSize, data.clock, data.ID));
         }
     }
 }

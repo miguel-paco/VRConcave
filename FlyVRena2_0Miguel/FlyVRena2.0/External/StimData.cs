@@ -12,6 +12,7 @@ namespace FlyVRena2._0.ImageProcessing
         public double[] position;
         public float[] size;
         public double time;
+
         public StimData(double[] position, float[] size, double time, ulong ID)
         {
             this.position = position;

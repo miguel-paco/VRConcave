@@ -21,6 +21,7 @@ namespace FlyVRena2._0.ImageProcessing
         // trackPreviousResult[4] - Y Head Coord (Arena Pixels);
         private IplImage Background;
         private float[] trackMovementDirection = new float[10] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+        private FlyVRena2._0.VirtualWorld.VirtualWorld vw;
 
         private int _minArea = 0; 
         public int MinArea
@@ -69,8 +70,9 @@ namespace FlyVRena2._0.ImageProcessing
         ServiceProvider provider;
 
 
-        public FastTracking(Frame mask, int minA, int maxA, int thr, int smooth, bool boolDisplayTrackingResult)
+        public FastTracking(FlyVRena2._0.VirtualWorld.VirtualWorld VW, Frame mask, int minA, int maxA, int thr, int smooth, bool boolDisplayTrackingResult)
         {
+            this.vw = VW;
             //Initialize with pre-defined parameters. Modify and re-compile to alter tracking parameters. 
             MinArea = minA;
             MaxArea = maxA;
@@ -276,8 +278,8 @@ namespace FlyVRena2._0.ImageProcessing
                 ((trackCurrentResult[0]-trackPreviousResult[0])*(float)Math.Cos(Math.PI*trackCurrentResult[2]/180) + (trackCurrentResult[1]-trackPreviousResult[1])*(float)Math.Sin(Math.PI*trackCurrentResult[2]/180))*data.frameRate ,
                 (-(trackCurrentResult[0]-trackPreviousResult[0])*(float)Math.Sin(Math.PI*trackCurrentResult[2]/180) + (trackCurrentResult[1]-trackPreviousResult[1])*(float)Math.Cos(Math.PI*trackCurrentResult[2]/180))*data.frameRate ,
                 (trackCurrentResult[2] - trackPreviousResult[2])*data.frameRate },
-                new float[] { trackCurrentResult[3], trackCurrentResult[4]
-                }));
+                new float[] { trackCurrentResult[3], trackCurrentResult[4] }, vw._time
+                ));
             trackPreviousResult = trackCurrentResult;
             data.image.Dispose();
         }

@@ -96,14 +96,12 @@ namespace FlyVRena2._0.External
             {
                 if (cam != null)
                 {
-                    fileStream.WriteLine(data.ID.ToString() + " " + data.clock.ToString() + " " +
-                        data.raw[0].ToString() + " " + data.raw[1].ToString() + " " + data.raw[2].ToString() + " " + data.raw[3].ToString() + " " + (vw._time).ToString("F6", CultureInfo.InvariantCulture)
+                    fileStream.WriteLine(data.ID.ToString() + " " + data.clock.ToString() + " " + (vw._time).ToString("F6", CultureInfo.InvariantCulture)
                        + " " + cam.m_s32FrameCoutTotal.ToString());
                 }
                 else
                 {
-                    fileStream.WriteLine(data.ID.ToString() + " " + data.clock.ToString() + " " +
-                        data.raw[0].ToString() + " " + data.raw[1].ToString() + " " + data.raw[2].ToString() + " " + data.raw[3].ToString() + " " + (vw._time).ToString("F6", CultureInfo.InvariantCulture));
+                    fileStream.WriteLine(data.ID.ToString() + " " + data.clock.ToString() + " " + (vw._time).ToString("F6", CultureInfo.InvariantCulture));
                 }
             }
         }
