@@ -1,0 +1,14 @@
+C:\Users\ChiappeLab\Desktop\Nuno FlyVRena2.0 looming\Nuno FlyVRena2.0 looming automatic\StartProtocolVR_2\StartProtocolVR\StartProtocolVR\bin\Debug\StartProtocolVR.exe.config
+C:\Users\ChiappeLab\Desktop\Nuno FlyVRena2.0 looming\Nuno FlyVRena2.0 looming automatic\StartProtocolVR_2\StartProtocolVR\StartProtocolVR\bin\Debug\StartProtocolVR.exe
+C:\Users\ChiappeLab\Desktop\Nuno FlyVRena2.0 looming\Nuno FlyVRena2.0 looming automatic\StartProtocolVR_2\StartProtocolVR\StartProtocolVR\bin\Debug\StartProtocolVR.pdb
+C:\Users\ChiappeLab\Desktop\Nuno FlyVRena2.0 looming\Nuno FlyVRena2.0 looming automatic\StartProtocolVR_2\StartProtocolVR\StartProtocolVR\obj\Debug\StartProtocolVR.csprojAssemblyReference.cache
+C:\Users\ChiappeLab\Desktop\Nuno FlyVRena2.0 looming\Nuno FlyVRena2.0 looming automatic\StartProtocolVR_2\StartProtocolVR\StartProtocolVR\obj\Debug\StartProtocolVR.csproj.CoreCompileInputs.cache
+C:\Users\ChiappeLab\Desktop\Nuno FlyVRena2.0 looming\Nuno FlyVRena2.0 looming automatic\StartProtocolVR_2\StartProtocolVR\StartProtocolVR\obj\Debug\StartProtocolVR.exe
+C:\Users\ChiappeLab\Desktop\Nuno FlyVRena2.0 looming\Nuno FlyVRena2.0 looming automatic\StartProtocolVR_2\StartProtocolVR\StartProtocolVR\obj\Debug\StartProtocolVR.pdb
+C:\Users\ALBINO\Documents\VRConcave\FlyVRena2_0Miguel\StartProtocolVR\bin\Debug\StartProtocolVR.exe.config
+C:\Users\ALBINO\Documents\VRConcave\FlyVRena2_0Miguel\StartProtocolVR\bin\Debug\StartProtocolVR.exe
+C:\Users\ALBINO\Documents\VRConcave\FlyVRena2_0Miguel\StartProtocolVR\bin\Debug\StartProtocolVR.pdb
+C:\Users\ALBINO\Documents\VRConcave\FlyVRena2_0Miguel\StartProtocolVR\obj\Debug\StartProtocolVR.csprojAssemblyReference.cache
+C:\Users\ALBINO\Documents\VRConcave\FlyVRena2_0Miguel\StartProtocolVR\obj\Debug\StartProtocolVR.csproj.CoreCompileInputs.cache
+C:\Users\ALBINO\Documents\VRConcave\FlyVRena2_0Miguel\StartProtocolVR\obj\Debug\StartProtocolVR.exe
+C:\Users\ALBINO\Documents\VRConcave\FlyVRena2_0Miguel\StartProtocolVR\obj\Debug\StartProtocolVR.pdb

@@ -38,6 +38,9 @@
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Emgu.CV">
       <HintPath>..\..\Virtual Reality Free Walking\VirtualReality\VirtualReality\VirtualReality\bin\x86\Debug\Emgu.CV.dll</HintPath>

@@ -40,6 +40,21 @@ namespace FlyVRena2._0.VirtualWorld
             Initialize(Size);
         }
 
+        string protName;
+        string protFolder;
+        public VirtualWorld(int Size, string protName)
+        {
+            this.protName = protName;
+            Initialize(Size);
+        }
+
+        public VirtualWorld(int Size, string protName, string protFolder)
+        {
+            this.protFolder = protFolder;
+            this.protName = protName;
+            Initialize(Size);
+        }
+
         public void Initialize(int Size)
         {
             // Initialize vr components
@@ -48,7 +63,10 @@ namespace FlyVRena2._0.VirtualWorld
             kft = new KalmanFilterTrack<MovementData>(false);
 
             // Load virtual world
-            GetStimulus();
+            if (protName == null)
+                GetStimulus();
+            else
+                GetStimulus(protName);
 
             // Initialize data acquisition objects           
             if (vRProtocol.usePulsePal)
@@ -205,6 +223,22 @@ namespace FlyVRena2._0.VirtualWorld
                 }
             }
         }
+        public void GetStimulus(string protName)
+        {
+            root = LoadStimulus(protName);
+            string fileName = Path.GetFileName(protName);
+            if (root != null)
+            {
+                Init(root);
+                VRProtocolFactory vrpF = (VRProtocolFactory)root.objectBuilder[0];
+                vrpF.Initialize(root, this);
+                this.vRProtocol = (VRProtocol)root.GetService(typeof(VRProtocol));
+                if (vRProtocol.recordCam1 || vRProtocol.recordCam2 || vRProtocol.recordTracking)
+                {
+                    CreateSaveDirectory(fileName, this.vRProtocol);
+                }
+            }
+        }
 
         // Create Save Directory
         public void CreateSaveDirectory(string protocolName, VRProtocol protocol)
@@ -212,20 +246,25 @@ namespace FlyVRena2._0.VirtualWorld
             int index0 = protocolName.LastIndexOf(".");
             string directory = "";
             protocolName = protocolName.Substring(0, index0);
-            Thread t = new Thread((ThreadStart)(() =>
+            if (protFolder == null)
             {
-                FolderBrowserDialog folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
-                folderBrowserDialog1.Description = "Select the directory that you want to save the data.";
-                folderBrowserDialog1.ShowNewFolderButton = true;
-                folderBrowserDialog1.RootFolder = System.Environment.SpecialFolder.Desktop;
-                if (folderBrowserDialog1.ShowDialog() == DialogResult.OK)
+                Thread t = new Thread((ThreadStart)(() =>
                 {
-                    directory = folderBrowserDialog1.SelectedPath;
-                }
-            }));
-            t.SetApartmentState(ApartmentState.STA);
-            t.Start();
-            t.Join();
+                    FolderBrowserDialog folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
+                    folderBrowserDialog1.Description = "Select the directory that you want to save the data.";
+                    folderBrowserDialog1.ShowNewFolderButton = true;
+                    folderBrowserDialog1.RootFolder = System.Environment.SpecialFolder.Desktop;
+                    if (folderBrowserDialog1.ShowDialog() == DialogResult.OK)
+                    {
+                        directory = folderBrowserDialog1.SelectedPath;
+                    }
+                }));
+                t.SetApartmentState(ApartmentState.STA);
+                t.Start();
+                t.Join();
+            }
+            else
+                directory = protFolder;
             directory = directory + "\\";
             var subDirectories = Directory.GetDirectories(directory);
             int nFolders = 1;

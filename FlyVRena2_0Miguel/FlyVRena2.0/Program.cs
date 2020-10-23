@@ -13,10 +13,14 @@ namespace FlyVRena2._0
         /// The main entry point for the application.
         /// </summary>
         [STAThread]
-        static void Main()
+
+        private static void Main(string[] s)
         {
-            //Process.GetCurrentProcess().ProcessorAffinity = new IntPtr(1);
-            new MainWindow().Run();
+            if (s.Length > 0)
+                new MainWindow(s[0], s[1]).Run();
+            else
+                new MainWindow().Run();
         }
     }
 }
+

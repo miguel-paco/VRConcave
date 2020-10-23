@@ -5,6 +5,7 @@ using OpenTK.Graphics.ES20;
 using Sardine.Core;
 using System;
 using System.Diagnostics;
+using System.Globalization;
 
 namespace FlyVRena2._0.ImageProcessing
 {
@@ -179,7 +180,6 @@ namespace FlyVRena2._0.ImageProcessing
 
                 //CV.Circle(output, new Point(Convert.ToInt32(trackResult[3]), Convert.ToInt32(trackResult[4])), 0, new Scalar(125));
                 CV.Line(output, new Point(Convert.ToInt32(trackResult[0]), Convert.ToInt32(trackResult[1])), new Point(Convert.ToInt32(trackResult[3]), Convert.ToInt32(trackResult[4])), new Scalar(125));
-
 
                 if (boolDisplayTrackingResult)
                     imVis.Show(output.Clone());

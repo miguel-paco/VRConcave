@@ -21,14 +21,28 @@ namespace FlyVRena2._0.Display
         {
             VSync = VSyncMode.Off;
             GraphicsContext.ShareContexts = false;
-            //this.Location = new System.Drawing.Point(-1280 + 95, -60); // was (-1280+95, 30) 24-09-2019                       CHANGE HERE
-            this.Location = new System.Drawing.Point(1920+250, 50); //-1280+280  -1280+250
-            //this.TargetUpdateFrequency = 120;
+            this.Location = new System.Drawing.Point(1920+250, 50);
+        }
+
+        public string protName;
+        public string protFolder;
+        public MainWindow(string protocolName, string protFolder) : base(800, 800, GraphicsMode.Default, "FlyVRena2.0", GameWindowFlags.Default, DisplayDevice.Default, 4, 0, GraphicsContextFlags.ForwardCompatible) //720,720
+        {
+            this.protName = protocolName;
+            this.protFolder = protFolder;
+            VSync = VSyncMode.Off;
+            GraphicsContext.ShareContexts = false;
+            this.Location = new System.Drawing.Point(1920 + 250, 50);
         }
 
         protected override void OnLoad(EventArgs e)
         {
-            virtualWorld = new VirtualWorld.VirtualWorld(Width); 
+            if (protName == null)
+                virtualWorld = new VirtualWorld.VirtualWorld(Width);
+            else if (protFolder == null)
+                virtualWorld = new VirtualWorld.VirtualWorld(Width, protName);
+            else
+                virtualWorld = new VirtualWorld.VirtualWorld(Width, protName, protFolder);
         }
 
         protected override void OnUpdateFrame(FrameEventArgs e)
