@@ -13,7 +13,7 @@ namespace FlyVRena2._0.VirtualWorld.ServiceFactories.DrawFactories
     public class DarkCircleFactory : ServiceFactory
     {
         [XmlElement("circleRadius")]
-        public int circleRadius;
+        public double circleRadius;
 
         [XmlElement("nPoints")]
         public int np;
@@ -22,9 +22,10 @@ namespace FlyVRena2._0.VirtualWorld.ServiceFactories.DrawFactories
         {
             var wo = (IServiceContainer)provider.GetService(typeof(IServiceContainer));
             // Convert the radius from MillimeterCurve into VirtualRealityLinear (Approximation)
-            External.Coordinates coord = new External.Coordinates() { MillimetersLine = new Point2d(circleRadius, circleRadius) };
-            int radius = Convert.ToInt32( (coord.VirtualRealityLine.X + coord.VirtualRealityLine.Y)/2 );
-            Console.WriteLine("{0}", radius);
+            External.Coordinates coord = new External.Coordinates() { MillimetersCurve = new Point2d(circleRadius, circleRadius) };
+            External.Coordinates center = new External.Coordinates() { MillimetersCurve = new Point2d(0, 0) };
+            int radius = Convert.ToInt32( ((coord.VirtualRealityLine.X - center.VirtualRealityLine.X) + (coord.VirtualRealityLine.Y - center.VirtualRealityLine.Y)) /2 );
+            //Console.WriteLine("{0}", radius);
             var draw = new DarkCircleService(wo, VW, radius, np);
             wo.AddService(typeof(DarkCircleService), draw);
         }
