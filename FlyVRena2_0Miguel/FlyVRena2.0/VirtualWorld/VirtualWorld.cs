@@ -32,6 +32,7 @@ namespace FlyVRena2._0.VirtualWorld
         private DataRecorder<FilteredData> dataRecorder;
         private StimRecorder<StimData> stimRecorder;
         public double _time = 0;
+        public int time_check = 0;
 
         public bool finish = false;
         public VirtualWorld(int Size)
@@ -137,9 +138,14 @@ namespace FlyVRena2._0.VirtualWorld
             // Update Timer
             if (!firstUp && secondUp)
             {
+                
                 update.Update(time);
                 _time += time;
-                Console.WriteLine("{0}", _time);
+                if (_time - time_check >= 1)
+                {
+                    time_check = Convert.ToInt32(_time);
+                    Console.WriteLine("{0}", time_check);
+                }
             }
             // Finish Experiment
             if (stopwatch.ElapsedMilliseconds >= 1000 * (vRProtocol.duration + 0.5) && secondUp)

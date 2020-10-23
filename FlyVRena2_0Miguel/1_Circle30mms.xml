@@ -22,7 +22,10 @@
           <nPoints>100</nPoints>
         </DarkCircleFactory>
         <UpdateStimulusFactory>
-          <protocol>0</protocol>
+          <protocol>1</protocol>
+          <protocol_radius> 25</protocol_radius>
+          <protocol_speed> 30</protocol_speed>
+          <protocol_direction> 1</protocol_direction>
         </UpdateStimulusFactory>
       </objectBuilder>
     </WorldObject>
