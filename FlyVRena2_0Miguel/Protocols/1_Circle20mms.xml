@@ -46,7 +46,7 @@
       <Cam1Track>true</Cam1Track>
       <Cam2Track>false</Cam2Track>
       <FPSCam1>85</FPSCam1>
-      <FPSCam2>150</FPSCam2>
+      <FPSCam2>200</FPSCam2>
       <UsePulsePal>true</UsePulsePal>
       <PortPulsePal>COM3</PortPulsePal>
       <RecordTracking>true</RecordTracking>
