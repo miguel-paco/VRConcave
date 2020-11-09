@@ -55,10 +55,8 @@ namespace FlyVRena2._0.VirtualWorld.Services.UpdateServices
                 if (k == 1)
                 {
                     vector_norm = protocol_speed * time;
-                    walking_angle += 2 * Math.Asin((vector_norm / 2) / protocol_radius);
+                    walking_angle += (2 * Math.Asin((vector_norm / 2) / protocol_radius)) * protocol_direction;
                 }
-
-                walking_angle = walking_angle * protocol_direction;
 
                 centroid = new Coordinates() { MillimetersCurve = new Point2d(Math.Cos(walking_angle) * protocol_radius, Math.Sin(walking_angle) * protocol_radius) };
 
