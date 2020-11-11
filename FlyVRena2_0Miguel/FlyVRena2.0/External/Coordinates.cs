@@ -187,8 +187,8 @@ namespace FlyVRena2._0.External
             }
             else
             {
-                newCoord.X = fl * value.X * Math.Sin(Math.PI * h / fl) / h;
-                newCoord.Y = fl * value.Y * Math.Sin(Math.PI * h / fl) / h;
+                newCoord.X = fl * value.X * Math.Sin(h / fl) / h;
+                newCoord.Y = fl * value.Y * Math.Sin(h / fl) / h;
             }
 
             return newCoord;
@@ -208,8 +208,8 @@ namespace FlyVRena2._0.External
             }
             else
             {
-                newCoord.X = fl * value.X * Math.Asin(a / fl) / (Math.PI * a);
-                newCoord.Y = fl * value.Y * Math.Asin(a / fl) / (Math.PI * a);
+                newCoord.X = fl * value.X * Math.Asin(a / fl) / (a);
+                newCoord.Y = fl * value.Y * Math.Asin(a / fl) / (a);
             }
 
             return newCoord;
