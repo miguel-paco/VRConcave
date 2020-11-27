@@ -17,12 +17,16 @@
           <rz>0</rz>  
           <scale>1</scale>
         </PositionFactory>
-        <DarkCircleFactory>
-          <circleRadius>1.56</circleRadius>
+        <DarkEllipseFactory>
+          <ellipseXRadius>1.56</ellipseXRadius>
+          <ellipseYRadius>0.78</ellipseYRadius>
           <nPoints>100</nPoints>
-        </DarkCircleFactory>
+        </DarkEllipseFactory>
         <UpdateStimulusFactory>
-          <protocol>0</protocol>
+          <protocol>1</protocol>
+          <protocol_radius> 25</protocol_radius>
+          <protocol_speed> 30</protocol_speed>
+          <protocol_direction> 1</protocol_direction>
         </UpdateStimulusFactory>
       </objectBuilder>
     </WorldObject>
@@ -36,8 +40,8 @@
       <PathParamsCam2>C:\Users\ALBINO\Desktop\HighResCamParams.ini</PathParamsCam2>
       <Cam1Disp>true</Cam1Disp>
       <Cam2Disp>true</Cam2Disp>
-      <RecordCam1>false</RecordCam1>
-      <RecordCam2>false</RecordCam2>
+      <RecordCam1>true</RecordCam1>
+      <RecordCam2>true</RecordCam2>
       <PathRecordCam1>C:\Users\ALBINO\Desktop\Cam1</PathRecordCam1>
       <PathRecordCam2>C:\Users\ALBINO\Desktop\Cam2</PathRecordCam2>
       <Cam1Track>true</Cam1Track>
@@ -46,11 +50,11 @@
       <FPSCam2>200</FPSCam2>
       <UsePulsePal>true</UsePulsePal>
       <PortPulsePal>COM3</PortPulsePal>
-      <RecordTracking>false</RecordTracking>
+      <RecordTracking>true</RecordTracking>
       <PathRecordingTracking>C:\Users\ALBINO\Desktop\Track.txt</PathRecordingTracking>
-      <RecordStimulus>false</RecordStimulus>
+      <RecordStimulus>true</RecordStimulus>
       <PathRecordingStimulus>C:\Users\ALBINO\Desktop\Stim.txt</PathRecordingStimulus>
-      <DurationInSeconds>60</DurationInSeconds>
+      <DurationInSeconds>330</DurationInSeconds>
     </VRProtocolFactory>
   </objectBuilder>
 </WorldObject>

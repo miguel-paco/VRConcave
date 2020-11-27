@@ -17,10 +17,11 @@
           <rz>0</rz>  
           <scale>1</scale>
         </PositionFactory>
-        <DarkCircleFactory>
-          <circleRadius>1.56</circleRadius>
+        <DarkEllipseFactory>
+          <ellipseXRadius>1.56</ellipseXRadius>
+          <ellipseYRadius>0.78</ellipseYRadius>
           <nPoints>100</nPoints>
-        </DarkCircleFactory>
+        </DarkEllipseFactory>
         <UpdateStimulusFactory>
           <protocol>0</protocol>
         </UpdateStimulusFactory>

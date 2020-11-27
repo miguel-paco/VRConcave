@@ -62,6 +62,8 @@ namespace FlyVRena2._0.VirtualWorld.Services.UpdateServices
 
                 this.positionService.position.X = Convert.ToSingle(centroid.VirtualRealityLine.X);
                 this.positionService.position.Y = Convert.ToSingle(centroid.VirtualRealityLine.Y);
+                this.positionService.rotation.Z = Convert.ToSingle(-walking_angle);
+
             }
 
         }
@@ -86,6 +88,7 @@ namespace FlyVRena2._0.VirtualWorld.Services.UpdateServices
                 //Console.WriteLine("{0}", centroid.MillimetersLine);
                 this.positionService.position.X = Convert.ToSingle(centroid.VirtualRealityLine.X);
                 this.positionService.position.Y = Convert.ToSingle(centroid.VirtualRealityLine.Y);
+                this.positionService.rotation.Z = Convert.ToSingle(Math.PI * data.position[2] / 180);
             }
 
             // Save Stimulus Position
