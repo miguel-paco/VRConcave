@@ -23,7 +23,9 @@ namespace FlyVRena2._0.VirtualWorld.Services
         public string recordPathCam1 = "";
         public string recordPathCam2 = "";
         public bool usePulsePal = false;
-        public string portPulsePal = "COM5";
+        public string portPulsePal = "COM3";
+        public bool usePhotodiode = false;
+        public string portPhotodiode = "COM4";
         public bool recordTracking = false;
         public bool recordTrackingRaw = false;
         public string recordPathTracking = "";
@@ -33,7 +35,7 @@ namespace FlyVRena2._0.VirtualWorld.Services
 
         public VRProtocol(IServiceProvider wObj, VirtualWorld VW, string cam1Params, string cam2Params, bool cam1Use, bool cam2Use, bool cam1Track, bool cam2Track,
             bool cam1Disp, bool cam2Disp, bool cam1Rec, bool cam2Rec, string cam1StringRec, string cam2StringRec, int cam1FPS, int cam2FPS,
-            bool pulsePalUse, string pulsePalPort, bool trackingRec,
+            bool pulsePalUse, string pulsePalPort, bool photodiodeUse, string photodiodePort, bool trackingRec,
             string trackingRecPath, bool stimulusRec, string stimulusRecPath, float duration)
         {
             this.paramsPathCam1 = cam1Params;
@@ -52,6 +54,8 @@ namespace FlyVRena2._0.VirtualWorld.Services
             this.recordPathCam2 = cam2StringRec;
             this.usePulsePal = pulsePalUse;
             this.portPulsePal = pulsePalPort;
+            this.usePhotodiode = photodiodeUse;
+            this.portPhotodiode = photodiodePort;
             this.recordTracking = trackingRec;
             this.recordPathTracking = trackingRecPath;
             this.recordStimulus = stimulusRec;

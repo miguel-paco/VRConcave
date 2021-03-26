@@ -11,6 +11,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using OpenCV.Net;
+using System.Text.RegularExpressions;
 
 namespace FlyVRena2._0.External
 {
@@ -23,6 +24,8 @@ namespace FlyVRena2._0.External
         public Stopwatch watch;
         private bool writeStimulus = false;
         private FlyVRena2._0.VirtualWorld.VirtualWorld vw;
+
+        Photodiode lightValue;
 
         public StimRecorder(string path, FlyVRena2._0.VirtualWorld.VirtualWorld VW)
         {
@@ -60,26 +63,71 @@ namespace FlyVRena2._0.External
             fileStream.Flush();
         }
 
+        public StimRecorder(string path, Photodiode pd, uEyeCamera camera, bool writeStimulus, FlyVRena2._0.VirtualWorld.VirtualWorld VW)
+        {
+            this.vw = VW;
+            this.path = path;
+            this.writeStimulus = writeStimulus;
+            fileStream = new StreamWriter(path);
+            fileStream.Flush();
+            cam = camera;
+            lightValue = pd;
+        }
+
+        public StimRecorder(string path, Photodiode pd, bool writeStimulus, FlyVRena2._0.VirtualWorld.VirtualWorld VW)
+        {
+
+            this.vw = VW;
+            this.path = path;
+            this.writeStimulus = writeStimulus;
+            fileStream = new StreamWriter(path);
+            fileStream.Flush();
+            lightValue = pd;
+        }
+
         protected override void Process(T data)
         {
             Coordinates center = new Coordinates() { VirtualRealityLine = new Point2d(data.position[0], data.position[1]) };
             float[] size = data.size;
+            string stringlv = lightValue.Read;
 
             // General save Structure:
             // FramesCam1 TrackingClock StimulusCenterPositionX(mm) StimulusCenterPositionY(mm)
-            // StimulusSize1(mm) StimulusSize2(mm) ExperimentTimer FramesCam2
+            // StimulusSize1(mm) StimulusSize2(mm) PhotodiodeValue ExperimentTimer FramesCam2
 
+            if (lightValue != null)
+            {
+                Console.WriteLine(stringlv);
+            }
+            
             if (writeStimulus)
             {
                 if (cam != null)
                 {
-                    fileStream.WriteLine(data.ID.ToString() + " " + data.time.ToString() + " " + center.MillimetersCurve.X.ToString() + " " + center.MillimetersCurve.Y.ToString() + " " +
-                        size[0].ToString() + " " + size[1].ToString() + " " + (vw._time).ToString("F6", CultureInfo.InvariantCulture) + " " + cam.m_s32FrameCoutTotal.ToString());
+                    if (lightValue != null)
+                    {
+                        fileStream.WriteLine(data.ID.ToString() + " " + data.time.ToString() + " " + center.MillimetersCurve.X.ToString() + " " + center.MillimetersCurve.Y.ToString() + " " +
+                            size[0].ToString() + " " + size[1].ToString() + " " + stringlv + " " +
+                            (vw._time).ToString("F6", CultureInfo.InvariantCulture) + " " + cam.m_s32FrameCoutTotal.ToString());
+                    }
+                    else
+                    {
+                        fileStream.WriteLine(data.ID.ToString() + " " + data.time.ToString() + " " + center.MillimetersCurve.X.ToString() + " " + center.MillimetersCurve.Y.ToString() + " " +
+                            size[0].ToString() + " " + size[1].ToString() + " " + (vw._time).ToString("F6", CultureInfo.InvariantCulture) + " " + cam.m_s32FrameCoutTotal.ToString());
+                    }
                 }
                 else
                 {
-                    fileStream.WriteLine(data.ID.ToString() + " " + data.time.ToString() + " " + center.MillimetersCurve.X.ToString() + " " + center.MillimetersCurve.Y.ToString() + " " +
+                    if (lightValue != null)
+                    {
+                        fileStream.WriteLine(data.ID.ToString() + " " + data.time.ToString() + " " + center.MillimetersCurve.X.ToString() + " " + center.MillimetersCurve.Y.ToString() + " " +
                         size[0].ToString() + " " + size[1].ToString() + " " + (vw._time).ToString("F6", CultureInfo.InvariantCulture));
+                    }
+                    else
+                    {
+                        fileStream.WriteLine(data.ID.ToString() + " " + data.time.ToString() + " " + center.MillimetersCurve.X.ToString() + " " + center.MillimetersCurve.Y.ToString() + " " +
+                        size[0].ToString() + " " + size[1].ToString() + " " + stringlv + " " + (vw._time).ToString("F6", CultureInfo.InvariantCulture));
+                    }
                 }
             }
         }

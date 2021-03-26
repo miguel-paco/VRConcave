@@ -46,11 +46,13 @@
       <FPSCam2>200</FPSCam2>
       <UsePulsePal>true</UsePulsePal>
       <PortPulsePal>COM3</PortPulsePal>
+      <UsePhotodiode>true</UsePhotodiode>
+      <PortPhotodiode>COM4</PortPhotodiode>
       <RecordTracking>false</RecordTracking>
       <PathRecordingTracking>C:\Users\ALBINO\Desktop\Track.txt</PathRecordingTracking>
-      <RecordStimulus>false</RecordStimulus>
+      <RecordStimulus>true</RecordStimulus>
       <PathRecordingStimulus>C:\Users\ALBINO\Desktop\Stim.txt</PathRecordingStimulus>
-      <DurationInSeconds>60</DurationInSeconds>
+      <DurationInSeconds>300</DurationInSeconds>
     </VRProtocolFactory>
   </objectBuilder>
 </WorldObject>

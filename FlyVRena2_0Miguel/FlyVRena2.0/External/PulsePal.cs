@@ -32,7 +32,6 @@ namespace FlyVRena2._0.External
         const byte SetVoltageCommand = 0x4F; // Option byte 79 - Set a fixed voltage on an output channel
         const byte Acknowledge = 0x4B; // Option byte 75 (Program custom pulse train 1)
 
-
         public PulsePal(string portID)
         {
             // Serial Port Settings  - Pulse Pal v1.X (https://sites.google.com/site/pulsepalwiki/serial-interface)
@@ -124,7 +123,6 @@ namespace FlyVRena2._0.External
         {
             this.Dispose();
         }
-
 
     }
 }

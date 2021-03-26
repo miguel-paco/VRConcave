@@ -34,6 +34,9 @@ namespace FlyVRena2._0.VirtualWorld
         public double _time = 0;
         public int time_check = 0;
 
+        // Photodiode
+        private Photodiode pd;
+
         public bool finish = false;
         public VirtualWorld(int Size)
         {
@@ -68,6 +71,13 @@ namespace FlyVRena2._0.VirtualWorld
             else
                 GetStimulus(protName);
 
+            // Initialize Photodiode
+            if (vRProtocol.usePhotodiode)
+            {
+                pd = new Photodiode(vRProtocol.portPhotodiode);
+                pd.StartPhotodiode();
+            }
+
             // Initialize data acquisition objects           
             if (vRProtocol.usePulsePal)
             {
@@ -76,7 +86,7 @@ namespace FlyVRena2._0.VirtualWorld
             }
             if (vRProtocol.useCam1)
             {
-                cam1 = new uEyeCamera(0, vRProtocol.paramsPathCam1, vRProtocol.trackCam1, vRProtocol.dispCam1, 0, vRProtocol.fpsCam1, null);
+                cam1 = new uEyeCamera(1, vRProtocol.paramsPathCam1, vRProtocol.trackCam1, vRProtocol.dispCam1, 0, vRProtocol.fpsCam1, null);
                 while (!cam1.m_IsLive) { }
                 if (cam1.m_IsLive)
                 {
@@ -92,9 +102,9 @@ namespace FlyVRena2._0.VirtualWorld
             if (vRProtocol.useCam2)
             {
                 if (vRProtocol.usePulsePal)
-                    cam2 = new uEyeCamera(1, vRProtocol.paramsPathCam2, vRProtocol.trackCam2, vRProtocol.dispCam2, 800, vRProtocol.fpsCam2, pp);
+                    cam2 = new uEyeCamera(0, vRProtocol.paramsPathCam2, vRProtocol.trackCam2, vRProtocol.dispCam2, 800, vRProtocol.fpsCam2, pp);
                 else
-                    cam2 = new uEyeCamera(1, vRProtocol.paramsPathCam2, vRProtocol.trackCam2, vRProtocol.dispCam2, 800, vRProtocol.fpsCam2, null);
+                    cam2 = new uEyeCamera(0, vRProtocol.paramsPathCam2, vRProtocol.trackCam2, vRProtocol.dispCam2, 800, vRProtocol.fpsCam2, null);
 
                 if (cam2.m_IsLive)
                 {
@@ -121,13 +131,29 @@ namespace FlyVRena2._0.VirtualWorld
 
             if (vRProtocol.recordStimulus & vRProtocol.useCam2)
             {
-                stimRecorder = new StimRecorder<StimData>(vRProtocol.recordPathStimulus, cam2, true, this);
-                stimRecorder.Start();
+                if (vRProtocol.usePhotodiode)
+                {
+                    stimRecorder = new StimRecorder<StimData>(vRProtocol.recordPathStimulus, pd, cam2, true, this);
+                    stimRecorder.Start();
+                }
+                else
+                {
+                    stimRecorder = new StimRecorder<StimData>(vRProtocol.recordPathStimulus, cam2, true, this);
+                    stimRecorder.Start();
+                }
             }
             else if (vRProtocol.recordStimulus & !vRProtocol.useCam2)
             {
-                stimRecorder = new StimRecorder<StimData>(vRProtocol.recordPathStimulus, true, this);
-                stimRecorder.Start();
+                if (vRProtocol.usePhotodiode)
+                {
+                    stimRecorder = new StimRecorder<StimData>(vRProtocol.recordPathStimulus, pd, true, this);
+                    stimRecorder.Start();
+                }
+                else
+                {
+                    stimRecorder = new StimRecorder<StimData>(vRProtocol.recordPathStimulus, true, this);
+                    stimRecorder.Start();
+                }
             }
         }
 
@@ -162,7 +188,8 @@ namespace FlyVRena2._0.VirtualWorld
                 if (_time - time_check >= 1)
                 {
                     time_check = Convert.ToInt32(_time);
-                    Console.WriteLine("{0}", time_check);
+                    //Console.WriteLine("{0}", time_check);
+
                 }
             }
             // Finish Experiment
@@ -217,7 +244,7 @@ namespace FlyVRena2._0.VirtualWorld
                 VRProtocolFactory vrpF = (VRProtocolFactory)root.objectBuilder[0];
                 vrpF.Initialize(root, this);
                 this.vRProtocol = (VRProtocol)root.GetService(typeof(VRProtocol));
-                if (vRProtocol.recordCam1 || vRProtocol.recordCam2 || vRProtocol.recordTracking)
+                if (vRProtocol.recordCam1 || vRProtocol.recordCam2 || vRProtocol.recordTracking || vRProtocol.recordStimulus)
                 {
                     CreateSaveDirectory(fileName, this.vRProtocol);
                 }
@@ -233,7 +260,7 @@ namespace FlyVRena2._0.VirtualWorld
                 VRProtocolFactory vrpF = (VRProtocolFactory)root.objectBuilder[0];
                 vrpF.Initialize(root, this);
                 this.vRProtocol = (VRProtocol)root.GetService(typeof(VRProtocol));
-                if (vRProtocol.recordCam1 || vRProtocol.recordCam2 || vRProtocol.recordTracking)
+                if (vRProtocol.recordCam1 || vRProtocol.recordCam2 || vRProtocol.recordTracking || vRProtocol.recordStimulus)
                 {
                     CreateSaveDirectory(fileName, this.vRProtocol);
                 }
@@ -341,6 +368,10 @@ namespace FlyVRena2._0.VirtualWorld
                         this.fastT.OnExit();
                     this.cam2.OnExit();
                 }
+            }
+            if (vRProtocol.usePhotodiode)
+            {
+                pd.OnExit();
             }
             if (vRProtocol.usePulsePal)
             {
