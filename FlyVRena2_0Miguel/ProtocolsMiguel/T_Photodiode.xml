@@ -1,11 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <WorldObject xmlns:ServiceFactories="FlyVRena2._0.VirtualWorld.ServiceFactories">
+    
   <WObjects>
     <WorldObject>
       <WObjects/>
       <objectBuilder>
         <NameFactory>
-          <name>Spot1</name>
+          <name>PhotoShade</name>
         </NameFactory>
         <PositionFactory>
           <x>0</x>
@@ -21,7 +22,7 @@
           <nPoints>100</nPoints>
         </DarkCircleFactory>
         <UpdateStimulusFactory>
-          <protocol>1</protocol>
+          <protocol>0</protocol>
           <protocol_radius> 25</protocol_radius>
           <protocol_speed> 20</protocol_speed>
           <protocol_direction> 1</protocol_direction>
@@ -38,8 +39,8 @@
       <PathParamsCam2>C:\Users\ALBINO\Desktop\HighResCamParams.ini</PathParamsCam2>
       <Cam1Disp>true</Cam1Disp>
       <Cam2Disp>true</Cam2Disp>
-      <RecordCam1>true</RecordCam1>
-      <RecordCam2>true</RecordCam2>
+      <RecordCam1>false</RecordCam1>
+      <RecordCam2>false</RecordCam2>
       <PathRecordCam1>C:\Users\ALBINO\Desktop\Cam1</PathRecordCam1>
       <PathRecordCam2>C:\Users\ALBINO\Desktop\Cam2</PathRecordCam2>
       <Cam1Track>true</Cam1Track>
@@ -48,11 +49,13 @@
       <FPSCam2>200</FPSCam2>
       <UsePulsePal>true</UsePulsePal>
       <PortPulsePal>COM3</PortPulsePal>
-      <RecordTracking>true</RecordTracking>
+      <UsePhotodiode>true</UsePhotodiode>
+      <PortPhotodiode>COM4</PortPhotodiode>
+      <RecordTracking>false</RecordTracking>
       <PathRecordingTracking>C:\Users\ALBINO\Desktop\Track.txt</PathRecordingTracking>
       <RecordStimulus>true</RecordStimulus>
       <PathRecordingStimulus>C:\Users\ALBINO\Desktop\Stim.txt</PathRecordingStimulus>
-      <DurationInSeconds>330</DurationInSeconds>
+      <DurationInSeconds>300</DurationInSeconds>
     </VRProtocolFactory>
   </objectBuilder>
 </WorldObject>

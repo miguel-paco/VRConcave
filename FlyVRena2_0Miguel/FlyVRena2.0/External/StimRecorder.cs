@@ -91,15 +91,15 @@ namespace FlyVRena2._0.External
             float[] size = data.size;
             string stringlv = lightValue.Read;
 
+            //if (lightValue != null)
+            //{
+            //    Console.WriteLine(stringlv);
+            //}
+
             // General save Structure:
             // FramesCam1 TrackingClock StimulusCenterPositionX(mm) StimulusCenterPositionY(mm)
             // StimulusSize1(mm) StimulusSize2(mm) PhotodiodeValue ExperimentTimer FramesCam2
 
-            if (lightValue != null)
-            {
-                Console.WriteLine(stringlv);
-            }
-            
             if (writeStimulus)
             {
                 if (cam != null)

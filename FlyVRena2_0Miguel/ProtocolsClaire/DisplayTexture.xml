@@ -18,7 +18,7 @@
           <scale>1</scale>
         </PositionFactory>
        <TexturedSquareFactory>
-          <texturePath>C:\Users\ALBINO\Documents\VRConcave\FlyVRena2_0Miguel\Protocols\Textures/800x800px_Checkerboard-100x100px.png</texturePath>
+          <texturePath>C:\Users\ALBINO\Documents\VRConcave\FlyVRena2_0Miguel\ProtocolsClaire\Textures/800x800px_Checkerboard-100x100px.png</texturePath>
           <textureSize>800</textureSize>
         </TexturedSquareFactory>-->
       </objectBuilder>

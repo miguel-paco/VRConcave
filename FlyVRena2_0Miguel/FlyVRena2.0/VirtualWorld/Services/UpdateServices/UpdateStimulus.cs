@@ -66,6 +66,9 @@ namespace FlyVRena2._0.VirtualWorld.Services.UpdateServices
 
             }
 
+            // Protocol 100: Photodiode
+            
+
         }
 
         float[] currentStimSize = new float[2];

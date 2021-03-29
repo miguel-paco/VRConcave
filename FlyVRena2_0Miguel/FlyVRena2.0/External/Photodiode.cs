@@ -11,6 +11,10 @@ namespace FlyVRena2._0.External
     public class Photodiode
     {
 
+        // NOTES:
+        //-------> If the output is "E", then the arduino didn't have time to receive and deliver a value request before the next request was made\
+
+
         // Configure Photodiode Port
         public const int BaudRate = 115200; // Transfer Data rate 
         private SerialPort serialPort;
