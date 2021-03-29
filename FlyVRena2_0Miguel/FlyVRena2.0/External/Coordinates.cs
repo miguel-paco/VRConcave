@@ -72,15 +72,15 @@ namespace FlyVRena2._0.External
 
             // Conversion Matrix Values: 3x3 Matrix [a,b,c; d,e,f; g,h,i]
             // (set 'a','e'&'i' to 1 and the rest to 0 - identity matrix - if there is no transformation)
-            const float a = 0.00077075f;
-            const float b = -0.012556f;
-            const float c = 0.71356f;
-            const float d = -0.011993f;
-            const float e = -0.00016853f;
-            const float f = 0.70037f;
-            const float g = 2.4161e-06f;
-            const float h = 2.6058e-07f;
-            const float i = 0.0034603f;
+            const float a = 0.00075577f;
+            const float b = -0.012533f;
+            const float c = 0.71299f;
+            const float d = 0.011956f;
+            const float e = -0.00015895f;
+            const float f = 0.70095f;
+            const float g = 2.4296e-06f;
+            const float h = 2.2929e-07f;
+            const float i = 0.0034536f;
 
             // If there is a displacement between the current image and the calibrated image (set to 0 if there is no displacement)
             const float dispX = 0f;
@@ -99,15 +99,15 @@ namespace FlyVRena2._0.External
 
             // Conversion Matrix Values: 3x3 Matrix [a,b,c; d,e,f; g,h,i]
             // (set 'a','e'&'i' to 1 and the rest to 0 - identity matrix - if there is no transformation)
-            const float a = -6.0758e-05f;
-            const float b = 0.0034711f;
-            const float c = -0.69004f;
-            const float d = 0.0034354f;
-            const float e = 7.5192e-05f;
-            const float f = -0.72365f;
-            const float g = -2.1675e-07f;
-            const float h = -2.4211e-06f;
-            const float i = -0.011991f;
+            const float a = -5.6454e-05f;
+            const float b = 0.0034653f;
+            const float c = -0.69169f;
+            const float d = 0.0034286f;
+            const float e = 7.0202e-05f;
+            const float f = -0.72208f;
+            const float g = -1.8842e-07f;
+            const float h = -2.4339e-06f;
+            const float i = -0.011963f;
 
             // If there is a displacement between the current image and the calibrated image (set to 0 if there is no displacement)
             const float dispX = 0f;
@@ -222,15 +222,15 @@ namespace FlyVRena2._0.External
 
             // Conversion Matrix Values: 3x3 Matrix [a,b,c; d,e,f; g,h,i]
             // (set 'a','e'&'i' to 1 and the rest to 0 - identity matrix - if there is no transformation)
-            const float a = -0.00044876f;
-            const float b = 0.016953f;
-            const float c = -0.75324f;
-            const float d = 0.017465f;
-            const float e = 0.00038315f;
-            const float f = -0.64795f;
-            const float g = 9.0218e-07f;
-            const float h = 1.0749e-05f;
-            const float i = 0.11044f;
+            const float a = -0.0004138f;
+            const float b = 0.016269f;
+            const float c = -0.75361f;
+            const float d = 0.016701f;
+            const float e = 0.00030068f;
+            const float f = -0.64824f;
+            const float g = -1.7453e-07f;
+            const float h = 9.1337e-06f;
+            const float i = 0.10638f;
 
             // If there is a displacement between the current image and the calibrated image (set to 0 if there is no displacement)
             const float dispX = 0f;
@@ -249,15 +249,15 @@ namespace FlyVRena2._0.External
 
             // Conversion Matrix Values: 3x3 Matrix [a,b,c; d,e,f; g,h,i]
             // (set 'a','e'&'i' to 1 and the rest to 0 - identity matrix - if there is no transformation)
-            const float a = 0.0028354f;
-            const float b = -0.10811f;
-            const float c = -0.61484f;
-            const float d = -0.11093f;
-            const float e = -0.0028089f;
-            const float f = -0.7731f;
-            const float g = 1.0772e-05f;
-            const float h = 1.162e-06f;
-            const float i = -0.017033f;
+            const float a = -0.00227f;
+            const float b = 0.10421f;
+            const float c = 0.61887f;
+            const float d = 0.10654f;
+            const float e = 0.0026471f;
+            const float f = 0.77105f;
+            const float g = -9.1404e-06f;
+            const float h = -6.0741e-08f;
+            const float i = 0.016302f;
 
             // If there is a displacement between the current image and the calibrated image (set to 0 if there is no displacement)
             const float dispX = 0f;
