@@ -24,10 +24,13 @@ namespace FlyVRena2._0.VirtualWorld.ServiceFactories.UpdateFactories
         [XmlElement("protocol_direction")]
         public int protocol_direction;
 
+        [XmlElement("protocol_timer_ms")]
+        public float protocol_timer;
+
         public override void Initialize(IServiceProvider provider, VirtualWorld VW)
         {
             var wo = (IServiceContainer)provider.GetService(typeof(IServiceContainer));
-            var upd = new UpdateStimulus(wo, VW, protocol, protocol_radius, protocol_speed, protocol_direction);
+            var upd = new UpdateStimulus(wo, VW, protocol, protocol_radius, protocol_speed, protocol_direction, protocol_timer);
             upd.Start();
             wo.AddService(typeof(UpdateStimulus), upd);
         }

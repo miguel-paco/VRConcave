@@ -188,7 +188,7 @@ namespace FlyVRena2._0.VirtualWorld
                 if (_time - time_check >= 1)
                 {
                     time_check = Convert.ToInt32(_time);
-                    //Console.WriteLine("{0}", time_check);
+                    Console.WriteLine("{0}", time_check);
 
                 }
             }

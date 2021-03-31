@@ -18,8 +18,10 @@ namespace FlyVRena2._0.VirtualWorld.Services.UpdateServices
         public float protocol_radius;
         public float protocol_speed;
         public int protocol_direction;
+        public float protocol_timer;
         public float k = 0f; // Check if at least one FilteredData was generated
         public Coordinates centroid;
+
 
         // Stimulus variables
         float[] currentStimSize = new float[2];
@@ -29,21 +31,23 @@ namespace FlyVRena2._0.VirtualWorld.Services.UpdateServices
         // Generic Protocol Tools
         public float counter = 0f;
         public float constant = 1000f;
-        // Protocol 1
+        // Protocol 1 - Circular Motion
         public double vector_norm;
         public double walking_angle;
-        // Protocol 100
+        // Protocol 100 - Flicker
         public float photodiodeShadowTimer = 100; // milliseconds
+        public bool photodiodeSwitch = false;
 
 
 
-        public UpdateStimulus(IServiceContainer wObj, VirtualWorld VW, int protocol, float protocol_radius, float protocol_speed, int protocol_direction) : base(wObj, VW)
+        public UpdateStimulus(IServiceContainer wObj, VirtualWorld VW, int protocol, float protocol_radius, float protocol_speed, int protocol_direction, float protocol_timer) : base(wObj, VW)
         {
             posServ = new PositionService();
             this.protocol = protocol;
             this.protocol_radius = protocol_radius;
             this.protocol_speed = protocol_speed;
             this.protocol_direction = protocol_direction;
+            this.protocol_timer = protocol_timer;
             if (VW.update != null)
             {
                 VW.update.UpdateServices.Add(this.nameService.name, this);
@@ -78,20 +82,21 @@ namespace FlyVRena2._0.VirtualWorld.Services.UpdateServices
 
             }
 
-            // Protocol 100: Photodiode
+            // Protocol 100: Photodiode Flicker
             if (protocol == 100)
             {
                 counter += 1;
 
-                if (counter == photodiodeShadowTimer)
+                if (counter == protocol_timer)
                 {
                     counter = 0;
                     constant = -constant;
                     this.positionService.position.X += constant;
                     this.positionService.position.Y += constant;
+                    photodiodeSwitch = !photodiodeSwitch;
                 }
             }
-
+            
         }
 
 
@@ -115,11 +120,14 @@ namespace FlyVRena2._0.VirtualWorld.Services.UpdateServices
             }
 
             // Save Stimulus Position
-            currentStimPosition[0] = positionService.position.X;
-            currentStimPosition[1] = positionService.position.Y;
-            currentStimSize[0] = 0f;
-            currentStimSize[1] = 0f;
-            this.Send<StimData>(new StimData(currentStimPosition, currentStimSize, data.clock, data.ID));
+            if (protocol != 100)
+            {   
+               currentStimPosition[0] = positionService.position.X;
+               currentStimPosition[1] = positionService.position.Y;
+               currentStimSize[0] = 0f;
+               currentStimSize[1] = 0f;
+               this.Send<StimData>(new StimData(currentStimPosition, currentStimSize, photodiodeSwitch, data.clock, data.ID));
+            }
         }
     }
 }

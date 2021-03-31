@@ -50,9 +50,10 @@
           <circleRadius>30</circleRadius>
           <nPoints>100</nPoints>
         </DarkCircleFactory>
-        <UpdatePhotodiodeFactory>
-          <interval_milliseconds>100</interval_milliseconds>
-        </UpdatePhotodiodeFactory>
+        <UpdateStimulusFactory>
+          <protocol>100</protocol>
+          <protocol_timer_ms>100</protocol_timer_ms>
+        </UpdateStimulusFactory>
       </objectBuilder>
     </WorldObject>
 

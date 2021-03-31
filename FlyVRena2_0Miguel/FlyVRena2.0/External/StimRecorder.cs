@@ -24,6 +24,7 @@ namespace FlyVRena2._0.External
         public Stopwatch watch;
         private bool writeStimulus = false;
         private FlyVRena2._0.VirtualWorld.VirtualWorld vw;
+        private bool photobool = false;
 
         Photodiode lightValue;
 
@@ -89,12 +90,13 @@ namespace FlyVRena2._0.External
         {
             Coordinates center = new Coordinates() { VirtualRealityLine = new Point2d(data.position[0], data.position[1]) };
             float[] size = data.size;
-            string stringlv = lightValue.Read;
+            string photoLvl = lightValue.Read;
 
-            if (lightValue != null)
-            {
-                Console.WriteLine(stringlv);
-            }
+            // SEE PHOTODIODE RESULT
+            //if (lightValue != null)
+            //{
+            //    Console.WriteLine(photoLvl);
+            //}
 
             // General save Structure:
             // FramesCam1 TrackingClock StimulusCenterPositionX(mm) StimulusCenterPositionY(mm)
@@ -107,7 +109,7 @@ namespace FlyVRena2._0.External
                     if (lightValue != null)
                     {
                         fileStream.WriteLine(data.ID.ToString() + " " + data.time.ToString() + " " + center.MillimetersCurve.X.ToString() + " " + center.MillimetersCurve.Y.ToString() + " " +
-                            size[0].ToString() + " " + size[1].ToString() + " " + stringlv + " " +
+                            size[0].ToString() + " " + size[1].ToString() + " " + photobool.ToString() + " " + photoLvl + " " +
                             (vw._time).ToString("F6", CultureInfo.InvariantCulture) + " " + cam.m_s32FrameCoutTotal.ToString());
                     }
                     else
@@ -126,7 +128,7 @@ namespace FlyVRena2._0.External
                     else
                     {
                         fileStream.WriteLine(data.ID.ToString() + " " + data.time.ToString() + " " + center.MillimetersCurve.X.ToString() + " " + center.MillimetersCurve.Y.ToString() + " " +
-                        size[0].ToString() + " " + size[1].ToString() + " " + stringlv + " " + (vw._time).ToString("F6", CultureInfo.InvariantCulture));
+                        size[0].ToString() + " " + size[1].ToString() + " " + photobool.ToString() + " " + photoLvl + " " + (vw._time).ToString("F6", CultureInfo.InvariantCulture));
                     }
                 }
             }
