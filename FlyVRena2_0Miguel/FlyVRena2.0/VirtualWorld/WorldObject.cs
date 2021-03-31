@@ -45,7 +45,7 @@ namespace FlyVRena2._0.VirtualWorld
         [XmlArrayItem(ElementName = "UpdateNormalReverseGainFactory", Type = typeof(UpdateNormalReverseGainFactory))]
         [XmlArrayItem(ElementName = "RFMappingRotDotStimFactory", Type = typeof(RFMappingRotDotStimFactory))]
         [XmlArrayItem(ElementName = "VRProtocolFactory", Type = typeof(VRProtocolFactory))]
-        [XmlArrayItem(ElementName = "UpdateRotationReplayFactory", Type = typeof(UpdateRotationReplayFactory))]
+        [XmlArrayItem(ElementName = "UpdatePhotodiodeFactory", Type = typeof(UpdatePhotodiodeFactory))]
         [XmlArrayItem(ElementName = "UpdateStimulusFactory", Type = typeof(UpdateStimulusFactory))]
 
 

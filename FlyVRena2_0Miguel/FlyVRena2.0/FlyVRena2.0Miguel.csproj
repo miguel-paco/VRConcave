@@ -260,7 +260,7 @@
     <Compile Include="VirtualWorld\ServiceFactories\UpdateFactories\UpdateFlickerClockFactory.cs" />
     <Compile Include="VirtualWorld\ServiceFactories\UpdateFactories\UpdateNormalReverseGainFactory.cs" />
     <Compile Include="VirtualWorld\ServiceFactories\UpdateFactories\UpdateOscilatingDriftFactory.cs" />
-    <Compile Include="VirtualWorld\ServiceFactories\UpdateFactories\UpdateRotationReplayFactory.cs" />
+    <Compile Include="VirtualWorld\ServiceFactories\UpdateFactories\UpdatePhotodiodeFactory.cs" />
     <Compile Include="VirtualWorld\ServiceFactories\UpdateFactories\UpdateStimulusFactory.cs" />
     <Compile Include="VirtualWorld\ServiceFactories\UpdateFactories\UpdateWithFlyConstantDriftFactory.cs" />
     <Compile Include="VirtualWorld\ServiceFactories\VRProtocolFactory.cs" />
@@ -281,7 +281,7 @@
     <Compile Include="VirtualWorld\Services\UpdateServices\UpdateFlickerClock.cs" />
     <Compile Include="VirtualWorld\Services\UpdateServices\UpdateNormalReverseGain.cs" />
     <Compile Include="VirtualWorld\Services\UpdateServices\UpdateOscilatingDrift.cs" />
-    <Compile Include="VirtualWorld\Services\UpdateServices\UpdateRotationReplay.cs" />
+    <Compile Include="VirtualWorld\Services\UpdateServices\UpdatePhotodiode.cs" />
     <Compile Include="VirtualWorld\Services\UpdateServices\UpdateWithFlyConstantDrift.cs" />
     <Compile Include="VirtualWorld\Services\VRProtocol.cs" />
     <Compile Include="VirtualWorld\Subsystems\RenderSubsystem.cs" />

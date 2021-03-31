@@ -21,10 +21,21 @@ namespace FlyVRena2._0.VirtualWorld.Services.UpdateServices
         public float k = 0f; // Check if at least one FilteredData was generated
         public Coordinates centroid;
 
+        // Stimulus variables
+        float[] currentStimSize = new float[2];
+        double[] currentStimPosition = new double[2];
+
         // Specific Variables
+        // Generic Protocol Tools
+        public float counter = 0f;
+        public float constant = 1000f;
         // Protocol 1
         public double vector_norm;
         public double walking_angle;
+        // Protocol 100
+        public float photodiodeShadowTimer = 100; // milliseconds
+
+
 
         public UpdateStimulus(IServiceContainer wObj, VirtualWorld VW, int protocol, float protocol_radius, float protocol_speed, int protocol_direction) : base(wObj, VW)
         {
@@ -43,6 +54,7 @@ namespace FlyVRena2._0.VirtualWorld.Services.UpdateServices
         public override void Update(double time)
         {
             // Protocol 0: Follow Fly
+         
 
             // Protocol 1: Circle
             if (protocol == 1)
@@ -67,12 +79,20 @@ namespace FlyVRena2._0.VirtualWorld.Services.UpdateServices
             }
 
             // Protocol 100: Photodiode
-            
+            if (protocol == 100)
+            {
+                counter += 1;
+
+                if (counter == photodiodeShadowTimer)
+                {
+                    counter = 0;
+                    constant = -constant;
+                    this.positionService.position.X += constant;
+                    this.positionService.position.Y += constant;
+                }
+            }
 
         }
-
-        float[] currentStimSize = new float[2];
-        double[] currentStimPosition = new double[2];
 
 
         protected override void Process(FilteredData data)

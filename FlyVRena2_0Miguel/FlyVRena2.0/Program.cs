@@ -16,7 +16,7 @@ namespace FlyVRena2._0
 
         private static void Main(string[] s)
         {
-            if (s.Length > 0)
+             if (s.Length > 0)
                 new MainWindow(s[0], s[1]).Run();
             else
                 new MainWindow().Run();

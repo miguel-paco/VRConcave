@@ -24,6 +24,7 @@ namespace FlyVRena2._0.VirtualWorld.Services.DrawServices
                 rObj = new ColoredObject(VertexFactory.CreateSolidCircle(circleRadius, np, new float[] { 0, 0 }, 1, Color4.Black), sp.Id);
                 VW.render.DrawServices.Add(nameService.name, this);
             }
+            Console.WriteLine();
         }
 
         public override void Render(ICamera camera)

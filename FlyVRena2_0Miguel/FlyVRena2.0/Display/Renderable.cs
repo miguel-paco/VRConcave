@@ -23,11 +23,13 @@ namespace FlyVRena2._0.Display
 
             GL.BindVertexArray(VertexArray);
             GL.BindBuffer(BufferTarget.ArrayBuffer, Buffer);
+    //        GL.UseProgram(Program);
         }
         public virtual void Bind()
         {
             GL.UseProgram(Program);
-            GL.BindVertexArray(VertexArray);
+            GL.BindVertexArray(VertexArray-1); // -1 toguether with the DUMMY object makes it so that the objects drawn are correctly attributed. This is a Patch Fix for the interactions with the GL interface
+
         }
         public virtual void Render()
         {

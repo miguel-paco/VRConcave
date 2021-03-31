@@ -28,6 +28,7 @@ namespace FlyVRena2._0.VirtualWorld.ServiceFactories.DrawFactories
             //Console.WriteLine("{0}", radius);
             var draw = new DarkCircleService(wo, VW, radius, np);
             wo.AddService(typeof(DarkCircleService), draw);
+            Console.WriteLine();
         }
     }
 }

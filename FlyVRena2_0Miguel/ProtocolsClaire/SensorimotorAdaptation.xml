@@ -18,7 +18,7 @@
           <scale>1</scale>
         </PositionFactory>
        <TexturedSquareFactory>
-          <texturePath>C:\Users\ALBINO\Documents\VRConcave\FlyVRena2_0Miguel\Protocols\Textures/800x800px_Checkerboard-100x100px.png</texturePath>
+          <texturePath>C:\Users\ALBINO\Documents\VRConcave\FlyVRena2_0Miguel\ProtocolsClaire\Darkness.png</texturePath>
           <textureSize>800</textureSize>
         </TexturedSquareFactory>-->
       </objectBuilder>
@@ -47,7 +47,7 @@
       <PathRecordingTracking>C:\Users\ALBINO\Desktop\Track.txt</PathRecordingTracking>
       <RecordStimulus>false</RecordStimulus>
       <PathRecordingStimulus>C:\Users\ALBINO\Desktop\Stim.txt</PathRecordingStimulus>
-      <DurationInSeconds>60</DurationInSeconds>
+      <DurationInSeconds>1800</DurationInSeconds>
     </VRProtocolFactory>
   </objectBuilder>
 </WorldObject>

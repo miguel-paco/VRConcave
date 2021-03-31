@@ -228,10 +228,6 @@ C:\Users\ALBINO\Documents\VRConcave\FlyVRena2_0Miguel\FlyVRena2.0\bin\Debug\Syst
 C:\Users\ALBINO\Documents\VRConcave\FlyVRena2_0Miguel\FlyVRena2.0\bin\Debug\System.Text.RegularExpressions.dll
 C:\Users\ALBINO\Documents\VRConcave\FlyVRena2_0Miguel\FlyVRena2.0\bin\Debug\System.Xml.ReaderWriter.dll
 C:\Users\ALBINO\Documents\VRConcave\FlyVRena2_0Miguel\FlyVRena2.0\bin\Debug\ZedGraph.dll
-C:\Users\ALBINO\Documents\VRConcave\FlyVRena2_0Miguel\FlyVRena2.0\bin\Debug\NationalInstruments.NiLmClientDLL.dll
-C:\Users\ALBINO\Documents\VRConcave\FlyVRena2_0Miguel\FlyVRena2.0\bin\Debug\NationalInstruments.MStudioCLM.dll
-C:\Users\ALBINO\Documents\VRConcave\FlyVRena2_0Miguel\FlyVRena2.0\bin\Debug\NationalInstruments.Common.xml
-C:\Users\ALBINO\Documents\VRConcave\FlyVRena2_0Miguel\FlyVRena2.0\bin\Debug\NationalInstruments.DAQmx.xml
 C:\Users\ALBINO\Documents\VRConcave\FlyVRena2_0Miguel\FlyVRena2.0\bin\Debug\OpenCV.Net.xml
 C:\Users\ALBINO\Documents\VRConcave\FlyVRena2_0Miguel\FlyVRena2.0\bin\Debug\OpenTK.pdb
 C:\Users\ALBINO\Documents\VRConcave\FlyVRena2_0Miguel\FlyVRena2.0\bin\Debug\OpenTK.xml

@@ -43,18 +43,18 @@ namespace FlyVRena2._0.VirtualWorld.Subsystems
         //public static readonly object obj = new object();
         public void Draw(double time)
         {
-                int lastProgram = -1;
-                foreach (DrawService ds in DrawServices.Values)
+            int lastProgram = -1;
+            foreach (DrawService ds in DrawServices.Values)
+            {
+                var program = ds.rObj.Program;
+                if (lastProgram != program)
                 {
-                    var program = ds.rObj.Program;
-                    if (lastProgram != program)
-                    {
-                        var _pm = camera.ProjectionMatrix;
-                        GL.UniformMatrix4(20, false, ref _pm);
-                    }
-                    lastProgram = ds.rObj.Program;
-                    ds.Render(camera);
+                    var _pm = camera.ProjectionMatrix;
+                    GL.UniformMatrix4(20, false, ref _pm);
                 }
+                lastProgram = ds.rObj.Program;
+                ds.Render(camera);
+            }
         }
 
         public void OnExit()
