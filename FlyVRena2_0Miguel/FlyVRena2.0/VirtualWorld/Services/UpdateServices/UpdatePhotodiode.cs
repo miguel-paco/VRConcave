@@ -20,15 +20,13 @@ namespace FlyVRena2._0.VirtualWorld.Services.UpdateServices
         // Specific Variables
         public float counter = 0f;
         public float constant = 1000f;
-        public float photodiodeShadowTimer = 100; // milliseconds
+        public float photodiodeShadowFrames = 0;
         public bool photoStatus = false;
 
-
-
-        public UpdatePhotodiode(IServiceContainer wObj, VirtualWorld VW, float photodiodeShadowTimer) : base(wObj, VW)
+        public UpdatePhotodiode(IServiceContainer wObj, VirtualWorld VW, float photodiodeShadowFrames) : base(wObj, VW)
         {
             posServ = new PositionService();
-            this.photodiodeShadowTimer = photodiodeShadowTimer;
+            this.photodiodeShadowFrames = photodiodeShadowFrames;
             if (VW.update != null)
             {
                 VW.update.UpdateServices.Add(this.nameService.name, this);
@@ -38,28 +36,22 @@ namespace FlyVRena2._0.VirtualWorld.Services.UpdateServices
         // Open Loop Section
         public override void Update(double time)
         {
-            if (k == 1)
-            {
-                counter += 1;
-
-                if (counter == photodiodeShadowTimer)
-                {
-                    photoStatus = !photoStatus;
-                     counter = 0;
-                     constant = -constant;
-                     this.positionService.position.X += constant;
-                     this.positionService.position.Y += constant;
-                }
-            }
+           
         }
 
 
         protected override void Process(FilteredData data)
         {
-            if (k == 0)
+            counter += 1;
+            if (counter == photodiodeShadowFrames)
             {
-                k = 1;
+                counter = 0;
+                constant = -constant;
+                this.positionService.position.X += constant;
+                this.positionService.position.Y += constant;
+                photoStatus = !photoStatus;
             }
+            this.Send<PhotoData>(new PhotoData(this.positionService.position.X, photoStatus, data.ID));
         }
     }
 }

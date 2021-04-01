@@ -231,10 +231,12 @@
     <Compile Include="Display\TexturedVertex.cs" />
     <Compile Include="Display\VertexFactory.cs" />
     <Compile Include="External\AngleVal.cs" />
+    <Compile Include="External\PhotoData.cs" />
     <Compile Include="External\Photodiode.cs" />
     <Compile Include="External\Coordinates.cs" />
     <Compile Include="External\DataRecorder.cs" />
     <Compile Include="External\Frame.cs" />
+    <Compile Include="External\PhotoRecorder.cs" />
     <Compile Include="External\PulsePal.cs" />
     <Compile Include="External\ReadFTDI.cs" />
     <Compile Include="External\StimData.cs" />

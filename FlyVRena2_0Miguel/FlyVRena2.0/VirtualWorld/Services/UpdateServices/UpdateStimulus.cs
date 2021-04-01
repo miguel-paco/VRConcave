@@ -34,9 +34,6 @@ namespace FlyVRena2._0.VirtualWorld.Services.UpdateServices
         // Protocol 1 - Circular Motion
         public double vector_norm;
         public double walking_angle;
-        // Protocol 100 - Flicker
-        public float photodiodeShadowTimer = 100; // milliseconds
-        public bool photodiodeSwitch = false;
 
 
 
@@ -81,21 +78,6 @@ namespace FlyVRena2._0.VirtualWorld.Services.UpdateServices
                 this.positionService.rotation.Z = Convert.ToSingle(-walking_angle);
 
             }
-
-            // Protocol 100: Photodiode Flicker
-            if (protocol == 100)
-            {
-                counter += 1;
-
-                if (counter == protocol_timer)
-                {
-                    counter = 0;
-                    constant = -constant;
-                    this.positionService.position.X += constant;
-                    this.positionService.position.Y += constant;
-                    photodiodeSwitch = !photodiodeSwitch;
-                }
-            }
             
         }
 
@@ -119,15 +101,12 @@ namespace FlyVRena2._0.VirtualWorld.Services.UpdateServices
                 this.positionService.rotation.Z = Convert.ToSingle(Math.PI * data.position[2] / 180);
             }
 
-            // Save Stimulus Position
-            if (protocol != 100)
-            {   
-               currentStimPosition[0] = positionService.position.X;
-               currentStimPosition[1] = positionService.position.Y;
-               currentStimSize[0] = 0f;
-               currentStimSize[1] = 0f;
-               this.Send<StimData>(new StimData(currentStimPosition, currentStimSize, photodiodeSwitch, data.clock, data.ID));
-            }
+            // Save Stimulus
+            currentStimPosition[0] = positionService.position.X;
+            currentStimPosition[1] = positionService.position.Y;
+            currentStimSize[0] = 0f;
+            currentStimSize[1] = 0f;
+            this.Send<StimData>(new StimData(currentStimPosition, currentStimSize, data.clock, data.ID));
         }
     }
 }

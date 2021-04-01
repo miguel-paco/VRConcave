@@ -31,6 +31,7 @@ namespace FlyVRena2._0.VirtualWorld
         // Vars Data Storage
         private DataRecorder<FilteredData> dataRecorder;
         private StimRecorder<StimData> stimRecorder;
+        private PhotoRecorder<PhotoData> photoRecorder;
         public double _time = 0;
         public int time_check = 0;
 
@@ -131,29 +132,23 @@ namespace FlyVRena2._0.VirtualWorld
 
             if (vRProtocol.recordStimulus & vRProtocol.useCam2)
             {
-                if (vRProtocol.usePhotodiode)
-                {
-                    stimRecorder = new StimRecorder<StimData>(vRProtocol.recordPathStimulus, pd, cam2, true, this);
-                    stimRecorder.Start();
-                }
-                else
-                {
-                    stimRecorder = new StimRecorder<StimData>(vRProtocol.recordPathStimulus, cam2, true, this);
-                    stimRecorder.Start();
-                }
+                stimRecorder = new StimRecorder<StimData>(vRProtocol.recordPathStimulus, cam2, true, this);
+                stimRecorder.Start();
             }
             else if (vRProtocol.recordStimulus & !vRProtocol.useCam2)
             {
-                if (vRProtocol.usePhotodiode)
-                {
-                    stimRecorder = new StimRecorder<StimData>(vRProtocol.recordPathStimulus, pd, true, this);
-                    stimRecorder.Start();
-                }
-                else
-                {
-                    stimRecorder = new StimRecorder<StimData>(vRProtocol.recordPathStimulus, true, this);
-                    stimRecorder.Start();
-                }
+                stimRecorder = new StimRecorder<StimData>(vRProtocol.recordPathStimulus, true, this);
+                stimRecorder.Start();
+            }
+            if (vRProtocol.recordPhotodiode & vRProtocol.useCam2)
+            {
+                photoRecorder = new PhotoRecorder<PhotoData>(vRProtocol.recordPathPhotodiode, pd, cam2, true, this);
+                photoRecorder.Start();
+            }
+            else if (vRProtocol.recordPhotodiode & !vRProtocol.useCam2)
+            {
+                photoRecorder = new PhotoRecorder<PhotoData>(vRProtocol.recordPathPhotodiode, pd, true, this);
+                photoRecorder.Start();
             }
         }
 
@@ -244,7 +239,7 @@ namespace FlyVRena2._0.VirtualWorld
                 VRProtocolFactory vrpF = (VRProtocolFactory)root.objectBuilder[0];
                 vrpF.Initialize(root, this);
                 this.vRProtocol = (VRProtocol)root.GetService(typeof(VRProtocol));
-                if (vRProtocol.recordCam1 || vRProtocol.recordCam2 || vRProtocol.recordTracking || vRProtocol.recordStimulus)
+                if (vRProtocol.recordCam1 || vRProtocol.recordCam2 || vRProtocol.recordTracking || vRProtocol.recordStimulus || vRProtocol.recordPhotodiode)
                 {
                     CreateSaveDirectory(fileName, this.vRProtocol);
                 }
@@ -260,7 +255,7 @@ namespace FlyVRena2._0.VirtualWorld
                 VRProtocolFactory vrpF = (VRProtocolFactory)root.objectBuilder[0];
                 vrpF.Initialize(root, this);
                 this.vRProtocol = (VRProtocol)root.GetService(typeof(VRProtocol));
-                if (vRProtocol.recordCam1 || vRProtocol.recordCam2 || vRProtocol.recordTracking || vRProtocol.recordStimulus)
+                if (vRProtocol.recordCam1 || vRProtocol.recordCam2 || vRProtocol.recordTracking || vRProtocol.recordStimulus || vRProtocol.recordPhotodiode)
                 {
                     CreateSaveDirectory(fileName, this.vRProtocol);
                 }
@@ -315,7 +310,8 @@ namespace FlyVRena2._0.VirtualWorld
             protocol.recordPathCam2 = directory + protocol.recordPathCam2.Substring(protocol.recordPathCam2.LastIndexOf("\\"));
             protocol.recordPathTracking = directory + protocol.recordPathTracking.Substring(protocol.recordPathTracking.LastIndexOf("\\"));
             protocol.recordPathStimulus = directory + protocol.recordPathStimulus.Substring(protocol.recordPathStimulus.LastIndexOf("\\"));
-        }
+            protocol.recordPathPhotodiode = directory + protocol.recordPathPhotodiode.Substring(protocol.recordPathPhotodiode.LastIndexOf("\\"));
+            }
 
 
 
@@ -386,6 +382,10 @@ namespace FlyVRena2._0.VirtualWorld
             {
                 stimRecorder.OnExit();
             }
+            if (vRProtocol.recordPhotodiode)
+            {
+                photoRecorder.OnExit();
+            }
             render.OnExit();
             update.OnExit();
         }
@@ -423,6 +423,10 @@ namespace FlyVRena2._0.VirtualWorld
             if (vRProtocol.recordStimulus)
             {
                 stimRecorder.Dispose();
+            }
+            if (vRProtocol.recordPhotodiode)
+            { 
+                photoRecorder.Dispose();
             }
             update.Dispose();
         }

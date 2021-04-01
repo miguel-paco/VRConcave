@@ -12,75 +12,87 @@ using System.Threading;
 using System.Threading.Tasks;
 using OpenCV.Net;
 using System.Text.RegularExpressions;
-
 namespace FlyVRena2._0.External
 {
-    public class StimRecorder<T> : Module<T> where T : StimData
+    public class PhotoRecorder<T> : Module<T> where T : PhotoData
     {
         // Vars Data Storage
         private StreamWriter fileStream;
         private string path;
         uEyeCamera cam;
         public Stopwatch watch;
-        private bool writeStimulus = false;
+        private bool writePhoto = false;
         private FlyVRena2._0.VirtualWorld.VirtualWorld vw;
 
-        public StimRecorder(string path, FlyVRena2._0.VirtualWorld.VirtualWorld VW)
+        // Load Photodiode
+        Photodiode photodiode;
+
+        public PhotoRecorder(string path, Photodiode pd, FlyVRena2._0.VirtualWorld.VirtualWorld VW)
         {
             this.vw = VW;
             this.path = path;
             fileStream = new StreamWriter(path);
             fileStream.Flush();
+            photodiode = pd;
         }
 
-        public StimRecorder(string path, uEyeCamera camera, FlyVRena2._0.VirtualWorld.VirtualWorld VW)
+        public PhotoRecorder(string path, Photodiode pd, uEyeCamera camera, FlyVRena2._0.VirtualWorld.VirtualWorld VW)
         {
             this.vw = VW;
             this.path = path;
             fileStream = new StreamWriter(path);
             fileStream.Flush();
             cam = camera;
+            photodiode = pd;
         }
 
-        public StimRecorder(string path, uEyeCamera camera, bool writeStimulus, FlyVRena2._0.VirtualWorld.VirtualWorld VW)
+        public PhotoRecorder(string path, Photodiode pd, uEyeCamera camera, bool writePhoto, FlyVRena2._0.VirtualWorld.VirtualWorld VW)
         {
             this.vw = VW;
             this.path = path;
-            this.writeStimulus = writeStimulus;
+            this.writePhoto = writePhoto;
             fileStream = new StreamWriter(path);
             fileStream.Flush();
             cam = camera;
+            photodiode = pd;
         }
 
-        public StimRecorder(string path, bool writeStimulus, FlyVRena2._0.VirtualWorld.VirtualWorld VW)
+        public PhotoRecorder(string path, Photodiode pd, bool writePhoto, FlyVRena2._0.VirtualWorld.VirtualWorld VW)
         {
             this.vw = VW;
             this.path = path;
-            this.writeStimulus = writeStimulus;
+            this.writePhoto = writePhoto;
             fileStream = new StreamWriter(path);
             fileStream.Flush();
+            photodiode = pd;
         }
 
         protected override void Process(T data)
         {
-            Coordinates center = new Coordinates() { VirtualRealityLine = new Point2d(data.position[0], data.position[1]) };
-            float[] size = data.size;
+
+            string photoLvl = photodiode.Read;
+            // SEE PHOTODIODE RESULT
+            if (photodiode != null)
+            {
+                Console.WriteLine(photoLvl);
+            }
+
 
             // General save Structure:
-            // FramesCam1 TrackingClock StimulusCenterPositionX(mm) StimulusCenterPositionY(mm)
-            // StimulusSize1(mm) StimulusSize2(mm) PhotodiodeValue ExperimentTimer FramesCam2
+            // FramesCam1 TrackingClock PhotodiodeShadowState PhotodiodeValue
+            // ExperimentTimer FramesCam2
 
-            if (writeStimulus)
+            if (writePhoto)
             {
                 if (cam != null)
                 {
-                    fileStream.WriteLine(data.ID.ToString() + " " + data.time.ToString() + " " + center.MillimetersCurve.X.ToString() + " " + center.MillimetersCurve.Y.ToString() + " " +
-                        size[0].ToString() + " " + size[1].ToString() + " " + (vw._time).ToString("F6", CultureInfo.InvariantCulture) + " " + cam.m_s32FrameCoutTotal.ToString());
+                    fileStream.WriteLine(data.ID.ToString() + " " + data.X.ToString() + " " + data.photobool.ToString() + " " + photoLvl + " " +
+                        (vw._time).ToString("F6", CultureInfo.InvariantCulture) + " " + cam.m_s32FrameCoutTotal.ToString());
                 }
                 else
                 {
-                    fileStream.WriteLine(data.ID.ToString() + " " + data.time.ToString() + " " + center.MillimetersCurve.X.ToString() + " " + center.MillimetersCurve.Y.ToString() + " " +
-                    size[0].ToString() + " " + size[1].ToString() + " " + (vw._time).ToString("F6", CultureInfo.InvariantCulture));
+                    fileStream.WriteLine(data.ID.ToString() + " " + data.X.ToString() + " " + data.photobool.ToString() + " " + photoLvl + " " +
+                       (vw._time).ToString("F6", CultureInfo.InvariantCulture));
                 }
             }
         }
