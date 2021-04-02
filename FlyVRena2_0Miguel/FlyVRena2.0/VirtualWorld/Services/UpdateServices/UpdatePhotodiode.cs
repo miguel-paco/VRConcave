@@ -61,9 +61,9 @@ namespace FlyVRena2._0.VirtualWorld.Services.UpdateServices
             {
                 photoLvl = photodiode.Read;
                 // SEE PHOTODIODE RESULT
-                Console.WriteLine(photoLvl);
-            }
+                // Console.WriteLine(photoLvl);
 
+            }
             this.Send<PhotoData>(new PhotoData(this.positionService.position.X, photoStatus, photoLvl, data.ID));
         }
     }

@@ -26,10 +26,14 @@ namespace FlyVRena2._0.VirtualWorld.Services.UpdateServices
         // Stimulus variables
         float[] currentStimSize = new float[2];
         double[] currentStimPosition = new double[2];
+        public float state = 0f;
+        public double radius = 0f;
+        double X;
+        double Y;
 
         // Specific Variables
         // Generic Protocol Tools
-        public float counter = 0f;
+        public double counter = 0.0;
         public float constant = 1000f;
         // Protocol 1 - Circular Motion
         public double vector_norm;
@@ -54,10 +58,16 @@ namespace FlyVRena2._0.VirtualWorld.Services.UpdateServices
         // Open Loop Section
         public override void Update(double time)
         {
-            // Protocol 0: Follow Fly
-         
+            // Generate a Random Integer from 0 to 255
+            var rand = new Random();
+            var bytes = new byte[1];
+            rand.NextBytes(bytes);
+            int rnd = bytes[0];
 
-            // Protocol 1: Circle
+            // Protocol 0: Follow Fly
+
+
+            // Protocol 1: Circle -----------------------------------------------------
             if (protocol == 1)
             {
                 if (k == 0)
@@ -71,14 +81,75 @@ namespace FlyVRena2._0.VirtualWorld.Services.UpdateServices
                     walking_angle += (2 * Math.Asin((vector_norm / 2) / protocol_radius)) * protocol_direction;
                 }
 
-                centroid = new Coordinates() { MillimetersCurve = new Point2d(Math.Cos(walking_angle) * protocol_radius, Math.Sin(walking_angle) * protocol_radius) };
-
-                this.positionService.position.X = Convert.ToSingle(centroid.VirtualRealityLine.X);
-                this.positionService.position.Y = Convert.ToSingle(centroid.VirtualRealityLine.Y);
-                this.positionService.rotation.Z = Convert.ToSingle(-walking_angle);
-
+                X = Math.Cos(walking_angle) * protocol_radius;
+                Y = Math.Sin(walking_angle) * protocol_radius;
             }
-            
+
+            // Protocol 2: Sudden Turn Circle ------------------------------------------
+            if (protocol == 2)
+            {
+                if (k == 0)
+                {
+                    walking_angle = 0;
+                }
+                if (k == 1)
+                {
+                    if (state == 0)
+                    {
+                        if (counter == 0)
+                        {
+                            counter = Convert.ToSingle(rnd) * 10 + 2500; // 2500 to 5050 counts ~ 2.5 to 5.05 seconds
+                        }
+                        else
+                        {
+                            counter -= 1;
+                        }
+                        if (counter == 0)
+                        {
+                            state = 1;
+                        }
+                        else
+                        {
+                            vector_norm = protocol_speed * time;
+                            walking_angle += (2 * Math.Asin((vector_norm / 2) / protocol_radius)) * protocol_direction;
+                            radius = protocol_radius;
+                        }
+                    }
+                    if (state == 1)
+                    {
+                        vector_norm = protocol_speed * time;
+                        radius -= vector_norm;
+                        if (radius < 0)
+                        {
+                            radius = -radius;;
+                            rnd = rnd - 255 / 2; // Generate a Random Number Between -127.5 (-128) and 127.5 (128)
+                            walking_angle += (Convert.ToDouble(rnd)-180) * Math.PI / 180;
+                            state = 2;
+                        }
+                    }
+                    else if (state == 2)
+                    {
+                        vector_norm = protocol_speed * time;
+                        radius += vector_norm;
+                        if (radius > protocol_radius)
+                        {
+                            vector_norm = radius - protocol_radius;
+                            walking_angle += (2 * Math.Asin((vector_norm / 2) / protocol_radius)) * protocol_direction;
+                            radius = protocol_radius;
+                            state = 0;
+                        }
+                    }
+                }
+                X = Math.Cos(walking_angle) * radius;
+                Y = Math.Sin(walking_angle) * radius;
+            }
+
+            centroid = new Coordinates() { MillimetersCurve = new Point2d(X, Y) };
+
+            this.positionService.position.X = Convert.ToSingle(centroid.VirtualRealityLine.X);
+            this.positionService.position.Y = Convert.ToSingle(centroid.VirtualRealityLine.Y);
+            this.positionService.rotation.Z = Convert.ToSingle(-walking_angle);
+
         }
 
 
