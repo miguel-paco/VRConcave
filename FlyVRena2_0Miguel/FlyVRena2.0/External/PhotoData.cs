@@ -11,12 +11,14 @@ namespace FlyVRena2._0.External
     {
         public bool photobool;
         public float X;
+        public string photoValue;
 
-        public PhotoData(float X, bool photobool, ulong ID)
+        public PhotoData(float X, bool photobool, string photoValue, ulong ID)
         {
             this.X = X;
             this.photobool = photobool;
             this.ID = ID;
+            this.photoValue = photoValue;
         }
     }
 }

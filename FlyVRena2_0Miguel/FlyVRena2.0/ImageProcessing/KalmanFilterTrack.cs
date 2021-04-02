@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Emgu.CV;
 using Sardine.Core;
+using FlyVRena2._0.External;
 
 namespace FlyVRena2._0.ImageProcessing
 {
@@ -18,8 +19,11 @@ namespace FlyVRena2._0.ImageProcessing
 
         bool use;
 
+        // Load Photodiode
+        Photodiode photodiode;
+
         public float[] pars;
-        public KalmanFilterTrack(bool use)
+        public KalmanFilterTrack(bool use, Photodiode pd)
         {
             //initialize new kalman filter with appropriate number of parameters
             kal = new Kalman(6, 3, 0);
@@ -38,6 +42,8 @@ namespace FlyVRena2._0.ImageProcessing
             kal.MeasurementMatrix = mk.measurementMatrix;
             pars = new float[3];
             this.use = use;
+
+            photodiode = pd;
         }
 
         //Filter data and store values
@@ -68,7 +74,7 @@ namespace FlyVRena2._0.ImageProcessing
 
             //estimate = filterPoints(data.position);
             estimate = data.position;
-            Send<FilteredData>(new FilteredData(data.ID, data.source, estimate, data.velocity, data.position, data.head, data.clock));
+            Send<FilteredData>(new FilteredData(data.ID, data.source, estimate, data.velocity, data.position, data.head, data.clock, photodiode));
         }
 
         //Dispose of all initiated objects

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using FlyVRena2._0.External;
 
 namespace FlyVRena2._0.ImageProcessing
 {
@@ -15,8 +16,9 @@ namespace FlyVRena2._0.ImageProcessing
         public float[] velocity;
         public string source;
         public double clock;
+        public Photodiode photodiode;
 
-        public FilteredData(ulong ID, string source, float[] position, float[] velocity, float[] rawposition, float[] head, double clock)
+        public FilteredData(ulong ID, string source, float[] position, float[] velocity, float[] rawposition, float[] head, double clock, Photodiode pd)
         {
             this.ID = ID;
             this.source = source;
@@ -25,6 +27,7 @@ namespace FlyVRena2._0.ImageProcessing
             this.rawposition = rawposition;
             this.head = head;
             this.clock = clock;
+            this.photodiode = pd;
         }
     }
 }

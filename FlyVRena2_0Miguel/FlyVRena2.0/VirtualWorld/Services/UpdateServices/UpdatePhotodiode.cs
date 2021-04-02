@@ -23,6 +23,10 @@ namespace FlyVRena2._0.VirtualWorld.Services.UpdateServices
         public float photodiodeShadowFrames = 0;
         public bool photoStatus = false;
 
+        // Load Photodiode
+        Photodiode photodiode;
+        string photoLvl;
+
         public UpdatePhotodiode(IServiceContainer wObj, VirtualWorld VW, float photodiodeShadowFrames) : base(wObj, VW)
         {
             posServ = new PositionService();
@@ -51,7 +55,16 @@ namespace FlyVRena2._0.VirtualWorld.Services.UpdateServices
                 this.positionService.position.Y += constant;
                 photoStatus = !photoStatus;
             }
-            this.Send<PhotoData>(new PhotoData(this.positionService.position.X, photoStatus, data.ID));
+
+            photodiode = data.photodiode;
+            if (photodiode != null)
+            {
+                photoLvl = photodiode.Read;
+                // SEE PHOTODIODE RESULT
+                Console.WriteLine(photoLvl);
+            }
+
+            this.Send<PhotoData>(new PhotoData(this.positionService.position.X, photoStatus, photoLvl, data.ID));
         }
     }
 }

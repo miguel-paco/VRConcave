@@ -94,11 +94,11 @@
       <PortPulsePal>COM3</PortPulsePal>
       <UsePhotodiode>true</UsePhotodiode>
       <PortPhotodiode>COM4</PortPhotodiode>
-      <RecordPhotodiode>true</RecordPhotodiode>
+      <RecordPhotodiode>true</RecordPhotodiode>/RecordPhotodiode>
       <PathRecordingPhotodiode>C:\Users\ALBINO\Desktop\Photo.txt</PathRecordingPhotodiode>
       <RecordTracking>false</RecordTracking>
       <PathRecordingTracking>C:\Users\ALBINO\Desktop\Track.txt</PathRecordingTracking>
-      <RecordStimulus>true</RecordStimulus>
+      <RecordStimulus>false</RecordStimulus>
       <PathRecordingStimulus>C:\Users\ALBINO\Desktop\Stim.txt</PathRecordingStimulus>
       <DurationInSeconds>300</DurationInSeconds>
     </VRProtocolFactory>

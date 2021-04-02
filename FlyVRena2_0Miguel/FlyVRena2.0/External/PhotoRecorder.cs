@@ -70,12 +70,12 @@ namespace FlyVRena2._0.External
         protected override void Process(T data)
         {
 
-            string photoLvl = photodiode.Read;
-            // SEE PHOTODIODE RESULT
-            if (photodiode != null)
-            {
-                Console.WriteLine(photoLvl);
-            }
+            //string photoLvl = photodiode.Read;
+            ////// SEE PHOTODIODE RESULT
+            ////if (photodiode != null)
+            ////{
+            ////    Console.WriteLine(photoLvl);
+            ////}
 
 
             // General save Structure:
@@ -86,12 +86,12 @@ namespace FlyVRena2._0.External
             {
                 if (cam != null)
                 {
-                    fileStream.WriteLine(data.ID.ToString() + " " + data.X.ToString() + " " + data.photobool.ToString() + " " + photoLvl + " " +
+                    fileStream.WriteLine(data.ID.ToString() + " " + data.X.ToString() + " " + data.photobool.ToString() + " " + data.photoValue + " " +
                         (vw._time).ToString("F6", CultureInfo.InvariantCulture) + " " + cam.m_s32FrameCoutTotal.ToString());
                 }
                 else
                 {
-                    fileStream.WriteLine(data.ID.ToString() + " " + data.X.ToString() + " " + data.photobool.ToString() + " " + photoLvl + " " +
+                    fileStream.WriteLine(data.ID.ToString() + " " + data.X.ToString() + " " + data.photobool.ToString() + " " + data.photoValue + " " +
                        (vw._time).ToString("F6", CultureInfo.InvariantCulture));
                 }
             }

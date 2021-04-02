@@ -36,7 +36,7 @@ namespace FlyVRena2._0.VirtualWorld
         public int time_check = 0;
 
         // Photodiode
-        private Photodiode pd;
+        public Photodiode pd;
 
         public bool finish = false;
         public VirtualWorld(int Size)
@@ -64,7 +64,6 @@ namespace FlyVRena2._0.VirtualWorld
             // Initialize vr components
             render = new RenderSubsystem(this, new StaticCamera(Size), Size);
             update = new UpdateSubsystem(this);
-            kft = new KalmanFilterTrack<MovementData>(false);
 
             // Load virtual world
             if (protName == null)
@@ -72,12 +71,13 @@ namespace FlyVRena2._0.VirtualWorld
             else
                 GetStimulus(protName);
 
-            // Initialize Photodiode
+            // Initialize Photodiode & Kalman filter
             if (vRProtocol.usePhotodiode)
             {
                 pd = new Photodiode(vRProtocol.portPhotodiode);
                 pd.StartPhotodiode();
             }
+            kft = new KalmanFilterTrack<MovementData>(false,pd);
 
             // Initialize data acquisition objects           
             if (vRProtocol.usePulsePal)
