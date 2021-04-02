@@ -140,14 +140,15 @@ namespace FlyVRena2._0.VirtualWorld
                 stimRecorder = new StimRecorder<StimData>(vRProtocol.recordPathStimulus, true, this);
                 stimRecorder.Start();
             }
+
             if (vRProtocol.recordPhotodiode & vRProtocol.useCam2)
             {
-                photoRecorder = new PhotoRecorder<PhotoData>(vRProtocol.recordPathPhotodiode, pd, cam2, true, this);
+                photoRecorder = new PhotoRecorder<PhotoData>(vRProtocol.recordPathPhotodiode, cam2, true, this);
                 photoRecorder.Start();
             }
             else if (vRProtocol.recordPhotodiode & !vRProtocol.useCam2)
             {
-                photoRecorder = new PhotoRecorder<PhotoData>(vRProtocol.recordPathPhotodiode, pd, true, this);
+                photoRecorder = new PhotoRecorder<PhotoData>(vRProtocol.recordPathPhotodiode, true, this);
                 photoRecorder.Start();
             }
         }

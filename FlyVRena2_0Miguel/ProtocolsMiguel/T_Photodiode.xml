@@ -51,7 +51,7 @@
           <nPoints>100</nPoints>
         </DarkCircleFactory>
         <UpdatePhotodiodeFactory>
-          <frames>5</frames>
+          <frames>10</frames>
         </UpdatePhotodiodeFactory>
       </objectBuilder>
     </WorldObject>

@@ -24,29 +24,24 @@ namespace FlyVRena2._0.External
         private bool writePhoto = false;
         private FlyVRena2._0.VirtualWorld.VirtualWorld vw;
 
-        // Load Photodiode
-        Photodiode photodiode;
-
-        public PhotoRecorder(string path, Photodiode pd, FlyVRena2._0.VirtualWorld.VirtualWorld VW)
+        public PhotoRecorder(string path, FlyVRena2._0.VirtualWorld.VirtualWorld VW)
         {
             this.vw = VW;
             this.path = path;
             fileStream = new StreamWriter(path);
             fileStream.Flush();
-            photodiode = pd;
         }
 
-        public PhotoRecorder(string path, Photodiode pd, uEyeCamera camera, FlyVRena2._0.VirtualWorld.VirtualWorld VW)
+        public PhotoRecorder(string path, uEyeCamera camera, FlyVRena2._0.VirtualWorld.VirtualWorld VW)
         {
             this.vw = VW;
             this.path = path;
             fileStream = new StreamWriter(path);
             fileStream.Flush();
             cam = camera;
-            photodiode = pd;
         }
 
-        public PhotoRecorder(string path, Photodiode pd, uEyeCamera camera, bool writePhoto, FlyVRena2._0.VirtualWorld.VirtualWorld VW)
+        public PhotoRecorder(string path, uEyeCamera camera, bool writePhoto, FlyVRena2._0.VirtualWorld.VirtualWorld VW)
         {
             this.vw = VW;
             this.path = path;
@@ -54,29 +49,19 @@ namespace FlyVRena2._0.External
             fileStream = new StreamWriter(path);
             fileStream.Flush();
             cam = camera;
-            photodiode = pd;
         }
 
-        public PhotoRecorder(string path, Photodiode pd, bool writePhoto, FlyVRena2._0.VirtualWorld.VirtualWorld VW)
+        public PhotoRecorder(string path, bool writePhoto, FlyVRena2._0.VirtualWorld.VirtualWorld VW)
         {
             this.vw = VW;
             this.path = path;
             this.writePhoto = writePhoto;
             fileStream = new StreamWriter(path);
             fileStream.Flush();
-            photodiode = pd;
         }
 
         protected override void Process(T data)
         {
-
-            //string photoLvl = photodiode.Read;
-            ////// SEE PHOTODIODE RESULT
-            ////if (photodiode != null)
-            ////{
-            ////    Console.WriteLine(photoLvl);
-            ////}
-
 
             // General save Structure:
             // FramesCam1 TrackingClock PhotodiodeShadowState PhotodiodeValue
