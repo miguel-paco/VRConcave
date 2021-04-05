@@ -98,7 +98,7 @@ namespace FlyVRena2._0.VirtualWorld.Services.UpdateServices
                     {
                         if (counter == 0)
                         {
-                            counter = Convert.ToSingle(rnd) * 10 + 2500; // 2500 to 5050 counts ~ 2.5 to 5.05 seconds
+                            counter = Convert.ToSingle(rnd) * 10 + 5000; // 2500 to 5050 counts ~ 5 to 7.55 seconds
                         }
                         else
                         {

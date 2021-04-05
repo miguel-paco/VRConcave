@@ -77,13 +77,13 @@
   <objectBuilder>
     <VRProtocolFactory>
       <UseCam1>true</UseCam1>
-      <UseCam2>false</UseCam2>
+      <UseCam2>true</UseCam2>
       <PathParamsCam1>C:\Users\ALBINO\Desktop\LowResCamParams.ini</PathParamsCam1>
       <PathParamsCam2>C:\Users\ALBINO\Desktop\HighResCamParams.ini</PathParamsCam2>
       <Cam1Disp>true</Cam1Disp>
-      <Cam2Disp>false</Cam2Disp>
-      <RecordCam1>false</RecordCam1>
-      <RecordCam2>false</RecordCam2>
+      <Cam2Disp>true</Cam2Disp>
+      <RecordCam1>true</RecordCam1>
+      <RecordCam2>true</RecordCam2>
       <PathRecordCam1>C:\Users\ALBINO\Desktop\Cam1</PathRecordCam1>
       <PathRecordCam2>C:\Users\ALBINO\Desktop\Cam2</PathRecordCam2>
       <Cam1Track>true</Cam1Track>
