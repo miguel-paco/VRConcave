@@ -68,19 +68,19 @@ namespace FlyVRena2._0.External
 
             // General save Structure:
             // FramesCam1 TrackingClock StimulusCenterPositionX(mm) StimulusCenterPositionY(mm)
-            // StimulusSize1(mm) StimulusSize2(mm) PhotodiodeValue ExperimentTimer FramesCam2
+            // StimulusSize1(mm) StimulusSize2(mm) StimulusState ExperimentTimer FramesCam2
 
             if (writeStimulus)
             {
                 if (cam != null)
                 {
                     fileStream.WriteLine(data.ID.ToString() + " " + data.time.ToString() + " " + center.MillimetersCurve.X.ToString() + " " + center.MillimetersCurve.Y.ToString() + " " +
-                        size[0].ToString() + " " + size[1].ToString() + " " + (vw._time).ToString("F6", CultureInfo.InvariantCulture) + " " + cam.m_s32FrameCoutTotal.ToString());
+                        size[0].ToString() + " " + size[1].ToString() + " " + data.state.ToString() + " " + (vw._time).ToString("F6", CultureInfo.InvariantCulture) + " " + cam.m_s32FrameCoutTotal.ToString());
                 }
                 else
                 {
                     fileStream.WriteLine(data.ID.ToString() + " " + data.time.ToString() + " " + center.MillimetersCurve.X.ToString() + " " + center.MillimetersCurve.Y.ToString() + " " +
-                    size[0].ToString() + " " + size[1].ToString() + " " + (vw._time).ToString("F6", CultureInfo.InvariantCulture));
+                    size[0].ToString() + " " + size[1].ToString() + " " + data.state.ToString() + (vw._time).ToString("F6", CultureInfo.InvariantCulture));
                 }
             }
         }
