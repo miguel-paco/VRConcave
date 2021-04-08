@@ -29,8 +29,49 @@
         </UpdateStimulusFactory>
       </objectBuilder>
     </WorldObject>
+
+    <WorldObject>
+      <WObjects/>
+      <objectBuilder>
+        <NameFactory>
+          <name>PhotodiodeShade</name>
+        </NameFactory>
+        <PositionFactory>
+          <x>-400</x>
+          <y>-400</y>
+          <z>0</z>
+          <rx>0</rx>
+          <ry>0</ry>
+          <rz>0</rz>
+          <scale>1</scale>
+        </PositionFactory>
+        <DarkCircleFactory>
+          <circleRadius>30</circleRadius>
+          <nPoints>100</nPoints>
+        </DarkCircleFactory>
+        <UpdatePhotodiodeFactory>
+          <frames>10</frames>
+        </UpdatePhotodiodeFactory>
+      </objectBuilder>
+    </WorldObject>
+
+    <WorldObject>
+      <WObjects/>
+      <objectBuilder>
+        <NameFactory>
+          <name>DUMMY</name>
+        </NameFactory>
+        <PositionFactory>
+        </PositionFactory>
+        <DarkCircleFactory>
+          <circleRadius>1</circleRadius>
+          <nPoints>100</nPoints>
+        </DarkCircleFactory>
+      </objectBuilder>
+    </WorldObject>
+
   </WObjects>
-  
+
   <objectBuilder>
     <VRProtocolFactory>
       <UseCam1>true</UseCam1>
@@ -49,6 +90,10 @@
       <FPSCam2>200</FPSCam2>
       <UsePulsePal>true</UsePulsePal>
       <PortPulsePal>COM3</PortPulsePal>
+      <UsePhotodiode>true</UsePhotodiode>
+      <PortPhotodiode>COM4</PortPhotodiode>
+      <RecordPhotodiode>true</RecordPhotodiode>/RecordPhotodiode>
+      <PathRecordingPhotodiode>C:\Users\ALBINO\Desktop\Photo.txt</PathRecordingPhotodiode>
       <RecordTracking>true</RecordTracking>
       <PathRecordingTracking>C:\Users\ALBINO\Desktop\Track.txt</PathRecordingTracking>
       <RecordStimulus>true</RecordStimulus>
@@ -56,4 +101,5 @@
       <DurationInSeconds>330</DurationInSeconds>
     </VRProtocolFactory>
   </objectBuilder>
+
 </WorldObject>

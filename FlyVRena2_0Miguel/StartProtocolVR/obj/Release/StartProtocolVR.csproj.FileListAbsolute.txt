@@ -1,0 +1,7 @@
+C:\Users\ALBINO\Documents\VRConcave\FlyVRena2_0Miguel\StartProtocolVR\bin\Release\StartProtocolVR.exe.config
+C:\Users\ALBINO\Documents\VRConcave\FlyVRena2_0Miguel\StartProtocolVR\bin\Release\StartProtocolVR.exe
+C:\Users\ALBINO\Documents\VRConcave\FlyVRena2_0Miguel\StartProtocolVR\bin\Release\StartProtocolVR.pdb
+C:\Users\ALBINO\Documents\VRConcave\FlyVRena2_0Miguel\StartProtocolVR\obj\Release\StartProtocolVR.csprojAssemblyReference.cache
+C:\Users\ALBINO\Documents\VRConcave\FlyVRena2_0Miguel\StartProtocolVR\obj\Release\StartProtocolVR.csproj.CoreCompileInputs.cache
+C:\Users\ALBINO\Documents\VRConcave\FlyVRena2_0Miguel\StartProtocolVR\obj\Release\StartProtocolVR.exe
+C:\Users\ALBINO\Documents\VRConcave\FlyVRena2_0Miguel\StartProtocolVR\obj\Release\StartProtocolVR.pdb

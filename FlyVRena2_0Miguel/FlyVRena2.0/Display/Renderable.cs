@@ -28,8 +28,9 @@ namespace FlyVRena2._0.Display
         public virtual void Bind()
         {
             GL.UseProgram(Program);
-            GL.BindVertexArray(VertexArray-1); // -1 toguether with the DUMMY object makes it so that the objects drawn are correctly attributed. This is a Patch Fix for the interactions with the GL interface
-
+            // Program = 1 makes textures and has no corrections, Program = 2 makes shaders and needs the DUMMY object and the -1 Correction described bellow
+            if (Program == 1) { GL.BindVertexArray(VertexArray); }
+            if (Program == 2) { GL.BindVertexArray(VertexArray-1); } // -1 toguether with the DUMMY object makes it so that the objects drawn are correctly attributed. This is a Patch Fix for the interactions with the GL interface
         }
         public virtual void Render()
         {

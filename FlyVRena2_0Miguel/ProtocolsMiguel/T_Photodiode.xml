@@ -94,7 +94,7 @@
       <PortPulsePal>COM3</PortPulsePal>
       <UsePhotodiode>true</UsePhotodiode>
       <PortPhotodiode>COM4</PortPhotodiode>
-      <RecordPhotodiode>true</RecordPhotodiode>/RecordPhotodiode>
+      <RecordPhotodiode>true</RecordPhotodiode>
       <PathRecordingPhotodiode>C:\Users\ALBINO\Desktop\Photo.txt</PathRecordingPhotodiode>
       <RecordTracking>false</RecordTracking>
       <PathRecordingTracking>C:\Users\ALBINO\Desktop\Track.txt</PathRecordingTracking>
