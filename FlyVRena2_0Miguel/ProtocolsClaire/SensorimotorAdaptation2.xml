@@ -18,7 +18,7 @@
           <scale>1</scale>
         </PositionFactory>
        <TexturedSquareFactory>
-          <texturePath>C:\Users\ALBINO\Documents\VRConcave\FlyVRena2_0Miguel\ProtocolsClaire\backgroun_image_1_for_VR_now.png</texturePath>
+          <texturePath>C:\Users\ALBINO\Documents\VRConcave\FlyVRena2_0Miguel\ProtocolsClaire\backgroun_image_1_for_VR_now2.png</texturePath>
           <textureSize>800</textureSize>
         </TexturedSquareFactory>-->
       </objectBuilder>
