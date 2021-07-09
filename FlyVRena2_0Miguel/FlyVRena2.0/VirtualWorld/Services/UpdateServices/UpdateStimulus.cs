@@ -19,6 +19,7 @@ namespace FlyVRena2._0.VirtualWorld.Services.UpdateServices
         public float protocol_speed;
         public int protocol_direction;
         public float protocol_timer;
+        public int protocol_numb;
         public float k = 0f; // Check if at least one FilteredData was generated
         public Coordinates centroid;
 
@@ -30,6 +31,7 @@ namespace FlyVRena2._0.VirtualWorld.Services.UpdateServices
         public double radius = 0f;
         double X;
         double Y;
+        public double value;
 
         // Specific Variables
         // Generic Protocol Tools
@@ -38,10 +40,18 @@ namespace FlyVRena2._0.VirtualWorld.Services.UpdateServices
         // Protocol 1 - Circular Motion
         public double vector_norm;
         public double walking_angle;
+        // Protocol 3 - Sinusoid Aux
+        public double L;
+        public double circle_numb;
+        public double dtheta;
+        public double direction = 1;
+        public double dx;
+        
 
 
 
-        public UpdateStimulus(IServiceContainer wObj, VirtualWorld VW, int protocol, float protocol_radius, float protocol_speed, int protocol_direction, float protocol_timer) : base(wObj, VW)
+
+        public UpdateStimulus(IServiceContainer wObj, VirtualWorld VW, int protocol, float protocol_radius, float protocol_speed, int protocol_direction, float protocol_timer, int protocol_numb) : base(wObj, VW)
         {
             posServ = new PositionService();
             this.protocol = protocol;
@@ -49,6 +59,7 @@ namespace FlyVRena2._0.VirtualWorld.Services.UpdateServices
             this.protocol_speed = protocol_speed;
             this.protocol_direction = protocol_direction;
             this.protocol_timer = protocol_timer;
+            this.protocol_numb = protocol_numb;
             if (VW.update != null)
             {
                 VW.update.UpdateServices.Add(this.nameService.name, this);
@@ -65,7 +76,6 @@ namespace FlyVRena2._0.VirtualWorld.Services.UpdateServices
             int rnd = bytes[0];
 
             // Protocol 0: Follow Fly
-
 
             // Protocol 1: Circle -----------------------------------------------------
             if (protocol == 1)
@@ -121,9 +131,9 @@ namespace FlyVRena2._0.VirtualWorld.Services.UpdateServices
                         radius -= vector_norm;
                         if (radius < 0)
                         {
-                            radius = -radius;;
+                            radius = -radius; ;
                             rnd = rnd - 255 / 2; // Generate a Random Number Between -127.5 (-128) and 127.5 (128)
-                            walking_angle += (Convert.ToDouble(rnd)-180) * Math.PI / 180;
+                            walking_angle += (Convert.ToDouble(rnd) - 180) * Math.PI / 180;
                             state = 2;
                         }
                     }
@@ -140,8 +150,66 @@ namespace FlyVRena2._0.VirtualWorld.Services.UpdateServices
                         }
                     }
                 }
+
                 X = Math.Cos(walking_angle) * radius;
                 Y = Math.Sin(walking_angle) * radius;
+            }
+
+            // Protocol 3: Sinusoid (state = 0) / Ribbon (state = 1) / Circle (state = 2) -----------------------------------------------------
+            if (protocol == 3)
+            {
+                if (radius == 0)
+                {
+                    walking_angle = 0;
+
+                    L = protocol_radius * 2;
+                    circle_numb = protocol_numb;
+
+                    radius = L / (4 * circle_numb); // Diameter is L/(2 * the number of circle halfs) - radius is half the diameter
+                    vector_norm = protocol_speed * time;
+                    dtheta = 2 * Math.Asin(vector_norm / (2 * radius));
+                    radius = vector_norm / (2 * Math.Sin(dtheta / 2));
+                    L = radius * 4 * circle_numb;
+
+                    Y = 0;
+                    X = 0;
+                    value = 1;
+
+                    state = 2;
+                }
+                else if (k == 1)
+                {
+                    if (X >= L/2)
+                    {
+                        value = -1;
+                    }
+                    else if (X <= - L/2)
+                    {
+                        value = 1;
+                    }
+                    
+                    vector_norm = protocol_speed * time;
+                    dtheta = 2 * Math.Asin(vector_norm / (2 * radius));
+                    walking_angle += dtheta;
+                    dx = value * Math.Abs(radius * Math.Cos(walking_angle) - radius * Math.Cos(walking_angle - dtheta));
+                    if (state != 0)
+                    {
+                        if ((X * (X + dx)) < 0)
+                        {
+                            if (state == 1)
+                            {
+                                direction = -direction;
+                            }
+                            if (state == 2)
+                            {
+                                value = -value;
+                                dx = -dx;
+                            }
+                        }
+                    }
+                    X += dx;
+                    Y = protocol_direction * direction * radius * Math.Sin(walking_angle);
+                }
             }
 
             centroid = new Coordinates() { MillimetersCurve = new Point2d(X, Y) };

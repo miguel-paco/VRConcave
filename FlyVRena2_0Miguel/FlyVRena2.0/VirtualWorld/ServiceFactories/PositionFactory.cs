@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
+using OpenCV.Net;
 
 namespace FlyVRena2._0.VirtualWorld.ServiceFactories
 {
@@ -29,7 +30,8 @@ namespace FlyVRena2._0.VirtualWorld.ServiceFactories
         public override void Initialize(IServiceProvider provider, VirtualWorld VW)
         {
             var wo = (IServiceContainer)provider.GetService(typeof(IServiceContainer));
-            var pos = new PositionService(wo, VW, new Vector3(x, y, z) , new Vector3(rx, ry, rz), scale);
+            External.Coordinates coord = new External.Coordinates() { MillimetersCurve = new Point2d(x, y) };
+            var pos = new PositionService(wo, VW, new Vector3(Convert.ToSingle(coord.VirtualRealityLine.X), Convert.ToSingle(coord.VirtualRealityLine.Y), z) , new Vector3(rx, ry, rz), scale);
             wo.AddService(typeof(PositionService), pos);
         }
 

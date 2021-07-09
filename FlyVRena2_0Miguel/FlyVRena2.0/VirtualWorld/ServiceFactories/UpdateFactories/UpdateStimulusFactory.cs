@@ -27,10 +27,13 @@ namespace FlyVRena2._0.VirtualWorld.ServiceFactories.UpdateFactories
         [XmlElement("protocol_timer_ms")]
         public float protocol_timer;
 
+        [XmlElement("protocol_numb")]
+        public int protocol_numb;
+
         public override void Initialize(IServiceProvider provider, VirtualWorld VW)
         {
             var wo = (IServiceContainer)provider.GetService(typeof(IServiceContainer));
-            var upd = new UpdateStimulus(wo, VW, protocol, protocol_radius, protocol_speed, protocol_direction, protocol_timer);
+            var upd = new UpdateStimulus(wo, VW, protocol, protocol_radius, protocol_speed, protocol_direction, protocol_timer, protocol_numb);
             upd.Start();
             wo.AddService(typeof(UpdateStimulus), upd);
         }
