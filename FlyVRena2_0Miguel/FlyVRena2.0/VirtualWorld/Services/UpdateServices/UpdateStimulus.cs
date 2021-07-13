@@ -20,6 +20,7 @@ namespace FlyVRena2._0.VirtualWorld.Services.UpdateServices
         public int protocol_direction;
         public float protocol_timer;
         public int protocol_numb;
+        public int protocol_nosave;
         public float k = 0f; // Check if at least one FilteredData was generated
         public Coordinates centroid;
 
@@ -32,6 +33,9 @@ namespace FlyVRena2._0.VirtualWorld.Services.UpdateServices
         double X;
         double Y;
         public double value;
+        public double theta;
+        public double rho;
+        
 
         // Specific Variables
         // Generic Protocol Tools
@@ -46,12 +50,12 @@ namespace FlyVRena2._0.VirtualWorld.Services.UpdateServices
         public double dtheta;
         public double direction = 1;
         public double dx;
-        
 
 
 
 
-        public UpdateStimulus(IServiceContainer wObj, VirtualWorld VW, int protocol, float protocol_radius, float protocol_speed, int protocol_direction, float protocol_timer, int protocol_numb) : base(wObj, VW)
+
+        public UpdateStimulus(IServiceContainer wObj, VirtualWorld VW, int protocol, float protocol_radius, float protocol_speed, int protocol_direction, float protocol_timer, int protocol_numb, int protocol_nosave) : base(wObj, VW)
         {
             posServ = new PositionService();
             this.protocol = protocol;
@@ -60,6 +64,7 @@ namespace FlyVRena2._0.VirtualWorld.Services.UpdateServices
             this.protocol_direction = protocol_direction;
             this.protocol_timer = protocol_timer;
             this.protocol_numb = protocol_numb;
+            this.protocol_nosave = protocol_nosave;
             if (VW.update != null)
             {
                 VW.update.UpdateServices.Add(this.nameService.name, this);
@@ -84,7 +89,7 @@ namespace FlyVRena2._0.VirtualWorld.Services.UpdateServices
                 {
                     walking_angle = 0;
                 }
-                
+
                 if (k == 1)
                 {
                     vector_norm = protocol_speed * time;
@@ -179,15 +184,15 @@ namespace FlyVRena2._0.VirtualWorld.Services.UpdateServices
                 }
                 else if (k == 1)
                 {
-                    if (X >= L/2)
+                    if (X >= L / 2)
                     {
                         value = -1;
                     }
-                    else if (X <= - L/2)
+                    else if (X <= -L / 2)
                     {
                         value = 1;
                     }
-                    
+
                     vector_norm = protocol_speed * time;
                     dtheta = 2 * Math.Asin(vector_norm / (2 * radius));
                     walking_angle += dtheta;
@@ -212,21 +217,20 @@ namespace FlyVRena2._0.VirtualWorld.Services.UpdateServices
                 }
             }
 
-            centroid = new Coordinates() { MillimetersCurve = new Point2d(X, Y) };
+            if (k == 1)
+            {
+                centroid = new Coordinates() { MillimetersCurve = new Point2d(X, Y) };
 
-            this.positionService.position.X = Convert.ToSingle(centroid.VirtualRealityLine.X);
-            this.positionService.position.Y = Convert.ToSingle(centroid.VirtualRealityLine.Y);
-            this.positionService.rotation.Z = Convert.ToSingle(-walking_angle);
+                this.positionService.position.X = Convert.ToSingle(centroid.VirtualRealityLine.X);
+                this.positionService.position.Y = Convert.ToSingle(centroid.VirtualRealityLine.Y);
+                this.positionService.rotation.Z = Convert.ToSingle(-walking_angle);
+            }
 
         }
 
 
         protected override void Process(FilteredData data)
         {
-            if (k == 0)
-            {
-                k = 1;
-            }
 
             // Close Loop Section
 
@@ -239,13 +243,63 @@ namespace FlyVRena2._0.VirtualWorld.Services.UpdateServices
                 this.positionService.position.Y = Convert.ToSingle(centroid.VirtualRealityLine.Y);
                 this.positionService.rotation.Z = Convert.ToSingle(Math.PI * data.position[2] / 180);
             }
+            // Protocol 4: Center Obstacle
+            else if (protocol == 4)
+            {
+                if (data.clock >= protocol_numb)
+                {
+                    centroid = new Coordinates() { MillimetersCurve = new Point2d(0,0) };
+                    this.positionService.position.X = Convert.ToSingle(centroid.VirtualRealityLine.X);
+                    this.positionService.position.Y = Convert.ToSingle(centroid.VirtualRealityLine.Y);
+                }
+            }
+            // Generic Close Loop Interaction
+            else if (k == 0)
+            {
+                if (data.clock < 30)
+                {
+                    rho = Math.Max(Math.Sqrt((data.position[0] * data.position[0]) + (data.position[1] * data.position[1])) - 5, 0);
+                    theta = Math.Atan2(data.position[1], data.position[0]);
+                    centroid = new Coordinates() { PixelsCurve = new Point2d(rho * Math.Cos(theta), rho * Math.Sin(theta)) };
+                    this.positionService.position.X = Convert.ToSingle(centroid.VirtualRealityLine.X);
+                    this.positionService.position.Y = Convert.ToSingle(centroid.VirtualRealityLine.Y);
+                    this.positionService.rotation.Z = Convert.ToSingle(theta);
+                    state = 99;
 
-            // Save Stimulus
-            currentStimPosition[0] = positionService.position.X;
-            currentStimPosition[1] = positionService.position.Y;
-            currentStimSize[0] = 0f;
-            currentStimSize[1] = 0f;
-            this.Send<StimData>(new StimData(currentStimPosition, currentStimSize, state, data.clock, data.ID));
+                }
+                else
+                {
+                    k = 1;
+                    state = 0;
+                }
+
+            }
+
+            // Protocol 3: Sequence
+            if (k == 1)
+            {
+                if (protocol == 3)
+                {
+                    if (data.clock < 630)
+                    {
+                        state = 2;
+                    }
+                    else
+                    {
+                        state = 1;
+                    }
+                }
+            }
+
+            if (protocol_nosave == 0)
+            {
+                // Save Stimulus
+                currentStimPosition[0] = positionService.position.X;
+                currentStimPosition[1] = positionService.position.Y;
+                currentStimSize[0] = 0f;
+                currentStimSize[1] = 0f;
+                this.Send<StimData>(new StimData(currentStimPosition, currentStimSize, state, data.clock, data.ID));
+            }
         }
     }
 }

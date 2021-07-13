@@ -30,8 +30,7 @@ namespace FlyVRena2._0.VirtualWorld.ServiceFactories
         public override void Initialize(IServiceProvider provider, VirtualWorld VW)
         {
             var wo = (IServiceContainer)provider.GetService(typeof(IServiceContainer));
-            External.Coordinates coord = new External.Coordinates() { MillimetersCurve = new Point2d(x, y) };
-            var pos = new PositionService(wo, VW, new Vector3(Convert.ToSingle(coord.VirtualRealityLine.X), Convert.ToSingle(coord.VirtualRealityLine.Y), z) , new Vector3(rx, ry, rz), scale);
+            var pos = new PositionService(wo, VW, new Vector3(x, y, z) , new Vector3(rx, ry, rz), scale);
             wo.AddService(typeof(PositionService), pos);
         }
 
