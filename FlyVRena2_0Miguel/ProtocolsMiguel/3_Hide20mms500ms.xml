@@ -48,7 +48,7 @@
           <scale>1</scale>
         </PositionFactory>
         <DarkCircleFactory>
-          <circleRadius>2.5</circleRadius>
+          <circleRadius>5</circleRadius>
           <nPoints>100</nPoints>
         </DarkCircleFactory>
         <UpdateStimulusFactory>

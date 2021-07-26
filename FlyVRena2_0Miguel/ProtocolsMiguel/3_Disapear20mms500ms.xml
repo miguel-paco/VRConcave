@@ -47,10 +47,10 @@
           <rz>0</rz>
           <scale>1</scale>
         </PositionFactory>
-        <DarkCircleFactory>
-          <circleRadius>2.5</circleRadius>
+        <WhiteCircleFactory>
+          <circleRadius>5</circleRadius>
           <nPoints>100</nPoints>
-        </DarkCircleFactory>
+        </WhiteCircleFactory>
         <UpdateStimulusFactory>
           <protocol>4</protocol>
           <protocol_numb> 330</protocol_numb>

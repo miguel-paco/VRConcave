@@ -23,7 +23,7 @@
           <nPoints>100</nPoints>
         </DarkCircleFactory>
         <UpdateStimulusFactory>
-          <protocol>3</protocol>
+          <protocol>31</protocol>
           <protocol_radius> 25</protocol_radius>
           <protocol_speed> 20</protocol_speed>
           <protocol_numb> 1</protocol_numb>
@@ -48,12 +48,12 @@
           <scale>1</scale>
         </PositionFactory>
         <DarkCircleFactory>
-          <circleRadius>2.5</circleRadius>
+          <circleRadius>5</circleRadius>
           <nPoints>100</nPoints>
         </DarkCircleFactory>
         <UpdateStimulusFactory>
           <protocol>4</protocol>
-          <protocol_numb> 330</protocol_numb>
+          <protocol_numb> 30</protocol_numb>
           <protocol_nosave> 1</protocol_nosave>
         </UpdateStimulusFactory>
       </objectBuilder>

@@ -161,7 +161,7 @@ namespace FlyVRena2._0.VirtualWorld.Services.UpdateServices
             }
 
             // Protocol 3: Sinusoid (state = 0) / Ribbon (state = 1) / Circle (state = 2) -----------------------------------------------------
-            if (protocol == 3)
+            if (protocol == 3 || protocol == 31)
             {
                 if (radius == 0)
                 {
@@ -288,6 +288,10 @@ namespace FlyVRena2._0.VirtualWorld.Services.UpdateServices
                     {
                         state = 1;
                     }
+                }
+                if (protocol == 31)
+                {
+                   state = 1;
                 }
             }
 
