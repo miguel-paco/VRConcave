@@ -87,7 +87,7 @@ namespace FlyVRena2._0.VirtualWorld
             }
             if (vRProtocol.useCam1)
             {
-                cam1 = new uEyeCamera(1, vRProtocol.paramsPathCam1, vRProtocol.trackCam1, vRProtocol.dispCam1, 0, vRProtocol.fpsCam1, null);
+                cam1 = new uEyeCamera(0, vRProtocol.paramsPathCam1, vRProtocol.trackCam1, vRProtocol.dispCam1, 0, vRProtocol.fpsCam1, null);
                 while (!cam1.m_IsLive) { }
                 if (cam1.m_IsLive)
                 {
@@ -103,9 +103,9 @@ namespace FlyVRena2._0.VirtualWorld
             if (vRProtocol.useCam2)
             {
                 if (vRProtocol.usePulsePal)
-                    cam2 = new uEyeCamera(0, vRProtocol.paramsPathCam2, vRProtocol.trackCam2, vRProtocol.dispCam2, 800, vRProtocol.fpsCam2, pp);
+                    cam2 = new uEyeCamera(1, vRProtocol.paramsPathCam2, vRProtocol.trackCam2, vRProtocol.dispCam2, 800, vRProtocol.fpsCam2, pp);
                 else
-                    cam2 = new uEyeCamera(0, vRProtocol.paramsPathCam2, vRProtocol.trackCam2, vRProtocol.dispCam2, 800, vRProtocol.fpsCam2, null);
+                    cam2 = new uEyeCamera(1, vRProtocol.paramsPathCam2, vRProtocol.trackCam2, vRProtocol.dispCam2, 800, vRProtocol.fpsCam2, null);
 
                 if (cam2.m_IsLive)
                 {

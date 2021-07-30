@@ -136,8 +136,15 @@ namespace FlyVRena2._0.VirtualWorld.Services.UpdateServices
                         radius -= vector_norm;
                         if (radius < 0)
                         {
-                            radius = -radius; ;
-                            rnd = rnd - 255 / 2; // Generate a Random Number Between -127.5 (-128) and 127.5 (128)
+                            radius = -radius;
+                            if (protocol_numb == 1)
+                            {
+                                rnd = 0;
+                            }
+                            else
+                            {
+                                rnd = rnd - 255 / 2; // Generate a Random Number Between -127.5 (-128) and 127.5 (128)
+                            }
                             walking_angle += (Convert.ToDouble(rnd) - 180) * Math.PI / 180;
                             state = 2;
                         }
