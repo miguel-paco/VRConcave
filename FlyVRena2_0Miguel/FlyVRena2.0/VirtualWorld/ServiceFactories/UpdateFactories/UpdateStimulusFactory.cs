@@ -24,7 +24,7 @@ namespace FlyVRena2._0.VirtualWorld.ServiceFactories.UpdateFactories
         [XmlElement("protocol_direction")]
         public int protocol_direction;
 
-        [XmlElement("protocol_timer_ms")]
+        [XmlElement("protocol_timer")]
         public float protocol_timer;
 
         [XmlElement("protocol_numb")]

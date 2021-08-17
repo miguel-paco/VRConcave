@@ -22,6 +22,7 @@ namespace FlyVRena2._0.VirtualWorld.Services.UpdateServices
         public int protocol_numb;
         public int protocol_nosave;
         public float k = 0f; // Check if at least one FilteredData was generated
+        public float p = 0f; //switch
         public Coordinates centroid;
 
 
@@ -100,8 +101,10 @@ namespace FlyVRena2._0.VirtualWorld.Services.UpdateServices
                 Y = Math.Sin(walking_angle) * protocol_radius;
             }
 
-            // Protocol 2: Sudden Turn Circle ------------------------------------------
-            if (protocol == 2)
+            // Protocol 2: Sudden Turn Circle && Protocol 5: Straight Vanish ------------------------------------------
+            // protocol_numb == 1: Straight Line
+            // || protocol == 5 protocol_numb == 2: Vanish
+            if (protocol == 2 || protocol == 5)
             {
                 if (k == 0)
                 {
@@ -137,7 +140,7 @@ namespace FlyVRena2._0.VirtualWorld.Services.UpdateServices
                         if (radius < 0)
                         {
                             radius = -radius;
-                            if (protocol_numb == 1)
+                            if (protocol_numb == 1 || protocol == 5) // Straight Line
                             {
                                 rnd = 0;
                             }
@@ -163,8 +166,16 @@ namespace FlyVRena2._0.VirtualWorld.Services.UpdateServices
                     }
                 }
 
-                X = Math.Cos(walking_angle) * radius;
-                Y = Math.Sin(walking_angle) * radius;
+                if (protocol == 5 && radius <= protocol_numb && p == 1)
+                {
+                    X = 5000;
+                    Y = 5000;
+                }
+                else
+                {
+                    X = Math.Cos(walking_angle) * radius;
+                    Y = Math.Sin(walking_angle) * radius;
+                }
             }
 
             // Protocol 3: Sinusoid (state = 0) / Ribbon (state = 1) / Circle (state = 2) -----------------------------------------------------
@@ -241,8 +252,15 @@ namespace FlyVRena2._0.VirtualWorld.Services.UpdateServices
 
             // Close Loop Section
 
+            // Protocol Timer Count
+
+            if (data.clock >= protocol_timer)
+            {
+                p = 1;
+            }
+
             // Protocol 0: Follow Fly
-            if (protocol == 0)
+                if (protocol == 0)
             {
                 centroid = new Coordinates() { PixelsCurve = new Point2d(data.position[0], data.position[1]) };
                 //Console.WriteLine("{0}", centroid.MillimetersLine);
