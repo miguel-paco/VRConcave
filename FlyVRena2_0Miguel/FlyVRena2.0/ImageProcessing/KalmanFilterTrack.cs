@@ -18,12 +18,13 @@ namespace FlyVRena2._0.ImageProcessing
         Matrix<float> estimated;
 
         bool use;
+        bool twoflies;
 
         // Load Photodiode
         Photodiode photodiode;
 
         public float[] pars;
-        public KalmanFilterTrack(bool use, Photodiode pd)
+        public KalmanFilterTrack(bool use, bool twoflies, Photodiode pd)
         {
             //initialize new kalman filter with appropriate number of parameters
             kal = new Kalman(6, 3, 0);
@@ -42,6 +43,7 @@ namespace FlyVRena2._0.ImageProcessing
             kal.MeasurementMatrix = mk.measurementMatrix;
             pars = new float[3];
             this.use = use;
+            this.twoflies = twoflies;
 
             photodiode = pd;
         }
@@ -74,7 +76,14 @@ namespace FlyVRena2._0.ImageProcessing
 
             //estimate = filterPoints(data.position);
             estimate = data.position;
-            Send<FilteredData>(new FilteredData(data.ID, data.source, estimate, data.velocity, data.position, data.head, data.clock, photodiode));
+            if (twoflies)
+            {
+                Send<FilteredData>(new FilteredData(data.ID, data.source, estimate, data.velocity, data.position, data.head, data.female, data.clock, photodiode));
+            }
+            else
+            {
+                Send<FilteredData>(new FilteredData(data.ID, data.source, estimate, data.velocity, data.position, data.head, data.clock, photodiode));
+            }
         }
 
         //Dispose of all initiated objects

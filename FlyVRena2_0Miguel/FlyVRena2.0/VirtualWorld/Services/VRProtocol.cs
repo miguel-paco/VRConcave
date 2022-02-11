@@ -34,11 +34,12 @@ namespace FlyVRena2._0.VirtualWorld.Services
         public string recordPathStimulus = "";
         public bool recordPhotodiode = false;
         public string recordPathPhotodiode = "";
+        public bool twoFlies = false;
 
         public VRProtocol(IServiceProvider wObj, VirtualWorld VW, string cam1Params, string cam2Params, bool cam1Use, bool cam2Use, bool cam1Track, bool cam2Track,
             bool cam1Disp, bool cam2Disp, bool cam1Rec, bool cam2Rec, string cam1StringRec, string cam2StringRec, int cam1FPS, int cam2FPS,
             bool pulsePalUse, string pulsePalPort, bool photodiodeUse, string photodiodePort, bool trackingRec,
-            string trackingRecPath, bool stimulusRec, string stimulusRecPath, bool photodiodeRec, string photodiodeRecPath, float duration)
+            string trackingRecPath, bool stimulusRec, string stimulusRecPath, bool photodiodeRec, string photodiodeRecPath, bool twoFliesInArena, float duration)
         {
             this.paramsPathCam1 = cam1Params;
             this.paramsPathCam2 = cam2Params;
@@ -64,6 +65,7 @@ namespace FlyVRena2._0.VirtualWorld.Services
             this.recordPathStimulus = stimulusRecPath;
             this.recordPhotodiode = photodiodeRec;
             this.recordPathPhotodiode = photodiodeRecPath;
+            this.twoFlies = twoFliesInArena;
             this.duration = duration;   
         }
     }

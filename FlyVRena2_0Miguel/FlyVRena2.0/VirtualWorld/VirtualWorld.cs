@@ -15,6 +15,7 @@ namespace FlyVRena2._0.VirtualWorld
 {
     public class VirtualWorld
     {
+
         //Acquisition
         private uEyeCamera cam1;
         private uEyeCamera cam2;
@@ -77,7 +78,7 @@ namespace FlyVRena2._0.VirtualWorld
                 pd = new Photodiode(vRProtocol.portPhotodiode);
                 pd.StartPhotodiode();
             }
-            kft = new KalmanFilterTrack<MovementData>(false,pd);
+            kft = new KalmanFilterTrack<MovementData>(false, vRProtocol.twoFlies, pd);
 
             // Initialize data acquisition objects           
             if (vRProtocol.usePulsePal)
@@ -87,14 +88,14 @@ namespace FlyVRena2._0.VirtualWorld
             }
             if (vRProtocol.useCam1)
             {
-                cam1 = new uEyeCamera(1, vRProtocol.paramsPathCam1, vRProtocol.trackCam1, vRProtocol.dispCam1, 0, vRProtocol.fpsCam1, null);
+                cam1 = new uEyeCamera(0, vRProtocol.paramsPathCam1, vRProtocol.trackCam1, vRProtocol.dispCam1, 0, vRProtocol.fpsCam1, null);
                 while (!cam1.m_IsLive) { }
                 if (cam1.m_IsLive)
                 {
                     cam1.Start();
                     if (vRProtocol.trackCam1)
                     {
-                        fastT = new FastTracking<Frame>(this, cam1.firstFrame, 1, 100, 50, 0, false, true);
+                        fastT = new FastTracking<Frame>(this, cam1.firstFrame, 1, 100, 50, 0, vRProtocol.twoFlies, true);
                         fastT.Start();
                         kft.Start();
                     }
@@ -103,16 +104,16 @@ namespace FlyVRena2._0.VirtualWorld
             if (vRProtocol.useCam2)
             {
                 if (vRProtocol.usePulsePal)
-                    cam2 = new uEyeCamera(0, vRProtocol.paramsPathCam2, vRProtocol.trackCam2, vRProtocol.dispCam2, 800, vRProtocol.fpsCam2, pp);
+                    cam2 = new uEyeCamera(1, vRProtocol.paramsPathCam2, vRProtocol.trackCam2, vRProtocol.dispCam2, 800, vRProtocol.fpsCam2, pp);
                 else
-                    cam2 = new uEyeCamera(0, vRProtocol.paramsPathCam2, vRProtocol.trackCam2, vRProtocol.dispCam2, 800, vRProtocol.fpsCam2, null);
+                    cam2 = new uEyeCamera(1, vRProtocol.paramsPathCam2, vRProtocol.trackCam2, vRProtocol.dispCam2, 800, vRProtocol.fpsCam2, null);
 
                 if (cam2.m_IsLive)
                 {
                     cam2.Start();
                     if (vRProtocol.trackCam2)
                     {
-                        fastT = new FastTracking<Frame>(this, cam2.firstFrame, 10, 5000, 35, 0, false, false);
+                        fastT = new FastTracking<Frame>(this, cam2.firstFrame, 10, 5000, 35, 0, vRProtocol.twoFlies, false);
                         fastT.Start();
                         kft.Start();
                     }
@@ -121,12 +122,12 @@ namespace FlyVRena2._0.VirtualWorld
 
             if (vRProtocol.recordTracking & vRProtocol.useCam2)
             {
-                dataRecorder = new DataRecorder<FilteredData>(vRProtocol.recordPathTracking, cam2, true, this);
+                dataRecorder = new DataRecorder<FilteredData>(vRProtocol.recordPathTracking, cam2, true, vRProtocol.twoFlies, this);
                 dataRecorder.Start();
             }
             else if (vRProtocol.recordTracking & !vRProtocol.useCam2)
             {
-                dataRecorder = new DataRecorder<FilteredData>(vRProtocol.recordPathTracking, true, this);
+                dataRecorder = new DataRecorder<FilteredData>(vRProtocol.recordPathTracking, true, vRProtocol.twoFlies, this);
                 dataRecorder.Start();
             }
 
@@ -184,7 +185,7 @@ namespace FlyVRena2._0.VirtualWorld
                 if (_time - time_check >= 1)
                 {
                     time_check = Convert.ToInt32(_time);
-                    Console.WriteLine("{0}", time_check);
+                    //Console.WriteLine("{0}", time_check);
 
                 }
             }

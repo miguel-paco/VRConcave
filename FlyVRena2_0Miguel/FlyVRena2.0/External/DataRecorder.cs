@@ -22,6 +22,7 @@ namespace FlyVRena2._0.External
         uEyeCamera cam;
         public Stopwatch watch;
         private bool writeTracking = false;
+        private bool twoflies = false;
         private FlyVRena2._0.VirtualWorld.VirtualWorld vw;
 
         public DataRecorder(string path, FlyVRena2._0.VirtualWorld.VirtualWorld VW)
@@ -41,21 +42,23 @@ namespace FlyVRena2._0.External
             cam = camera;
         }
 
-        public DataRecorder(string path, uEyeCamera camera, bool writeTracking, FlyVRena2._0.VirtualWorld.VirtualWorld VW)
+        public DataRecorder(string path, uEyeCamera camera, bool writeTracking, bool twoflies, FlyVRena2._0.VirtualWorld.VirtualWorld VW)
         {
             this.vw = VW;
             this.path = path;
             this.writeTracking = writeTracking;
+            this.twoflies = twoflies;
             fileStream = new StreamWriter(path);
             fileStream.Flush();
             cam = camera;
         }
 
-        public DataRecorder(string path, bool writeTracking, FlyVRena2._0.VirtualWorld.VirtualWorld VW)
+        public DataRecorder(string path, bool writeTracking, bool twoflies, FlyVRena2._0.VirtualWorld.VirtualWorld VW)
         {
             this.vw = VW;
             this.path = path;
             this.writeTracking = writeTracking;
+            this.twoflies = twoflies;
             fileStream = new StreamWriter(path);
             fileStream.Flush();
         }
@@ -67,29 +70,60 @@ namespace FlyVRena2._0.External
             Coordinates estimate = new Coordinates() { PixelsCurve = new Point2d(data.position[0], data.position[1]) };
             float orientation = data.rawposition[2];
             float stableori = data.position[2];
+            Coordinates fcentroid = new Coordinates() { PixelsCurve = new Point2d(data.female[0], data.female[1]) };
+            Coordinates fhead = new Coordinates() { PixelsCurve = new Point2d(data.female[3], data.female[4]) };
+            float forientation = data.female[2];
 
             // General save Structure:
             // FramesCam1 TrackingClock RawTrackingcentroidX(mm) RawTrackingCentroidY(mm) RawTrackingOrientation(deg) 
             // EstimatedTrackingcentroidX(mm) Estimated TrackingCentroidY(mm) EstimatedTrackingOrientation(deg)
-            //RawTrackingHeadX(mm) RawTrackingHeadY(mm) ExperimentTimer FramesCam2
+            // RawTrackingHeadX(mm) RawTrackingHeadY(mm) 
+            // FemaleX(mm) FemaleY(mm) FemaleOrientation(deg) FemaleHeadX(mm) FemaleHeadY(mm)
+            // ExperimentTimer FramesCam2
 
             if (writeTracking)
             {
                 if (cam != null)
                 {
-                    fileStream.WriteLine(data.ID.ToString() + " " + data.clock.ToString() + " " +
-                        centroid.MillimetersCurve.X.ToString() + " " + centroid.MillimetersCurve.Y.ToString() + " " + orientation.ToString() + " " +
-                        estimate.MillimetersCurve.X.ToString() + " " + estimate.MillimetersCurve.Y.ToString() + " " + stableori.ToString() + " " +
-                        head.MillimetersCurve.X.ToString() + " " + head.MillimetersCurve.Y.ToString() + " " +
-                        (vw._time).ToString("F6", CultureInfo.InvariantCulture) + " " + cam.m_s32FrameCoutTotal.ToString());
+                    if (twoflies)
+                    {
+                        fileStream.WriteLine(data.ID.ToString() + " " + data.clock.ToString() + " " +
+                            centroid.MillimetersCurve.X.ToString() + " " + centroid.MillimetersCurve.Y.ToString() + " " + orientation.ToString() + " " +
+                            estimate.MillimetersCurve.X.ToString() + " " + estimate.MillimetersCurve.Y.ToString() + " " + stableori.ToString() + " " +
+                            head.MillimetersCurve.X.ToString() + " " + head.MillimetersCurve.Y.ToString() + " " +
+                            fcentroid.MillimetersCurve.X.ToString() + " " + fcentroid.MillimetersCurve.Y.ToString() + " " + forientation.ToString() + " " +
+                            fhead.MillimetersCurve.X.ToString() + " " + fhead.MillimetersCurve.Y.ToString() + " " +
+                            (vw._time).ToString("F6", CultureInfo.InvariantCulture) + " " + cam.m_s32FrameCoutTotal.ToString());
+                    }
+                    else
+                    {
+                        fileStream.WriteLine(data.ID.ToString() + " " + data.clock.ToString() + " " +
+                            centroid.MillimetersCurve.X.ToString() + " " + centroid.MillimetersCurve.Y.ToString() + " " + orientation.ToString() + " " +
+                            estimate.MillimetersCurve.X.ToString() + " " + estimate.MillimetersCurve.Y.ToString() + " " + stableori.ToString() + " " +
+                            head.MillimetersCurve.X.ToString() + " " + head.MillimetersCurve.Y.ToString() + " " +
+                            (vw._time).ToString("F6", CultureInfo.InvariantCulture) + " " + cam.m_s32FrameCoutTotal.ToString());
+                    }
                 }
                 else
                 {
-                    fileStream.WriteLine(data.ID.ToString() + " " + data.clock.ToString() + " " +
+                    if (twoflies)
+                    {
+                        fileStream.WriteLine(data.ID.ToString() + " " + data.clock.ToString() + " " +
+                            centroid.MillimetersCurve.X.ToString() + " " + centroid.MillimetersCurve.Y.ToString() + " " + orientation.ToString() + " " +
+                            estimate.MillimetersCurve.X.ToString() + " " + estimate.MillimetersCurve.Y.ToString() + " " + stableori.ToString() + " " +
+                            head.MillimetersCurve.X.ToString() + " " + head.MillimetersCurve.Y.ToString() + " " +
+                            fcentroid.MillimetersCurve.X.ToString() + " " + fcentroid.MillimetersCurve.Y.ToString() + " " + forientation.ToString() + " " +
+                            fhead.MillimetersCurve.X.ToString() + " " + fhead.MillimetersCurve.Y.ToString() + " " +
+                           (vw._time).ToString("F6", CultureInfo.InvariantCulture));
+                    }
+                    else
+                    {
+                        fileStream.WriteLine(data.ID.ToString() + " " + data.clock.ToString() + " " +
                         centroid.MillimetersCurve.X.ToString() + " " + centroid.MillimetersCurve.Y.ToString() + " " + orientation.ToString() + " " +
                         estimate.MillimetersCurve.X.ToString() + " " + estimate.MillimetersCurve.Y.ToString() + " " + stableori.ToString() + " " +
                         head.MillimetersCurve.X.ToString() + " " + head.MillimetersCurve.Y.ToString() + " " +
                         (vw._time).ToString("F6", CultureInfo.InvariantCulture));
+                    }
                 }
             }
             else

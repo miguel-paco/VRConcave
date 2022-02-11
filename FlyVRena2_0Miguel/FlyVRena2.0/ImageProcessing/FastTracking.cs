@@ -224,24 +224,27 @@ namespace FlyVRena2._0.ImageProcessing
                 using (var storage = new MemStorage())
                 using (var scanner = CV.StartFindContours(output, storage, Contour.HeaderSize, ContourRetrieval.External, ContourApproximation.ChainApproxNone, new OpenCV.Net.Point(0, 0)))
                 {
-                    double bfArea = 0;
+                    double bfArea1 = 0;
                     while ((currentContour = scanner.FindNextContour()) != null)
                     {
+                       
                         //Calculate the number of pixels inside the contour
                         contourArea = CV.ContourArea(currentContour, SeqSlice.WholeSeq);
-                        CV.DrawContours(output, currentContour, new Scalar(80), new Scalar(80), 1, -1);
+                        
                         //Console.WriteLine("{0}", contourArea);
                         //if number of pixels fit the expected for the fly, calculate the distribution moments
-                        if (contourArea > bfArea && (contourArea > MinArea && contourArea < MaxArea))
+                        if (contourArea > bfArea1 && (contourArea > MinArea && contourArea < MaxArea))
                         {
                             scanner.SubstituteContour(null);
                             //calculate the pixel distribution moments
                             moments = new Moments(currentContour);
                             if (moments.M00 > 0)
                             {
+
                                 trackResult2 = trackResult1;
                                 majoraxis2 = majoraxis1;
                                 orientation2 = orientation1;
+                                Console.WriteLine("{0} {1}", Convert.ToSingle(moments.M10 / moments.M00), trackResult2[0]);
                                 //transform moments into X,Y and orentation   
                                 trackResult1[0] = Convert.ToSingle(moments.M10 / moments.M00);
                                 trackResult1[1] = Convert.ToSingle(moments.M01 / moments.M00);
@@ -261,10 +264,12 @@ namespace FlyVRena2._0.ImageProcessing
                                 }
                             }
                             CV.DrawContours(output, currentContour, new Scalar(255), new Scalar(255), 1, -1);
-                        }
-                        bfArea = contourArea;
+                            bfArea1 = contourArea;
+                        } 
                     }
                 }
+
+                Console.WriteLine("{0} {1}", trackResult1[0], trackResult2[0]);
 
                 orientation1 = HeadTailOrientation(trackResult1[0], trackResult1[1], orientation1, trackPreviousResult);
                 orientation2 = HeadTailOrientation(trackResult2[0], trackResult2[1], orientation2, trackPreviousResult2);
@@ -313,6 +318,7 @@ namespace FlyVRena2._0.ImageProcessing
 
                 //CV.Circle(output, new Point(Convert.ToInt32(trackResult[3]), Convert.ToInt32(trackResult[4])), 0, new Scalar(125));
                 CV.Line(output, new Point(Convert.ToInt32(trackResult[0]), Convert.ToInt32(trackResult[1])), new Point(Convert.ToInt32(trackResult[3]), Convert.ToInt32(trackResult[4])), new Scalar(125));
+
 
                 if (boolDisplayTrackingResult)
                     imVis.Show(output.Clone());
@@ -414,15 +420,33 @@ namespace FlyVRena2._0.ImageProcessing
                 }
             }
 
-            this.Send<MovementData>(new MovementData(data.ID, data.source, new float[] {
+            if (_twoflies)
+            {
+                this.Send<MovementData>(new MovementData(data.ID, data.source, new float[] {
                 trackCurrentResult[0],
                 trackCurrentResult[1],
                 trackCurrentResult[2],
                 ((trackCurrentResult[0]-trackPreviousResult[0])*(float)Math.Cos(Math.PI*trackCurrentResult[2]/180) + (trackCurrentResult[1]-trackPreviousResult[1])*(float)Math.Sin(Math.PI*trackCurrentResult[2]/180))*data.frameRate ,
                 (-(trackCurrentResult[0]-trackPreviousResult[0])*(float)Math.Sin(Math.PI*trackCurrentResult[2]/180) + (trackCurrentResult[1]-trackPreviousResult[1])*(float)Math.Cos(Math.PI*trackCurrentResult[2]/180))*data.frameRate ,
                 (trackCurrentResult[2] - trackPreviousResult[2])*data.frameRate },
-                new float[] { trackCurrentResult[3], trackCurrentResult[4] }, vw._time
-                ));
+               new float[] { trackCurrentResult[3], trackCurrentResult[4] },
+               new float[] { trackCurrentResult[5], trackCurrentResult[6], trackCurrentResult[7], trackCurrentResult[8], trackCurrentResult[9] }, vw._time
+               ));
+                
+            }
+            else
+            {
+                this.Send<MovementData>(new MovementData(data.ID, data.source, new float[] {
+                trackCurrentResult[0],
+                trackCurrentResult[1],
+                trackCurrentResult[2],
+                ((trackCurrentResult[0]-trackPreviousResult[0])*(float)Math.Cos(Math.PI*trackCurrentResult[2]/180) + (trackCurrentResult[1]-trackPreviousResult[1])*(float)Math.Sin(Math.PI*trackCurrentResult[2]/180))*data.frameRate ,
+                (-(trackCurrentResult[0]-trackPreviousResult[0])*(float)Math.Sin(Math.PI*trackCurrentResult[2]/180) + (trackCurrentResult[1]-trackPreviousResult[1])*(float)Math.Cos(Math.PI*trackCurrentResult[2]/180))*data.frameRate ,
+                (trackCurrentResult[2] - trackPreviousResult[2])*data.frameRate },
+               new float[] { trackCurrentResult[3], trackCurrentResult[4] }, vw._time
+               ));
+            }
+               
             trackPreviousResult = trackCurrentResult;
             data.image.Dispose();
         }
