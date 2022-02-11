@@ -103,7 +103,7 @@ namespace FlyVRena2._0.VirtualWorld.Services.UpdateServices
 
             // Protocol 2: Sudden Turn Circle && Protocol 5: Straight Vanish ------------------------------------------
             // protocol_numb == 1: Straight Line
-            // || protocol == 5 protocol_numb == 2: Vanish
+            // || protocol == 5: Vanish (protocol_numb = radius to vanish)
             if (protocol == 2 || protocol == 5)
             {
                 if (k == 0)

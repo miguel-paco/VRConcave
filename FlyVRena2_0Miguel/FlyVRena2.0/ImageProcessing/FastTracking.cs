@@ -20,10 +20,12 @@ namespace FlyVRena2._0.ImageProcessing
         // trackPreviousResult[2] - Orientation (Degrees);
         // trackPreviousResult[3] - X Head Coord (Arena Pixels);
         // trackPreviousResult[4] - Y Head Coord (Arena Pixels);
+        private float[] trackPreviousResult2 = new float[5] { 0, 0, 0, 0, 0 };
         private IplImage Background;
         private float[] trackMovementDirection = new float[10] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
         private FlyVRena2._0.VirtualWorld.VirtualWorld vw;
 
+        private bool _twoflies = false;
         private int _minArea = 0; 
         public int MinArea
         {
@@ -71,7 +73,7 @@ namespace FlyVRena2._0.ImageProcessing
         ServiceProvider provider;
 
 
-        public FastTracking(FlyVRena2._0.VirtualWorld.VirtualWorld VW, Frame mask, int minA, int maxA, int thr, int smooth, bool boolDisplayTrackingResult)
+        public FastTracking(FlyVRena2._0.VirtualWorld.VirtualWorld VW, Frame mask, int minA, int maxA, int thr, int smooth, bool twoflies, bool boolDisplayTrackingResult)
         {
             this.vw = VW;
             //Initialize with pre-defined parameters. Modify and re-compile to alter tracking parameters. 
@@ -79,6 +81,7 @@ namespace FlyVRena2._0.ImageProcessing
             MaxArea = maxA;
             Thr = thr;
             SmoothSize = smooth;
+            _twoflies = twoflies;
             this.boolDisplayTrackingResult = boolDisplayTrackingResult;
             Background = mask.image; // In background subtraction method, this will be the first adquired frame 
             if (boolDisplayTrackingResult)
@@ -93,6 +96,7 @@ namespace FlyVRena2._0.ImageProcessing
             }
         }
         
+        // Single Fly
         public float[] ObtainTrackingData(IplImage output)
         {
             float[] trackResult = new float[5] { 0, 0, 0, 0, 0};
@@ -160,13 +164,13 @@ namespace FlyVRena2._0.ImageProcessing
                     }
                 }
 
-                orientation = HeadTailOrientation(trackResult[0], trackResult[1], orientation);
+                orientation = HeadTailOrientation(trackResult[0], trackResult[1], orientation, trackPreviousResult);
 
                 orientation = CorrectedOrientation(orientation, trackPreviousResult[2]);
 
                 trackResult[2] = orientation.Degrees;
 
-                // Find Fly Head
+                // Find Fly Head #1
                 if (majoraxis > 0)
                 {
                     trackResult[3] = trackResult[0] + Convert.ToSingle(Math.Cos(orientation.Radians)) * majoraxis / 2f;
@@ -177,6 +181,135 @@ namespace FlyVRena2._0.ImageProcessing
                     trackResult[3] = trackResult[0];
                     trackResult[4] = trackResult[1];
                 }
+
+                //CV.Circle(output, new Point(Convert.ToInt32(trackResult[3]), Convert.ToInt32(trackResult[4])), 0, new Scalar(125));
+                CV.Line(output, new Point(Convert.ToInt32(trackResult[0]), Convert.ToInt32(trackResult[1])), new Point(Convert.ToInt32(trackResult[3]), Convert.ToInt32(trackResult[4])), new Scalar(125));
+
+                if (boolDisplayTrackingResult)
+                    imVis.Show(output.Clone());
+
+                return trackResult;
+            }
+        }
+
+        public float[] ObtainTrackingData2Flies(IplImage output)
+        {
+            float[] trackResult = new float[10] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+            float[] trackResult1 = new float[5] { 0, 0, 0, 0, 0 };
+            float[] trackResult2 = new float[5] { 0, 0, 0, 0, 0 };
+
+            if (Background == null) // if no first frame
+            {
+                Background = output.Clone();
+                return trackResult;
+            }
+            else
+            {
+                float majoraxis1 = 0f;
+                float majoraxis2 = 0f;
+                double contourArea;
+                RotatedRect elipse;
+                Moments moments;
+                Point2f head;
+                AngleVal orientation1 = new AngleVal() { Radians = 0f };
+                AngleVal orientation2 = new AngleVal() { Radians = 0f };
+
+                output = BackgroundSubtraction(output, (SmoothSize > 0));
+
+                //Binarize the data
+                CV.Threshold(output, output, _thr, 255, ThresholdTypes.Binary);
+
+                //Find countours of the binary regions
+                Seq currentContour;
+                using (var storage = new MemStorage())
+                using (var scanner = CV.StartFindContours(output, storage, Contour.HeaderSize, ContourRetrieval.External, ContourApproximation.ChainApproxNone, new OpenCV.Net.Point(0, 0)))
+                {
+                    double bfArea = 0;
+                    while ((currentContour = scanner.FindNextContour()) != null)
+                    {
+                        //Calculate the number of pixels inside the contour
+                        contourArea = CV.ContourArea(currentContour, SeqSlice.WholeSeq);
+                        CV.DrawContours(output, currentContour, new Scalar(80), new Scalar(80), 1, -1);
+                        //Console.WriteLine("{0}", contourArea);
+                        //if number of pixels fit the expected for the fly, calculate the distribution moments
+                        if (contourArea > bfArea && (contourArea > MinArea && contourArea < MaxArea))
+                        {
+                            scanner.SubstituteContour(null);
+                            //calculate the pixel distribution moments
+                            moments = new Moments(currentContour);
+                            if (moments.M00 > 0)
+                            {
+                                trackResult2 = trackResult1;
+                                majoraxis2 = majoraxis1;
+                                orientation2 = orientation1;
+                                //transform moments into X,Y and orentation   
+                                trackResult1[0] = Convert.ToSingle(moments.M10 / moments.M00);
+                                trackResult1[1] = Convert.ToSingle(moments.M01 / moments.M00);
+                                orientation1.Radians = Convert.ToSingle(0.5 * Math.Atan2(2 * (moments.M11 / moments.M00 - trackResult1[0] * trackResult1[1]),
+                                    (moments.M20 / moments.M00 - trackResult1[0] * trackResult1[0])
+                                    - (moments.M02 / moments.M00 - trackResult1[1] * trackResult1[1])));
+
+                                if (moments.M00 > 5)
+                                {
+                                    //save head coordenates
+                                    elipse = CV.FitEllipse2(currentContour);
+                                    majoraxis1 = elipse.Size.Height;
+                                }
+                                else
+                                {
+                                    majoraxis1 = 0f;
+                                }
+                            }
+                            CV.DrawContours(output, currentContour, new Scalar(255), new Scalar(255), 1, -1);
+                        }
+                        bfArea = contourArea;
+                    }
+                }
+
+                orientation1 = HeadTailOrientation(trackResult1[0], trackResult1[1], orientation1, trackPreviousResult);
+                orientation2 = HeadTailOrientation(trackResult2[0], trackResult2[1], orientation2, trackPreviousResult2);
+
+                orientation1 = CorrectedOrientation(orientation1, trackPreviousResult[2]);
+                orientation2 = CorrectedOrientation(orientation2, trackPreviousResult2[2]);
+
+                trackResult1[2] = orientation1.Degrees;
+                trackResult2[2] = orientation2.Degrees;
+
+                // Find Fly Head #1
+                if (majoraxis1 > 0)
+                {
+                    trackResult1[3] = trackResult1[0] + Convert.ToSingle(Math.Cos(orientation1.Radians)) * majoraxis1 / 2f;
+                    trackResult[4] = trackResult1[1] + Convert.ToSingle(Math.Sin(orientation1.Radians)) * majoraxis1 / 2f;
+                }
+                else
+                {
+                    trackResult1[3] = trackResult1[0];
+                    trackResult1[4] = trackResult1[1];
+                }
+                // Find Fly Head #2
+                if (majoraxis2 > 0)
+                {
+                    trackResult2[3] = trackResult2[0] + Convert.ToSingle(Math.Cos(orientation2.Radians)) * majoraxis2 / 2f;
+                    trackResult2[4] = trackResult2[1] + Convert.ToSingle(Math.Sin(orientation2.Radians)) * majoraxis2 / 2f;
+                }
+                else
+                {
+                    trackResult2[3] = trackResult2[0];
+                    trackResult2[4] = trackResult2[1];
+                }
+
+                // Save the tracked blobs
+                // Male is the smallest blob "2" and female the biggest "1"
+                trackResult[0] = trackResult2[0]; // Male X Coord(Arena Pixels);
+                trackResult[1] = trackResult2[1]; // Male Y Coord(Arena Pixels);
+                trackResult[2] = trackResult2[2]; // Male Orientation (Degrees);
+                trackResult[3] = trackResult2[3]; // Male X Head Coord (Arena Pixels);
+                trackResult[4] = trackResult2[4]; // Male Y Head Coord (Arena Pixels);
+                trackResult[5] = trackResult1[0]; // Female X Coord(Arena Pixels);
+                trackResult[6] = trackResult1[1]; // Female Y Coord(Arena Pixels);
+                trackResult[7] = trackResult1[2]; // Female Orientation (Degrees);
+                trackResult[8] = trackResult1[3]; // Female X Head Coord (Arena Pixels);
+                trackResult[9] = trackResult1[4]; // Female X Head Coord (Arena Pixels);
 
                 //CV.Circle(output, new Point(Convert.ToInt32(trackResult[3]), Convert.ToInt32(trackResult[4])), 0, new Scalar(125));
                 CV.Line(output, new Point(Convert.ToInt32(trackResult[0]), Convert.ToInt32(trackResult[1])), new Point(Convert.ToInt32(trackResult[3]), Convert.ToInt32(trackResult[4])), new Scalar(125));
@@ -215,14 +348,16 @@ namespace FlyVRena2._0.ImageProcessing
             return or;
         }
 
-        public AngleVal HeadTailOrientation (float X, float Y, AngleVal or)
+        public AngleVal HeadTailOrientation (float X, float Y, AngleVal or, float[] prev)
         {
             int idx = 0;
             int check = 1;
             float average = 0f;
             float norm;
-            Point2f previous = new Point2f(trackPreviousResult[0] - trackPreviousResult[3], trackPreviousResult[1] - trackPreviousResult[4]);
-            Point2f current = new Point2f(trackPreviousResult[0] - X, trackPreviousResult[1] - Y);
+            //Point2f previous = new Point2f(trackPreviousResult[0] - trackPreviousResult[3], trackPreviousResult[1] - trackPreviousResult[4]);
+            //Point2f current = new Point2f(trackPreviousResult[0] - X, trackPreviousResult[1] - Y);
+            Point2f previous = new Point2f(prev[0] - prev[3], prev[1] - prev[4]);
+            Point2f current = new Point2f(prev[0] - X, prev[1] - Y);
             AngleVal theta = new AngleVal() { Radians = 0f };
 
             norm = (float)Math.Sqrt((previous.X - current.X) * (previous.X - current.X) +
@@ -268,7 +403,15 @@ namespace FlyVRena2._0.ImageProcessing
             float[] trackCurrentResult;
             using (IplImage input = data.image)
             {
-                trackCurrentResult = ObtainTrackingData(input);
+                if (_twoflies)
+                {
+                    trackCurrentResult = ObtainTrackingData2Flies(input);                    
+
+                }
+                else
+                {
+                    trackCurrentResult = ObtainTrackingData(input);
+                }
             }
 
             this.Send<MovementData>(new MovementData(data.ID, data.source, new float[] {

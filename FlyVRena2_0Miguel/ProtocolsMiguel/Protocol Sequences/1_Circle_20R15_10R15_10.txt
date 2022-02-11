@@ -1,0 +1,3 @@
+C:\Users\ALBINO\Documents\VRConcave\FlyVRena2_0Miguel\ProtocolsMiguel\1_Circle20mmsR15mm.xml 1
+C:\Users\ALBINO\Documents\VRConcave\FlyVRena2_0Miguel\ProtocolsMiguel\1_Circle10mmsR15mm.xml 1
+C:\Users\ALBINO\Documents\VRConcave\FlyVRena2_0Miguel\ProtocolsMiguel\1_Circle10mms.xml 1

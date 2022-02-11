@@ -1,6 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <WorldObject xmlns:ServiceFactories="FlyVRena2._0.VirtualWorld.ServiceFactories">
+  
   <WObjects>
+    
     <WorldObject>
       <WObjects/>
       <objectBuilder>
@@ -8,12 +10,12 @@
           <name>Spot1</name>
         </NameFactory>
         <PositionFactory>
-          <x>000</x>
-          <y>000</y>
+          <x>0</x>
+          <y>0</y>
           <z>0</z>
           <rx>0</rx>
           <ry>0</ry>
-          <rz>0</rz>
+          <rz>0</rz>  
           <scale>1</scale>
         </PositionFactory>
         <DarkCircleFactory>
@@ -21,16 +23,14 @@
           <nPoints>100</nPoints>
         </DarkCircleFactory>
         <UpdateStimulusFactory>
-          <protocol>5</protocol>
-          <protocol_radius> 25</protocol_radius>
+          <protocol>1</protocol>
+          <protocol_radius> 10</protocol_radius>
           <protocol_speed> 20</protocol_speed>
           <protocol_direction> 1</protocol_direction>
-          <protocol_numb>5</protocol_numb>
-          <protocol_timer>330</protocol_timer>
         </UpdateStimulusFactory>
       </objectBuilder>
     </WorldObject>
-    
+
     <WorldObject>
       <WObjects/>
       <objectBuilder>
@@ -70,8 +70,9 @@
         </DarkCircleFactory>
       </objectBuilder>
     </WorldObject>
+    
   </WObjects>
-  
+
   <objectBuilder>
     <VRProtocolFactory>
       <UseCam1>true</UseCam1>
@@ -98,7 +99,8 @@
       <PathRecordingTracking>C:\Users\ALBINO\Desktop\Track.txt</PathRecordingTracking>
       <RecordStimulus>true</RecordStimulus>
       <PathRecordingStimulus>C:\Users\ALBINO\Desktop\Stim.txt</PathRecordingStimulus>
-      <DurationInSeconds>930</DurationInSeconds>
+      <DurationInSeconds>330</DurationInSeconds>
     </VRProtocolFactory>
   </objectBuilder>
+  
 </WorldObject>
